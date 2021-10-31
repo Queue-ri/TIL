@@ -1,0 +1,234 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+@import url('http://fonts.cdnfonts.com/css/segoe-ui-4');
+
+:root {
+  --ifm-color-primary: #8088ff;
+  --ifm-color-primary-dark: #5a64ff;
+  --ifm-color-primary-darker: #4752ff;
+  --ifm-color-primary-darkest: #0d1cff;
+  --ifm-color-primary-light: #a6acff;
+  --ifm-color-primary-lighter: #b9beff;
+  --ifm-color-primary-lightest: #f3f4ff;
+  --site-primary-hue-saturation: 236,100%; /* Announcement Bar */
+  --ifm-font-family-base:system-ui,-apple-system,Noto Sans KR,sans-serif,"Segoe UI",Helvetica,Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";
+  --ifm-code-font-size: 95%;
+  --ifm-global-shadow-md: 0px;  /* Remove shadow on the left */
+  --ifm-toc-border-color: #ededed;
+}
+
+/* Banner Button Style */
+@media (min-width: 430px) {
+  .button--mg {
+    margin-left: 20px;
+  }
+}
+
+@media (max-width: 429px) {
+  .button--mg {
+    margin-top: 10px;
+  }
+  .button {
+    width: 60%;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    font-size: 18px;
+  }
+}
+
+.button--hl:hover {
+    /* Has to be explicitly defined because .button--outline has quite high specificity. */
+    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+}
+
+.button--hl {
+  background: radial-gradient(100% 100% at 100% 0%, rgb(255 66 137) 0%, rgb(128 136 255) 100%);
+}
+
+html[data-theme='dark'] {
+  --ifm-background-color: #1e2125;
+  --ifm-background-surface-color: #292c30;
+  --ifm-toc-border-color: #313131;
+}
+
+html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* GitHub Link Icon */
+.header-github-link:hover {
+  opacity: 0.6;
+}
+
+.header-github-link:before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+    no-repeat;
+}
+
+html[data-theme='dark'] .header-github-link:before {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+    no-repeat;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+.navbar .navbar__items {
+  flex: auto;
+}
+
+/* Header Dropdown Menu */
+.dropdown__link {
+  font-size: inherit;
+}
+
+article {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Announcement Bar 
+div[class^='announcementBarContent'] {
+  background-color: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+}
+
+div[class^='announcementBarContent'] a {
+  color: var(--ifm-link-color);
+  text-decoration: inherit;
+}
+
+div[class^='announcementBarContent'] a:hover {
+  color: var(--ifm-link-color);
+  text-decoration: underline;
+}
+*/
+div[class^=announcementBar_] {
+  --site-announcement-bar-stripe-color1: hsl(var(--site-primary-hue-saturation),85%);
+  --site-announcement-bar-stripe-color2: hsl(var(--site-primary-hue-saturation),95%);
+  background: repeating-linear-gradient(
+    35deg,
+    var(--site-announcement-bar-stripe-color1),
+    var(--site-announcement-bar-stripe-color1) 20px,
+    var(--site-announcement-bar-stripe-color2) 10px,
+    var(--site-announcement-bar-stripe-color2) 40px
+  );
+  font-weight: 700;
+}
+
+@media screen and (max-width: 996px) {
+  :root {
+    --ifm-font-size-base: 18px;
+  }
+  article header h1 {
+    font-size: 2rem !important;
+  }
+  .hero .hero__title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Don't make headers so big */
+.markdown > h2,
+h3,
+h4,
+h5,
+h6 {
+  --ifm-h2-font-size: inherit !important;
+  --ifm-h3-font-size: inherit !important;
+  --ifm-h4-font-size: inherit !important;
+  --ifm-h5-font-size: inherit !important;
+  --ifm-h6-font-size: inherit !important;
+}
+
+@media screen and (min-width: 997px) {
+  :root {
+    --ifm-font-size-base: 17px;
+  }
+  article header h1 {
+    font-size: 2.5rem !important;
+  }
+}
+
+/* Table of Content */
+.table-of-contents .table-of-contents__link--active {
+  border-left: 4px solid var(--ifm-link-color);
+  color: var(--ifm-color-primary);
+  font-weight: bold;
+  margin-left: -16px;
+  padding-left: 12px;
+}
+
+/* Footer */
+.footer {
+  background-color: #242526;
+}
+.footer .container {
+    max-width: 900px;
+}
+.footer .footer__item {
+  font-size: 16px;
+}
+.footer .footer__title {
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+.footer .footer__title, .footer .text--center {
+  color: #6a6f7c;
+  font-size: 16px;
+}
+.footer .footer__copyright {
+  padding-top: 1rem;
+}
+#__docusaurus > footer > div > div.text--center > div > a {
+  color: unset;
+}
+#__docusaurus > footer > div > div.text--center > div > a:hover {
+  color: var(--ifm-link-color);
+  text-decoration: underline;
+}
+
+/* Customize website's scrollbar like Mac OS (Not supported in Firefox/IE) */
+/* total width */
+body::-webkit-scrollbar {
+  background-color: transparent;
+  width: 8px;
+}
+
+/* background of the scrollbar except button or resizer */
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* scrollbar itself */
+body::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 18px;
+}
+
+html[data-theme='dark'] body::-webkit-scrollbar-thumb {
+  background-color: #4c4c4e;
+}
+
+/* set button(top and bottom of the scrollbar) */
+body::-webkit-scrollbar-button {
+  display:none;
+}
