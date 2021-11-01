@@ -9,11 +9,11 @@
   position: relative;
   overflow: hidden;
   background-image: url("../../static/img/banner_background.jpg");
-  background-size: cover; 
+  background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: center;
-  height: 100vh;
+  background-position: center center;
+  height: 90vh;
 }
 
 @media screen and (max-width: 966px) {
@@ -31,6 +31,18 @@
 @media (max-width: 429px) {
   .buttons {
     flex-direction: column;
+  }
+  .heroBanner {
+    padding: 4rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background-image: url("../../static/img/m_banner_background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+    height: 90vh;
   }
 }
 
