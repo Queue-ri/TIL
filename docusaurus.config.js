@@ -18,7 +18,17 @@ const config = {
 
   i18n: {
     defaultLocale: 'ko',
-    locales: ['en', 'ko']
+    locales: ['en', 'ko'],
+    localeConfigs: {
+      en: {
+        label: 'English',
+        direction: 'ltr',
+      },
+      ko: {
+        label: '한국어',
+        direction: 'ltr',
+      }
+    },
   },
   
   presets: [
