@@ -55,6 +55,37 @@ const config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-pwa',
+      {
+        debug: true,
+        offlineModeActivationStrategies: [
+          'appInstalled',
+          'standalone',
+          'queryString',
+        ],
+        pwaHead: [
+          {
+            tagName: 'link',
+            rel: 'icon',
+            href: '/img/icon/logo_161.png',
+          },
+          {
+            tagName: 'link',
+            rel: 'manifest',
+            href: '/static/manifest.json', // PWA manifest
+          },
+          {
+            tagName: 'meta',
+            name: 'theme-color',
+            content: '#8088ff',
+          },
+        ],
+      },
+    ],
+  ],
+
   themeConfig:
     /* @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
