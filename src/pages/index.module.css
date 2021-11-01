@@ -7,13 +7,25 @@
   padding: 4rem 0;
   text-align: center;
   position: relative;
+  height: 95vh;
   overflow: hidden;
   background-image: url("../../static/img/banner_background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+/*  background-attachment: fixed; */
   background-position: center center;
-  height: 95vh;
+}
+
+@media (min-height: 600px){
+  .heroBanner {
+    background-attachment: fixed;
+  }
+}
+
+@media (max-height: 599px) {
+  .heroBanner{
+    background-attachment: scroll;
+  }
 }
 
 @media screen and (max-width: 966px) {
@@ -36,13 +48,13 @@
     padding: 4rem 0;
     text-align: center;
     position: relative;
+    height: 95vh;
     overflow: hidden;
     background-image: url("../../static/img/m_banner_background.jpg");
-    background-size: cover;
+    background-size: 110vh;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+  /*  background-attachment: fixed; */
     background-position: center center;
-    height: 90vh;
   }
 }
 
