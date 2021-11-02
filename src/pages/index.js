@@ -21,7 +21,7 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--secondary button--lg button--hl button--mg"
-            to="/featured/main">
+            to="/featured">
             📑 Featured
           </Link>
         </div>
