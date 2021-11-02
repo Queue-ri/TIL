@@ -3,6 +3,16 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const docNavItems = [
+  {
+    to: 'featured/pl/category1/category1_main',
+    label: 'PL',
+  },
+  {
+    to: 'featured/backend/spring/spring_main',
+    label: 'Backend',
+  },
+];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -102,12 +112,13 @@ const config = {
         items: [
           {to: '/about', label: 'About', position: 'left'},
           {to: '/date', label: 'Date', position: 'left'},
-          {
+          /* {
             type: 'doc',
             docId: 'main',
-            position: 'left',
             label: 'Featured',
-          },
+            position: 'left'
+          }, */
+          {to: '/featured', label: 'Featured', position: 'left', items: docNavItems},
           {
             type: 'localeDropdown',
             position: 'right',

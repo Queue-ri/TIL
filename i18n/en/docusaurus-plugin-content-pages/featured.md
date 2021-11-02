@@ -1,7 +1,7 @@
 ---
-sidebar_position: 1
+title: Featured
 ---
 
-# 📑 Featured Topics: Main
+# 📑 Featured Topics
 
 This page is for TIL documents categorized by featured topics.
