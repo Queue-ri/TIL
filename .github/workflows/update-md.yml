@@ -1,0 +1,19 @@
+name: Write markdown with mdupdater
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    update-md:
+        name: Write markdown with mdupdater
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          - name: Run mdupdater
+            run: ./mdupdater.sh
+      
+          - uses: actions/checkout@v2
+          - name: Push markdown file to repository
+            run: ./commit_push.sh
