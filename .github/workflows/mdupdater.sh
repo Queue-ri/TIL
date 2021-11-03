@@ -7,13 +7,17 @@ GREEN='\033[0;32m'
 NOCOLOR='\033[0m'
 
 TODAY=`date "+%Y-%m-%d"`
-FILE="../../md/date/${TODAY}.md"
+YEAR=`date +'%Y'`
+MONTH=`date +'%m'`
+FILE="../../md/date/${YEAR}/${MONTH}/${TODAY}.md"
+FOLDER="../../md/date/${YEAR}/${MONTH}"
 
 echo -e "\n${GREEN}** MDUPDATER by Queue-ri"
 echo -e "** configuring ${TODAY}.md...${NOCOLOR}"
 
 find ../../docs -name "*.md" > filepath_list # all md path
 
+mkdir -p $FOLDER
 echo "# 📚 ${TODAY}" > $FILE
 
 while read filepath; do
