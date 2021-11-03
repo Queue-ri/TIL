@@ -10,13 +10,13 @@ NOCOLOR='\033[0m'
 TODAY=`date "+%Y-%m-%d"`
 YEAR=`date +'%Y'`
 MONTH=`date +'%m'`
-FILE="../../md/date/${YEAR}/${MONTH}/${TODAY}.md"
-FOLDER="../../md/date/${YEAR}/${MONTH}"
+FILE="../md/date/${YEAR}/${MONTH}/${TODAY}.md"
+FOLDER="../md/date/${YEAR}/${MONTH}"
 
 echo -e "\n${GREEN}** MDUPDATER by Queue-ri"
 echo -e "** configuring ${TODAY}.md...${NOCOLOR}"
 
-find ../../docs -name "*.md" > filepath_prelist # all md path
+find docs -name "*.md" > filepath_prelist # All md path. Root is not a .sh path
 touch filepath_list
 
 while read filepath; do

@@ -10,8 +10,7 @@ TODAY=`date "+%Y-%m-%d"`
 
 echo -e "${GREEN}** working on git repository...${NOCOLOR}\n"
 
-cd ..
-cd ..
+# Root is not a .sh path
 git add --all
 git status
 git commit -m "ci(docs): Auto commit ${TODAY}.md"
