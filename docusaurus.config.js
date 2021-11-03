@@ -49,14 +49,15 @@ const config = {
         docs: {
           routeBasePath: 'featured',
           sidebarPath: require.resolve('./sidebars.js'),
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
           // Please change this to your repo.
-          editUrl: 'https://github.com/Queue-ri/asdf/edit/main/',
+          editUrl: 'https://github.com/Queue-ri/til/edit/main/docs/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl:
-            'https://github.com/Queue-ri/asdf/edit/main/blog/',
+          editUrl: 'https://github.com/Queue-ri/til/edit/main/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -93,6 +94,16 @@ const config = {
           },
         ],
       },
+    ],
+    [ /* Temporary path for date markdowns */
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'date-tmp',
+        path: './md/date',
+        routeBasePath: 'date-tmp',
+        sidebarPath: require.resolve('./sidebars-custom.js'),
+        editUrl: 'https://github.com/Queue-ri/til/edit/main/md/date/',
+      }, 
     ],
   ],
 
