@@ -1,4 +1,4 @@
-name: Write Markdown
+name: mdupdater
 
 on:
     push:
