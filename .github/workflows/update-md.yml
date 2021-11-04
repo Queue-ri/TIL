@@ -13,8 +13,7 @@ jobs:
           - uses: actions/checkout@v2
           - name: Run mdupdater
             run: ./.github/mdupdater.sh
-      
-          - uses: actions/checkout@v2
+            
           - name: Push markdown file to repository
             run: ./.github/commit_push.sh
 
