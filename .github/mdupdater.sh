@@ -43,11 +43,12 @@ while read filepath; do
     filedate=`grep "created_date" $filepath | cut -f2 -d " " | head -1` # should be a single space, not ":".
     fileupdate=`grep "updated_date" $filepath | cut -f2 -d " " | head -1`
     filetitle=`grep "title" $filepath | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
+    filetitle_en=`grep "eng_title" $filepath | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
 
     if [[ "$filedate" == "$TODAY" ]]; then
-        echo "- [New!] 📗 [$filetitle]($pagepath)" >> $FILE
+        echo "- [New!] 📗 [$filetitle ($filetitle_en)]($pagepath) \`repo: $filepath\`" >> $FILE
     elif [[ "$fileupdate" == "$TODAY" ]]; then
-        echo "- [Update] 📙 [$filetitle]($pagepath) (📜 [view history](https://github.com/Queue-ri/TIL/commits/main/.github/workflows/${filepath}?since=${TODAY}T00:00:00Z&until=${TODAY}T23:59:59Z) )" >> $FILE
+        echo "- [Update] 📙 [$filetitle ($filetitle_en)]($pagepath) 📜 [history](https://github.com/Queue-ri/TIL/commits/main/.github/workflows/${filepath}?since=${TODAY}T00:00:00Z&until=${TODAY}T23:59:59Z) \`repo: $filepath\`" >> $FILE
     fi
 done < .github/filepath_list
 
