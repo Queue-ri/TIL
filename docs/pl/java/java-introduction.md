@@ -1,5 +1,6 @@
 ---
 title: '내맘대로 Java 소개'
+eng_title: 'Java Introduction'
 created_date: 2021-11-04
 ---
 
