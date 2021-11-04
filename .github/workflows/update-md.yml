@@ -6,8 +6,8 @@ on:
             - main
 
 jobs:
-    update-md:
-        name: Write Markdown
+    update-md-and-deploy:
+        name: Write Markdown and Deploy
         runs-on: ubuntu-latest
         steps:
           - uses: actions/checkout@v2
@@ -17,3 +17,11 @@ jobs:
           - uses: actions/checkout@v2
           - name: Push markdown file to repository
             run: ./.github/commit_push.sh
+
+          - name: Trigger Cloudflare Pages
+            uses: Cyb3r-Jak3/actions-cloudflare-pages@<Latest Release>
+            with:
+              account: ${{ secrets.CLOUDFLARE_ID }}
+              project: ${{ secrets.CLOUDFLARE_PROJECT }}
+              email: ${{ secrets.CLOUDFLARE_EMAIL }}
+              global_token: ${{ secrets.CLOUDFLARE_KEY }}
