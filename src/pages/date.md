@@ -12,7 +12,7 @@ title: Date
 
 하단의 뒤틀린 자바스크립트를 클릭하면 숨겨진(?) 임시 페이지로 이동합니다.
 
-[![fail](../../static/img/date/fail.png)](../../date-tmp/2021/11/2021-11-04)
+[![fail](../../static/img/date/fail.png)](date-tmp/2021/11/2021-11-04)
 
 **Date의 문서들은 CI에 의해 자동 생성**되고 있으며, 다음의 구성으로 이루어집니다.
 ```
