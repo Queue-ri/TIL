@@ -25,6 +25,7 @@ const config = {
   favicon: 'img/favicon.ico',
   organizationName: 'qriositylog', // Usually your GitHub org/user name.
   projectName: 'TIL', // Usually your repo name.
+  trailingSlash: false,
 
   i18n: {
     defaultLocale: 'ko',
