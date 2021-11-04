@@ -5,7 +5,7 @@ const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const docNavItems = [
   {
-    to: 'featured/pl/category1/category1_main',
+    to: 'featured/pl/java/java-introduction',
     label: 'PL',
   },
   {
@@ -20,7 +20,7 @@ const config = {
   tagline: 'Today I Learned',
   url: 'https://til.qriositylog.com',
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'qriositylog', // Usually your GitHub org/user name.
