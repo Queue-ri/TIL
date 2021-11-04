@@ -24,4 +24,5 @@ What they contain is:
 2. Docs that have been initially written today
 3. Docs that have been updated today
 4. Update history link if the document is applicable to #3
+5. Repository path of the document
 ```
