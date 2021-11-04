@@ -7,14 +7,14 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NOCOLOR='\033[0m'
 
-TODAY=`date "+%Y-%m-%d"`
-YEAR=`date +'%Y'`
-MONTH=`date +'%m'`
+TODAY=`TZ=Asia/Seoul date "+%Y-%m-%d"`
+YEAR=`TZ=Asia/Seoul date +'%Y'`
+MONTH=`TZ=Asia/Seoul date +'%m'`
 FILE="../md/date/${YEAR}/${MONTH}/${TODAY}.md"
 FOLDER="../md/date/${YEAR}/${MONTH}"
 
-echo -e "\n${GREEN}** MDUPDATER by Queue-ri"
-echo -e "** configuring ${TODAY}.md...${NOCOLOR}"
+echo -e "\n${GREEN}** MDUPDATER by Queue-ri${NOCOLOR}"
+echo -e "${GREEN}** configuring ${TODAY}.md...${NOCOLOR}"
 
 find docs -name "*.md" > filepath_prelist # All md path. Root is not a .sh path
 touch filepath_list
@@ -53,4 +53,4 @@ done < filepath_list
 
 rm filepath_prelist
 rm filepath_list
-echo -e "${GREEN}** configuration done successfully!\n"
+echo -e "${GREEN}** configuration done successfully!\n${NOCOLOR}"
