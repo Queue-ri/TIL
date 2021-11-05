@@ -1,16 +1,16 @@
 {
-    "name": "Queue-ri's TIL",
-    "short_name": "TIL",
-    "theme_color": "#8088ff",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
-    "icons": [
-      {
-        "src": "img/icon/logo_161.png",
-        "sizes": "161x161",
-        "type": "image/png"
-      }
-    ]
-  }
+  "name": "Queue-ri's TIL",
+  "short_name": "TIL",
+  "theme_color": "#8088ff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "img/icon/logo_161.png",
+      "sizes": "161x161",
+      "type": "image/png"
+    }
+  ]
+}
