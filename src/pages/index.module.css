@@ -9,7 +9,7 @@
   position: relative;
   height: 95vh;
   overflow: hidden;
-  background-image: url("../../static/img/banner_background.jpg");
+  background-image: url("../../static/img/banner_background_comp.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 /*  background-attachment: fixed; */
