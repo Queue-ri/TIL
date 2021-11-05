@@ -6,8 +6,8 @@
 
 /* You can override the default Infima variables here. */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
-@import url('http://fonts.cdnfonts.com/css/segoe-ui-4');
+@import url('https://fonts.googleapis.com/earlyaccess/notosanskr.css');
+@import url('https://fonts.cdnfonts.com/css/segoe-ui-4');
 
 :root {
   --ifm-color-primary: #8088ff;
