@@ -100,7 +100,8 @@ html[data-theme='dark'] .header-github-link:before {
 }
 
 article {
-  max-width: 800px;
+  max-width: 850px;
+  margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -175,12 +176,27 @@ h6 {
   font-weight: bold;
   margin-left: -16px;
   padding-left: 12px;
+  padding-bottom: 2px;
 }
 
 /* Footer */
 .footer {
   background-color: #242526;
 }
+
+.footer__logo {
+  margin-top: 1rem;
+  max-width: 7rem;
+  opacity: 0.5;
+  transition: 0.8s;
+}
+.footer__logo:hover {
+  margin-top: 1rem;
+  max-width: 7rem;
+  opacity: 1;
+  transition: 0.8s;
+}
+
 .footer .container {
     max-width: 900px;
 }

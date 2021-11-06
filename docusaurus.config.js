@@ -22,7 +22,7 @@ const config = {
   baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/icon/favicon.ico',
   organizationName: 'qriositylog', // Usually your GitHub org/user name.
   projectName: 'TIL', // Usually your repo name.
   trailingSlash: false,
@@ -195,7 +195,26 @@ const config = {
               },
             ],
           },
+          {
+            title: 'Powered by',
+            items: [
+              {
+                html: `
+                  <img src="./static/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
+                `,
+              },
+              {
+                html: `
+                  <img src="./static/img/facebook_oss.png" alt="Built by Docusaurus" width="150px" style="margin-left:10px;" />
+                `,
+              },
+            ],
+          },
         ],
+        logo: {
+          alt: 'Queue-ri',
+          src: './static/img/logo.svg',
+        },
         copyright: `Copyright © ${new Date().getFullYear()} Queue-ri, All rights reserved.`,
       },
       prism: {
