@@ -200,12 +200,12 @@ const config = {
             items: [
               {
                 html: `
-                  <img src="./static/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
+                  <img src="./img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
                 `,
               },
               {
                 html: `
-                  <img src="./static/img/facebook_oss.png" alt="Built by Docusaurus" width="150px" style="margin-left:10px;" />
+                  <img src="./img/facebook_oss.png" alt="Built by Docusaurus" width="150px" style="margin-left:10px;" />
                 `,
               },
             ],
@@ -213,7 +213,7 @@ const config = {
         ],
         logo: {
           alt: 'Queue-ri',
-          src: './static/img/logo.svg',
+          src: './img/logo.svg',
         },
         copyright: `Copyright © ${new Date().getFullYear()} Queue-ri, All rights reserved.`,
       },

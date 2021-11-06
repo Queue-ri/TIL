@@ -38,7 +38,7 @@ function HomepageHeader() {
             
             img = new Image();
             // console.log("start loading.");
-            img.src = "/static/img/banner_background_resize.jpg";
+            img.src = "/img/banner_background_resize.jpg";
             
             img.onload = function () {
               /* replace img */
