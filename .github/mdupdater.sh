@@ -39,7 +39,7 @@ else
 fi
 
 while read filepath; do
-    pagepath=`echo ../../../${filepath%.*} | sed 's/docs/featured/'`
+    pagepath=`echo https://til.qriositylog.com/${filepath%.*} | sed 's/docs/featured/'`
     filedate=`grep "created_date" $filepath | cut -f2 -d " " | head -1` # should be a single space, not ":".
     fileupdate=`grep "updated_date" $filepath | cut -f2 -d " " | head -1`
     filetitle=`grep "title" $filepath | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
