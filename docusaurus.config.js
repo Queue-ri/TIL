@@ -200,12 +200,12 @@ const config = {
             items: [
               {
                 html: `
-                  <img src="./img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
+                  <img src="https://til.qriositylog.com/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
                 `,
               },
               {
                 html: `
-                  <img src="./img/facebook_oss.png" alt="Built by Docusaurus" width="150px" style="margin-left:10px;" />
+                  <img src="https://til.qriositylog.com/img/facebook_oss.png" alt="Built with Docusaurus" width="150px" style="margin-left:10px;" />
                 `,
               },
             ],
