@@ -7,13 +7,14 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NOCOLOR='\033[0m'
 
-TODAY=`TZ=Asia/Seoul date "+%Y-%m-%d"`
-YEAR=`TZ=Asia/Seoul date +'%Y'`
-MONTH=`TZ=Asia/Seoul date +'%m'`
+TODAY=`date -d "+9 hours" "+%Y-%m-%d"`
+YEAR=`date -d "+9 hours" +'%Y'`
+MONTH=`date -d "+9 hours" +'%m'`
 FILE="md/date/${YEAR}/${MONTH}/${TODAY}.md"
 FOLDER="md/date/${YEAR}/${MONTH}"
 
 echo -e "\n${GREEN}** MDUPDATER by Queue-ri${NOCOLOR}"
+date -d "+9 hours"
 echo -e "${GREEN}** configuring ${TODAY}.md...${NOCOLOR}"
 
 find docs -name "*.md" > .github/filepath_prelist # All md path. Root is not a .sh path
