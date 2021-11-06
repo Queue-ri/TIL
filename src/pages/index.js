@@ -75,7 +75,8 @@ export default function Home() {
   return (
     <Layout
       title={`Home`}
-      description="Description will go into a meta tag in <head />">
+      description="Welcome to Queue.ri's Today-I-Learned page."
+      image="https://til.qriositylog.com/img/banner_background_resize.jpg">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
