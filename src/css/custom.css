@@ -94,6 +94,15 @@ html[data-theme='dark'] .header-github-link:before {
   flex: auto;
 }
 
+@media (max-width: 429px) {
+  .navbar {
+    height: 3.3rem;
+  }
+  .navbar-sidebar__brand{
+    height: 3.3rem;
+  }
+}
+
 /* Header Dropdown Menu */
 .dropdown__link {
   font-size: inherit;
@@ -186,15 +195,22 @@ h6 {
 
 .footer__logo {
   margin-top: 1rem;
-  max-width: 7rem;
+  max-width: 6rem;
   opacity: 0.5;
   transition: 0.8s;
 }
 .footer__logo:hover {
-  margin-top: 1rem;
-  max-width: 7rem;
   opacity: 1;
   transition: 0.8s;
+}
+
+@media (max-width: 429px) {
+  .footer__logo {
+    margin-top: 1rem;
+    max-width: 5rem;
+    opacity: 0.5;
+    transition: 0.8s;
+  }
 }
 
 .footer .container {
