@@ -1,5 +1,5 @@
 {
-  "name": "@prism-custom/onelight",
+  "name": "@prism-custom/oneLight",
   "private": true,
   "sideEffects": false,
   "module": "oneLight.js",

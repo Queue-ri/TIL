@@ -3,8 +3,8 @@
 
 // const lightCodeTheme = require('prism-react-renderer/themes/vsLight');
 // const darkCodeTheme = require('prism-react-renderer/themes/palenight');
-const lightCodeTheme = require('./prism-custom/one-light/oneLight');
-const darkCodeTheme = require('./prism-custom/one-dark-pro-flat/onedarkproflat');
+const lightCodeTheme = require('./prism-custom/one-light/oneLight.js');
+const darkCodeTheme = require('./prism-custom/one-dark-pro-flat/oneDarkProFlat.js');
 const docNavItems = [
   {
     to: 'featured/pl/java/java-introduction',
