@@ -1,8 +1,10 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+// const lightCodeTheme = require('prism-react-renderer/themes/vsLight');
+// const darkCodeTheme = require('prism-react-renderer/themes/palenight');
+const lightCodeTheme = require('./prism-custom/one-light/oneLight');
+const darkCodeTheme = require('./prism-custom/one-dark-pro-flat/onedarkproflat');
 const docNavItems = [
   {
     to: 'featured/pl/java/java-introduction',
@@ -221,6 +223,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        additionalLanguages: ['java'],
       },
     }),
 };

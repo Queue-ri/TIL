@@ -1,0 +1,7 @@
+{
+  "name": "@prism-custom/onedarkproflat",
+  "private": true,
+  "sideEffects": false,
+  "module": "oneDarkProFlat.js",
+  "license": "MIT"
+}

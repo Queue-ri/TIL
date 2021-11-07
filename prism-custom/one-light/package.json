@@ -1,0 +1,7 @@
+{
+  "name": "@prism-custom/onelight",
+  "private": true,
+  "sideEffects": false,
+  "module": "oneLight.js",
+  "license": "MIT"
+}
