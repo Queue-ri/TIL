@@ -53,7 +53,7 @@ const config = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           // Please change this to your repo.
-          editUrl: 'https://github.com/Queue-ri/til/edit/main/docs/',
+          editUrl: 'https://github.com/Queue-ri/til/edit/main/',
         },
         blog: {
           showReadingTime: true,
@@ -104,7 +104,7 @@ const config = {
         path: './md/date',
         routeBasePath: 'date-tmp',
         sidebarPath: require.resolve('./sidebars-custom.js'),
-        editUrl: 'https://github.com/Queue-ri/til/edit/main/md/date/',
+        editUrl: 'https://github.com/Queue-ri/til/edit/main/',
       }, 
     ],
   ],
