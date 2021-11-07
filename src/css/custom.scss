@@ -8,6 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 @import url('https://fonts.googleapis.com/earlyaccess/notosanskr.css');
 @import url('https://fonts.cdnfonts.com/css/segoe-ui-4');
+@import url('https://fonts.cdnfonts.com/css/cascadia-mono');
 
 :root {
   --ifm-color-primary: #8088ff;
@@ -22,6 +23,11 @@
   --ifm-code-font-size: 95%;
   --ifm-global-shadow-md: 0px;  /* Remove shadow on the left */
   --ifm-toc-border-color: #ededed;
+  --ifm-code-background: #f2f2f2;
+  --ifm-code-padding-vertical: 1px;
+  --ifm-code-padding-horizontal: 4px;
+  --ifm-code-border-radius: 5px;
+  --ifm-font-family-monospace: 'Cascadia Mono', sans-serif;
 }
 
 /* Banner Button Style */
@@ -115,6 +121,16 @@ article {
   margin-right: auto;
 }
 
+code {
+  background-color: var(--ifm-code-background);
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--ifm-code-border-radius);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: var(--ifm-code-font-size);
+  padding: var(--ifm-code-padding-vertical) var(--ifm-code-padding-horizontal);
+  vertical-align: middle;
+}
+
 /* Announcement Bar 
 div[class^='announcementBarContent'] {
   background-color: var(--ifm-background-surface-color);
@@ -179,10 +195,16 @@ h6 {
 }
 
 /* Table of Content */
+.table-of-contents .table-of-contents__link {
+  color: var(--ifm-toc-link-color);
+  font-size: 14px;
+}
+
 .table-of-contents .table-of-contents__link--active {
   border-left: 4px solid var(--ifm-link-color);
   color: var(--ifm-color-primary);
   font-weight: bold;
+  font-size: 15px;
   margin-left: -16px;
   padding-left: 12px;
   padding-bottom: 2px;
