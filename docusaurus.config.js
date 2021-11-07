@@ -61,13 +61,14 @@ const config = {
           editUrl: 'https://github.com/Queue-ri/til/edit/main/blog/',
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve('./src/css/custom.scss'),
         },
       }),
     ],
   ],
 
   plugins: [
+    'docusaurus-plugin-sass',
     [
       '@docusaurus/plugin-pwa',
       {
