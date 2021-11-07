@@ -9,6 +9,7 @@
 @import url('https://fonts.googleapis.com/earlyaccess/notosanskr.css');
 @import url('https://fonts.cdnfonts.com/css/segoe-ui-4');
 @import url('https://fonts.cdnfonts.com/css/cascadia-mono');
+@import url('//cdn.rawgit.com/young-ha/webfont-archive/master/css/PureunJeonnam.css');
 
 :root {
   --ifm-color-primary: #8088ff;
@@ -19,11 +20,11 @@
   --ifm-color-primary-lighter: #b9beff;
   --ifm-color-primary-lightest: #f3f4ff;
   --site-primary-hue-saturation: 236,100%; /* Announcement Bar */
-  --ifm-font-family-base:system-ui,-apple-system,Noto Sans KR,sans-serif,"Segoe UI",Helvetica,Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";
+  --ifm-font-family-base: system-ui, -apple-system, "Noto Sans KR", "Segoe UI", Helvetica, Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
   --ifm-code-font-size: 95%;
   --ifm-global-shadow-md: 0px;  /* Remove shadow on the left */
   --ifm-toc-border-color: #ededed;
-  --ifm-code-background: #f2f2f2;
+  --ifm-code-background: #f6f7f8;
   --ifm-code-padding-vertical: 1px;
   --ifm-code-padding-horizontal: 4px;
   --ifm-code-border-radius: 5px;
@@ -119,6 +120,7 @@ article {
   margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
+  font-family: "PureunJeonnam", "Sans-serif";
 }
 
 code {
