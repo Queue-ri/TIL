@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import clsx from 'clsx';
 import styles from './HomepageFeatures.module.scss';
+import useOnScreen from './useOnScreen.js'
 
 const FeatureList = [
   {
@@ -24,9 +25,12 @@ const FeatureList = [
 ];
 
 function Feature({Svg, title, description}) {
-  // clsx('col col--3')
+  const ref = useRef(null);
+  const isOnScreen = useOnScreen(ref);
+  // console.log(isOnScreen);
+  // previous: clsx('col col--3')
   return (
-    <div className={clsx('col col')}>
+    <div className={['col', clsx(styles.col), isOnScreen?styles.animated:''].join(' ').trim()} ref={ref}>
       <div className="text--center">
         <Svg className={styles.featureSvg} alt={title} />
       </div>
