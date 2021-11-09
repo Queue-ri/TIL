@@ -34,6 +34,11 @@
   --ifm-font-family-monospace: 'Cascadia Mono', sans-serif;
 }
 
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
 /* Banner Button Style */
 @media (min-width: 430px) {
   .button--mg {
@@ -163,6 +168,29 @@ code {
   vertical-align: middle;
 }
 
+html[data-theme=light] p code, html[data-theme=light] li code {
+  background-color: rgba(128, 136, 255, 0.15);;
+  border: none;
+  border-radius: 8px;
+  color: #747eff;
+  display: inline-flex;
+  font-size: var(--ifm-code-font-size);
+  font-family: var(--ifm-font-family-monospace);
+  padding: 0px 7px;
+  vertical-align: middle;
+}
+html[data-theme=dark] p code, html[data-theme=dark] li code {
+  background-color: rgba(128, 136, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  color: #878fff;
+  display: inline-flex;
+  font-size: var(--ifm-code-font-size);
+  font-family: var(--ifm-font-family-monospace);
+  padding: 0px 7px;
+  vertical-align: middle;
+}
+
 /* Announcement Bar 
 div[class^='announcementBarContent'] {
   background-color: var(--ifm-background-surface-color);
@@ -224,6 +252,14 @@ h6 {
   article header h1 {
     font-size: 2.5rem !important;
   }
+}
+
+/* Pagination */
+.pagination-nav__link:hover{
+  background-color: rgba(128, 136, 255, .05);
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 10px rgb(128 136 255 / 40%);
+  transition: var(--ifm-transition-fast) var(--ifm-transition-timing-default);
 }
 
 /* Table of Content */
