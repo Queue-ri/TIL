@@ -11,7 +11,7 @@ import copy from 'copy-text-to-clipboard';
 import rangeParser from 'parse-numeric-range';
 import usePrismTheme from '@theme/hooks/usePrismTheme';
 import Translate, {translate} from '@docusaurus/Translate';
-import styles from './styles.module.css';
+import styles from './styles.module.scss';
 import {useThemeConfig, parseCodeBlockTitle} from '@docusaurus/theme-common';
 const HighlightLinesRangeRegex = /{([\d,-]+)}/;
 const HighlightLanguages = ['js', 'jsBlock', 'jsx', 'python', 'html'];
