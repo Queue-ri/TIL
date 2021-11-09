@@ -225,6 +225,12 @@ const config = {
         darkTheme: darkCodeTheme,
         additionalLanguages: ['bash','java'],
       },
+      algolia: {
+        apiKey: 'b7a1e2c35a7eec2662ce86440fa45a14',
+        indexName: 'til',
+        appId: 'NZLP2AD5K1',
+        contextualSearch: true,
+      },
     }),
 };
 
