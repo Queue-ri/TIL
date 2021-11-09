@@ -10,6 +10,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 @import url('https://fonts.cdnfonts.com/css/cascadia-mono');
 @import url('//cdn.rawgit.com/young-ha/webfont-archive/master/css/PureunJeonnam.css');
+@font-face {
+  font-family: 'Yoonwoo';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105@1.1/Yoonwoo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 // KR: unicode-range: U+AC00-D7A3;
 // EN: unicode-range: U+0041-005A, U+0061-007A;
@@ -110,7 +116,14 @@ html[data-theme='dark'] .header-github-link:before {
 }
 
 .navbar__title {
-  font-family: 'Varela Round', sans-serif;
+  font-family: 'Yoonwoo';
+  font-size: 25px;
+  //font-family: 'Varela Round', sans-serif;
+}
+
+.hero__title {
+  font-family: 'Yoonwoo' !important;
+  font-size: 75px !important;
 }
 
 /* Only links, except toggle button */
