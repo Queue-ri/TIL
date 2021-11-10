@@ -12,9 +12,11 @@
 @import url('//cdn.rawgit.com/young-ha/webfont-archive/master/css/PureunJeonnam.css');
 @font-face {
   font-family: 'Yoonwoo';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105@1.1/Yoonwoo.woff') format('woff');
+  src: url('https://objectstorage.ap-seoul-1.oraclecloud.com/n/cnfoego9ih3h/b/yoonwoo_woff/o/Yoonwoo.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
+  unicode-range: U+0027, U+0049, U+004C, U+0051, U+0054, U+0065-0075;
 }
 
 // KR: unicode-range: U+AC00-D7A3;
@@ -116,14 +118,8 @@ html[data-theme='dark'] .header-github-link:before {
 }
 
 .navbar__title {
-  font-family: 'Yoonwoo';
+  font-family: 'Yoonwoo', 'Varela Round', sans-serif;
   font-size: 25px;
-  //font-family: 'Varela Round', sans-serif;
-}
-
-.hero__title {
-  font-family: 'Yoonwoo' !important;
-  font-size: 75px !important;
 }
 
 /* Only links, except toggle button */
