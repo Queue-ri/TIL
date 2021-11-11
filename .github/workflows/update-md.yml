@@ -6,8 +6,8 @@ on:
             - main
 
 jobs:
-    update-md-and-deploy:
-        name: Write Markdown and Deploy
+    update-md:
+        name: Write Markdown
         runs-on: ubuntu-latest
         steps:
           - uses: actions/checkout@v2
@@ -17,10 +17,26 @@ jobs:
           - name: Push markdown file to repository
             run: ./.github/commit_push.sh
 
-          - name: Trigger Cloudflare Pages
-            uses: Cyb3r-Jak3/actions-cloudflare-pages@v1.0.1
-            with:
-              account: ${{ secrets.CLOUDFLARE_ID }}
-              project: ${{ secrets.CLOUDFLARE_PROJECT }}
-              email: ${{ secrets.CLOUDFLARE_EMAIL }}
-              global_token: ${{ secrets.CLOUDFLARE_KEY }}
+    deploy:
+        needs: update-md
+        name: Trigger Deployment
+        runs-on: ubuntu-latest
+        steps:
+            - name: Trigger Cloudflare Pages
+              uses: Cyb3r-Jak3/actions-cloudflare-pages@v1.0.1
+              with:
+                  account: ${{ secrets.CLOUDFLARE_ID }}
+                  project: ${{ secrets.CLOUDFLARE_PROJECT }}
+                  email: ${{ secrets.CLOUDFLARE_EMAIL }}
+                  global_token: ${{ secrets.CLOUDFLARE_KEY }}
+
+    trigger_scrapper:
+        needs: update-md
+        name: Trigger Scrapper
+        runs-on: ubuntu-latest
+        steps:
+            - uses: joelwmale/webhook-action@master
+            - name: Post hook
+              with:
+                  url: https://api.github.com/repos/Queue-ri/TIL/dispatches
+                  body: '{"event": "scrape", "repository": "Queue-ri/TIL"}'
