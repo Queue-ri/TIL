@@ -4,6 +4,7 @@ eng_title: 'Primitive Data Types of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '기본 자료형'
 created_date: 2021-11-08
+updated_date: 2021-11-12
 ---
 
 # Java의 기본 자료형
@@ -17,6 +18,13 @@ created_date: 2021-11-08
 - 논리: `boolean`
 
 ## Character
+
+자바의 문자형은 놀랍게도 크기가 2바이트입니다. 파이썬, 고랭같은 언어를 사용해오셨다면 별로 임팩트 있지 않겠지만, C/C++로 몸이 절여지신 분이라면 머리에 1바이트로 각인되어 있기 때문에 이부분이 색다르게 느껴지실 겁니다.
+
+그럼, 왜 하필 자바는 문자형을 2바이트로 정한 것일까요?
+
+그건 바로 자바가 내부적으로 UTF-16 인코딩을 사용하기 때문입니다. 
+
 ```java
 public class Main {
 	public static void main(String[] args) {
