@@ -1,4 +1,4 @@
-name: mdupdater
+name: CI
 
 on:
     push:
@@ -30,14 +30,14 @@ jobs:
                 email: ${{ secrets.CLOUDFLARE_EMAIL }}
                 global_token: ${{ secrets.CLOUDFLARE_KEY }}
 
-    trigger_scrapper:
+    docsearch-scraper:
         needs: update-md
-        name: Trigger Scraper
+        name: Docsearch Auto Scraper
         runs-on: ubuntu-latest
         steps:
-          - name: Post hook
-            uses: benc-uk/workflow-dispatch@v1
-            with:
-                workflow: Docsearch Auto Scraper
-                token: ${{ secrets.REPO_DISPATCH_TOKEN }}
-                inputs: '{ "ref": "${{ github.ref }}", "sha": "${{ github.sha }}" }'
+            - uses: actions/checkout@v2
+            - uses: darrenjennings/algolia-docsearch-action@master
+              with:
+                  algolia_application_id: ${{ secrets.DOCSEARCH_APP_ID }}
+                  algolia_api_key: ${{ secrets.DOCSEARCH_API_KEY }}
+                  file: 'algolia-config.json'
