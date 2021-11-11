@@ -36,7 +36,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
           - name: Post hook
-            uses: peter-evans/repository-dispatch@v1.1.3
+            uses: benc-uk/workflow-dispatch@v1
             with:
+                workflow: Docsearch Auto Scraper
                 token: ${{ secrets.REPO_DISPATCH_TOKEN }}
-                event-type: scrape
+                inputs: '{ "ref": "${{ github.ref }}", "sha": "${{ github.sha }}" }'
