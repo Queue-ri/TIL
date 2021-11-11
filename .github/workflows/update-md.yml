@@ -32,7 +32,7 @@ jobs:
 
     trigger_scrapper:
         needs: update-md
-        name: Trigger Scrapper
+        name: Trigger Scraper
         runs-on: ubuntu-latest
         steps:
           - name: Post hook

@@ -1,4 +1,4 @@
-name: Docsearch Auto Scrapper
+name: Docsearch Auto Scraper
 
 on:
     repository_dispatch:
@@ -6,12 +6,14 @@ on:
             - main
 
 jobs:
-    docsearch-scrapper:
+    docsearch-scraper:
         name: Run on pipenv
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/setup-python@v2
-            - name: Run docsearch-scrapper on pipenv shell
-              run: ./.github/docsearch-scrapper.sh ${{ secrets.DOCSEARCH_APP_ID }} \
-                                                   ${{ secrets.DOCSEARCH_API_KEY }} \
-                                                   'algolia-config.json'
+            - uses: actions/checkout@v2
+            - name: Run docsearch-scraper on pipenv shell
+              uses: actions/setup-python@v2
+              with:
+                  run: ./.github/docsearch_scraper.sh ${{ secrets.DOCSEARCH_APP_ID }} \
+                                                      ${{ secrets.DOCSEARCH_API_KEY }} \
+                                                      algolia-config.json
