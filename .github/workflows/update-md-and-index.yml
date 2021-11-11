@@ -30,13 +30,23 @@ jobs:
                 email: ${{ secrets.CLOUDFLARE_EMAIL }}
                 global_token: ${{ secrets.CLOUDFLARE_KEY }}
 
+    wait:
+        needs: deploy
+        name: Wait for the Deployment
+        runs-on: ubuntu-latest
+        steps:
+          - run: sleep 5m
+            shell: bash
+
     docsearch-scraper:
-        needs: update-md
+        needs: wait
         name: Docsearch Auto Scraper
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - uses: darrenjennings/algolia-docsearch-action@master
+
+            - name: Run docsearch scraper
+              uses: darrenjennings/algolia-docsearch-action@master
               with:
                   algolia_application_id: ${{ secrets.DOCSEARCH_APP_ID }}
                   algolia_api_key: ${{ secrets.DOCSEARCH_API_KEY }}
