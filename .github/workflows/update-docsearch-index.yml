@@ -11,9 +11,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - name: Run docsearch-scraper on pipenv shell
+
+            - name: Initialize python
               uses: actions/setup-python@v2
-              with:
-                  run: ./.github/docsearch_scraper.sh ${{ secrets.DOCSEARCH_APP_ID }} \
-                                                      ${{ secrets.DOCSEARCH_API_KEY }} \
-                                                      algolia-config.json
+
+            - name: Run docsearch-scraper on pipenv shell
+              run: ./.github/docsearch_scraper.sh ${{ secrets.DOCSEARCH_APP_ID }} \
+                                                  ${{ secrets.DOCSEARCH_API_KEY }} \
+                                                  algolia-config.json
