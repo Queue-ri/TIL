@@ -35,8 +35,8 @@ jobs:
         name: Trigger Scrapper
         runs-on: ubuntu-latest
         steps:
-            - uses: joelwmale/webhook-action@master
             - name: Post hook
+              uses: joelwmale/webhook-action@master
               with:
                   url: https://api.github.com/repos/Queue-ri/TIL/dispatches
                   body: '{"event": "scrape", "repository": "Queue-ri/TIL"}'
