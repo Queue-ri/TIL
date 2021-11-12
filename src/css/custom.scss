@@ -177,7 +177,7 @@ code {
   vertical-align: middle;
 }
 
-html[data-theme=light] p code, html[data-theme=light] li code {
+html[data-theme=light] p code:not(.admonition-content p code), html[data-theme=light] li code {
   background-color: rgba(128, 136, 255, 0.15);;
   border: none;
   border-radius: 8px;
@@ -188,7 +188,7 @@ html[data-theme=light] p code, html[data-theme=light] li code {
   padding: 0px 7px;
   vertical-align: middle;
 }
-html[data-theme=dark] p code, html[data-theme=dark] li code {
+html[data-theme=dark] p code:not(.admonition-content p code), html[data-theme=dark] li code {
   background-color: rgba(128, 136, 255, 0.2);
   border: none;
   border-radius: 8px;
