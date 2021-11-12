@@ -14,6 +14,10 @@ const docNavItems = [
     to: 'featured/backend/spring/spring_main',
     label: 'Backend',
   },
+  {
+    to: 'featured/english/dev-vocab/a',
+    label: 'English',
+  },
 ];
 
 /** @type {import('@docusaurus/types').Config} */

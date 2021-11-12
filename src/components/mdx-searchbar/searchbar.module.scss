@@ -1,0 +1,86 @@
+$cornflower-blue: #6078EA;
+$tundora: #4B4848;
+$snappy:  cubic-bezier(0.694,  0.048, 0.335, 1.000);
+
+.SearchbarBackground {
+    width: 100%;
+    height: 100px;
+    background-image: linear-gradient(-90deg, #CF77F3 0%, #009BFF 47%, #2AC9DB 100%);
+}
+
+.titleContainer {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+}
+
+.title {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    transition-delay: 0.25s;
+    margin: 0;
+    color: $cornflower-blue;
+}
+
+.titleDown {
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    transition-delay: 0.25s;
+    margin: 0;
+    color: $cornflower-blue;
+}
+
+.fieldContainer {
+    position: relative;
+    padding: 0;
+    margin: 0 auto;
+    border: 0;
+    width: 330px;
+    height: 40px;
+}
+
+.field {
+    top: 50%;
+    transform: translateY(50%);
+    border: 0;
+    width: 100%;
+    height: 50px;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 3px;
+    box-shadow: 0px 8px 15px rgba($tundora, 0.1);
+    transition: all 0.4s ease;
+    &:focus {
+        outline: none;
+        box-shadow: 0px 9px 20px rgba($tundora, 0.35);
+        + .iconsContainer {
+            opacity: 1;
+        }
+    }
+}
+
+.iconsContainer {
+    position: absolute;
+    top: 60%;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+    overflow: hidden;
+    opacity: 0.5;
+    transform: translateY(50%);
+    transition: opacity 0.25s ease, transform 0.43s $snappy;
+}
+
+.iconSearch {
+    position: relative;
+    top: 5px;
+    left: 8px;
+    width: 50%;
+    height: 50%;
+    transition: opacity 0.25s ease, transform 0.43s $snappy;
+}
