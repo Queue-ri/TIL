@@ -17,7 +17,7 @@ echo -e "\n${GREEN}** MDUPDATER by Queue-ri${NOCOLOR}"
 date -d "+9 hours"
 echo -e "${GREEN}** configuring ${TODAY}.md...${NOCOLOR}"
 
-find docs -name "*.md" > .github/filepath_prelist # All md path. Root is not a .sh path
+find docs -name "*.md" -o -name "*.mdx" > .github/filepath_prelist # All md(x) path. Root is not a .sh path
 touch .github/filepath_list
 
 while read filepath; do
