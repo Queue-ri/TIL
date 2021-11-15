@@ -4,7 +4,7 @@ eng_title: 'Array of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '배열'
 created_date: 2021-11-11
-updated_date: 2021-11-14
+updated_date: 2021-11-15
 ---
 
 # Java의 배열
@@ -46,4 +46,21 @@ String[] srr = {"대학생학대는", "거꾸로읽어도", "대학생학대"};
 ```java
 int[][] crr = new int[2][3];
 int[][] drr = { {9, 5, 0}, {5, 2, 4} };
+```
+<br />
+
+## 배열 길이 확인
+
+배열의 길이는 `length`로 확인할 수 있습니다.
+
+```java
+public class Main {
+	public static void main(String[] args) {
+        int[] arr = {1,2,3,4,5,6,7};
+        System.out.print(arr.length);
+    }
+}
+```
+```text title=결과
+7
 ```
