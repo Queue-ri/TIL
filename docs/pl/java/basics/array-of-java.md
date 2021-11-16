@@ -4,7 +4,7 @@ eng_title: 'Array of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '배열'
 created_date: 2021-11-11
-updated_date: 2021-11-15
+updated_date: 2021-11-16
 ---
 
 # Java의 배열
@@ -63,4 +63,74 @@ public class Main {
 ```
 ```text title=결과
 7
+```
+<br />
+
+## 배열 출력
+
+배열 출력은 C/C++에서 했던 것처럼 `for` 노가다를 사용해도 되지만, 자바의 `Arrays` 클래스에서 기본적으로 제공하는 `toString` 함수를 사용할 수도 있습니다. 어느쪽이든 편한대로 사용하면 됩니다.
+
+:::note
+
+toString 메소드를 사용하려면 `java.util.Arrays` 또는 `java.util.*`을 import 해야 합니다.
+
+:::
+
+```java
+import java.util.*;
+
+public class Main {
+	public static void main(String[] args) {
+        int[] arr = {1,2,3,4,5,6,7};
+        System.out.print(Arrays.toString(arr));
+    }
+}
+```
+```text title=결과
+[1, 2, 3, 4, 5, 6, 7]
+```
+<br />
+
+### 출력 포맷 변경
+:::tip
+
+***toString으로 출력한 포맷이 마음에 안들어요!***
+
+`replace` 노가다로 출력 포맷을 수정할 수 있습니다.
+
+:::
+
+```java
+import java.util.*;
+
+public class Main {
+	public static void main(String[] args) {
+        int[] arr = {1,2,3,4,5,6,7};
+        System.out.print(Arrays.toString(arr).replace(",", " *").replace("[", "").replace("]", ""));
+    }
+}
+```
+```text title=결과
+1 * 2 * 3 * 4 * 5 * 6 * 7
+```
+<br />
+
+## 배열 복사
+
+배열 복사 역시 for 노가다로 해결할 수 있지만, 관련하여 `System` 클래스의 `arraycopy`가 제공되고 있습니다.
+
+다만 source 파라미터가 destination보다 앞에 위치하여 정의된 형태로, C/C++의 convention과는 조금 다릅니다.
+
+```java
+public class Main {
+	public static void main(String[] args) {
+        char[] des = {'최','고','의',' ','언','어',' ','R','u','s','t','?'};
+	    char[] src = {'최','고','의',' ','레','거','시',' ','J','a','v','a','!'};
+	    System.arraycopy(src, 8, des, 7, 5);
+        System.out.print(des);
+    }
+}
+```
+```text title=결과
+최고의 언어 Java!
 ```
