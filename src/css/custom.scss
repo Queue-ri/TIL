@@ -7,9 +7,17 @@
 /* You can override the default Infima variables here. */
 // @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,500;0,600;1,500;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap'); // 'Noto Sans KR', sans-serif; */
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 @import url('https://fonts.cdnfonts.com/css/cascadia-mono');
 @import url('//cdn.rawgit.com/young-ha/webfont-archive/master/css/PureunJeonnam.css');
+@font-face {
+  font-family: 'Varela Round';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/varelaround/v13/w8gdH283Tvk__Lua32TysjIfp8uP.woff2) format('woff2');
+  unicode-range: U+0000-007F;
+}
 @font-face {
   font-family: 'Yoonwoo';
   src: url('https://objectstorage.ap-seoul-1.oraclecloud.com/n/cnfoego9ih3h/b/yoonwoo_woff/o/Yoonwoo.woff') format('woff');
@@ -31,7 +39,7 @@
   --ifm-color-primary-lighter: #b9beff;
   --ifm-color-primary-lightest: #f3f4ff;
   --site-primary-hue-saturation: 236,100%; /* Announcement Bar */
-  --ifm-font-family-base: system-ui, -apple-system, Arial, sans-serif, 'Varela Round', sans-serif, 'Noto Sans KR', sans-serif;
+  --ifm-font-family-base: system-ui, -apple-system;
   --ifm-code-font-size: 95%;
   --ifm-global-shadow-md: 0px;  /* Remove shadow on the left */
   --ifm-toc-border-color: #ededed;
@@ -39,7 +47,7 @@
   --ifm-code-padding-vertical: 1px;
   --ifm-code-padding-horizontal: 4px;
   --ifm-code-border-radius: 5px;
-  --ifm-font-family-monospace: 'Cascadia Mono', sans-serif;
+  --ifm-font-family-monospace: 'Cascadia Mono', 'Noto Sans KR', sans-serif;
 }
 
 body {
@@ -130,7 +138,7 @@ html[data-theme='dark'] .header-github-link:before {
   font-family: 'Varela Round', sans-serif;
 }
 .main-wrapper {
-    font-family: 'Varela Round', sans-serif;
+    font-family: 'Varela Round', 'Noto Sans KR', sans-serif;
 }
 .main-wrapper h1,
 h2,
@@ -138,7 +146,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Varela Round', sans-serif, system-ui, -apple-system;
+  font-family: 'Varela Round', 'Noto Sans KR', sans-serif, system-ui, -apple-system;
 }
 
 @media (max-width: 429px) {
@@ -242,11 +250,13 @@ div[class^=announcementBar_] {
 }
 
 /* Don't make headers so big */
-.markdown > h2,
+.markdown > h1,
+h2,
 h3,
 h4,
 h5,
 h6 {
+  font-family: 'Varela Round', 'Noto Sans KR', sans-serif, system-ui, -apple-system;
   // --ifm-h2-font-size: inherit !important;
   --ifm-h3-font-size: inherit !important;
   --ifm-h4-font-size: inherit !important;
