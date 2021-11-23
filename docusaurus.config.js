@@ -18,6 +18,10 @@ const docNavItems = [
     to: 'featured/english/dev-vocab/a',
     label: 'English',
   },
+  {
+    to: 'featured/infra/setting-redirection-in-apache-server-with-oracle-cloud',
+    label: 'Infra',
+  },
 ];
 
 /** @type {import('@docusaurus/types').Config} */
