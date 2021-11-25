@@ -7,6 +7,31 @@ var theme = {
     "backgroundColor": "#fafafa"
   },
   "styles": [
+    { // new
+      "types": [
+        "tag",
+        "property"
+      ],
+      "style": {
+        "color": "rgb(166, 38, 164)"
+      }
+    },
+    { // modified
+      "types": [
+        "variable"
+      ],
+      "style": {
+        "color": "rgb(1, 132, 188)"
+      }
+    },
+    { // new
+      "types": [
+        "regex"
+      ],
+      "style": {
+        "color": "rgb(80, 161, 79)"
+      }
+    },
     {
       "types": [
         "comment"
@@ -56,7 +81,6 @@ var theme = {
     },
     {
       "types": [
-        "variable",
         "tag",
         "deleted"
       ],

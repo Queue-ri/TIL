@@ -7,6 +7,31 @@ var theme = {
     "backgroundColor": "#282c34"
   },
   "styles": [
+    { // new
+      "types": [
+        "tag",
+        "property"
+      ],
+      "style": {
+        "color": "rgb(198, 120, 221)"
+      }
+    },
+    { // modified
+      "types": [
+        "variable"
+      ],
+      "style": {
+        "color": "rgb(86, 182, 194)"
+      }
+    },
+    { // new
+      "types": [
+        "regex"
+      ],
+      "style": {
+        "color": "rgb(152, 195, 121)"
+      }
+    },
     {
       "types": [
         "punctuation",
@@ -20,7 +45,6 @@ var theme = {
     },
     {
       "types": [
-        "variable",
         "keyword",
         "selector"
       ],
