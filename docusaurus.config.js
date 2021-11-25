@@ -4,6 +4,7 @@
 // const lightCodeTheme = require('prism-react-renderer/themes/vsLight');
 // const darkCodeTheme = require('prism-react-renderer/themes/palenight');
 const lightCodeTheme = require('./prism-custom/one-light/oneLight.js');
+// const lightCodeTheme = require('prism-react-renderer/themes/okaidia');
 const darkCodeTheme = require('./prism-custom/one-dark-pro-flat/oneDarkProFlat.js');
 const docNavItems = [
   {
@@ -231,7 +232,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ['bash','java'],
+        additionalLanguages: ['bash','java','apacheconf'],
       },
       algolia: {
         apiKey: 'b7a1e2c35a7eec2662ce86440fa45a14',
