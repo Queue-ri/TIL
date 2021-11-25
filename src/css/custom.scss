@@ -284,6 +284,7 @@ h6 {
 /* Table of Content */
 .table-of-contents .table-of-contents__link {
   color: var(--ifm-toc-link-color);
+  transition: font-size 120ms ease-out, color 100ms linear;
   font-size: 14px;
 }
 
