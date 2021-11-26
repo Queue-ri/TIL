@@ -4,7 +4,7 @@ eng_title: 'Java OOP 1: Class and Instance'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '객체지향 1: 클래스와 인스턴스'
 created_date: 2021-11-16
-updated_date: 2021-11-24
+updated_date: 2021-11-26
 ---
 
 # Java 객체지향 1: 클래스와 인스턴스
@@ -108,51 +108,79 @@ public class Main {
 ```
 <br />
 
-## 세 가지 변수 종류
+## 클래스, 인스턴스, 지역 변수
 
 ### 클래스 변수
+
+모든 인스턴스가 공유하는 변수입니다. `static` 키워드를 붙여 선언하며, 인스턴스를 생성하지 않아도 `클래스명.클래스변수` 형태로 접근하여 사용할 수 있습니다. 클래스 사용 시 JVM의 메서드 영역에 생성됩니다.
+
 ### 인스턴스 변수
+
+각각의 인스턴스가 독립적으로 가지는 변수입니다. 인스턴스 생성 시 JVM의 힙에 생성됩니다.
+
 ### 지역 변수
 
+생성자, 멤버 함수 등에서 선언되는 변수입니다. 함수 호출 시 JVM의 콜 스택에 생성됩니다.
+
+:::info
+
+예시 코드는 하단의 [변수와 메서드 예제](#%EB%B3%80%EC%88%98%EC%99%80-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%98%88%EC%A0%9C)를 확인하세요.
+
+:::
+
+<br />
+
+## 클래스, 인스턴스 메서드
+
+### 클래스 메서드
+
+`static` 키워드를 붙여 선언합니다.
+
+인스턴스 생성 없이도 사용 가능하기에, 클래스 메서드에서 인스턴스 변수를 사용하면 안되겠죠 ^~^
+
+그 대신, 클래스 메서드는 인스턴스 메서드보다 호출 시간이 짧아 성능 면에서 유리합니다.
+
+
+### 인스턴스 메서드
+
+인스턴스 생성 시점부터 사용 가능한 함수입니다. 인스턴스 메서드에선 클래스 변수를 사용할 수 있습니다.
+
+<br />
+
+## 변수와 메서드 예제
 ```java
 class Unit {
     // 클래스 변수
-    private static int attackLv = 0;
-    
+    static int attackLv = 0;
     // 인스턴스 변수
-    int damage;
-    int hp;
+    private int damage;
+    private int hp;
 
     public Unit(int dmg, int hp) {
         // 지역 변수를 인스턴스 변수에 할당
         damage = dmg;
         this.hp = hp;
     }
-
-    public int getAttackLv() {
+    // 클래스 메서드
+    public static int getAttackLv() {
         return attackLv;
-    }
-
-    public static void upgradeAttack() {
-        attackLv += 1;
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Unit unit1 = new Unit(80, 300);
-        Unit unit2 = new Unit(50, 200);
-        System.out.println("unit1:" + unit1.getAttackLv() + " unit2:" + unit2.getAttackLv());
+        Unit[] unit = new Unit[2];
+	    unit[0] = new Unit(80, 300);
+        unit[1] = new Unit(50, 200);
+        System.out.println("unit[0]:" + unit[0].getAttackLv() + " unit[1]:" + unit[1].getAttackLv());
 
-        Unit.upgradeAttack(); // 모든 Unit의 공격력 업그레이드
-        System.out.println("unit1:" + unit1.getAttackLv() + " unit2:" + unit2.getAttackLv());
+        Unit.attackLv += 1; // 모든 Unit의 공격력 업그레이드
+        System.out.println("unit[0]:" + unit[0].getAttackLv() + " unit[1]:" + unit[1].getAttackLv());
     }
 }
 ```
 ```text title=결과
-unit1:0 unit2:0
-unit1:1 unit2:1
+unit[0]:0 unit[1]:0
+unit[0]:1 unit[1]:1
 
 ```
-
-<br />
