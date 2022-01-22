@@ -20,6 +20,10 @@ const docNavItems = [
     label: 'Infra',
   },
   {
+    to: 'featured/git/github-action/aoji-for-integration-dev-note',
+    label: 'Git',
+  },
+  {
     to: 'featured/english/dev-vocab/a',
     label: 'English',
   },
