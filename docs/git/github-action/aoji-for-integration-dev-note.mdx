@@ -1,0 +1,48 @@
+---
+title: 'AOJ for Integration 개발 노트'
+eng_title: 'AOJ for Integration dev note'
+image: https://til.qriositylog.com/img/m_banner_background.jpg
+created_date: 2022-01-22
+---
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+## 개발 일자
+
+- `21-01-15`: bash, python script 작성
+- `21-01-16`: GitHub yaml script 작성 및 버그 테스트
+
+## 개발 동기
+
+알고리즘 문제 해결 전략(종만북) 스터디 내용을 [Advanced-Algorithm-Study](https://github.com/Queue-ri/Advanced-Algorithm-Study)에 기록하고 있습니다. 해당 repo에는 AC를 받은 코드만 커밋되어 있는데, 이러한 아카이브 성향으로 인해 repo가 정적으로 느껴지고, README를 꾸며도 코드의 신뢰도가 잘 와닿지 않았습니다.
+
+따라서 CI를 하나 구축하여 이 repo가 체계적으로 관리되고 있음을 드러내고자 했습니다.
+
+## 어떤 CI를 구축할까?
+
+다음의 후보군들이 있었습니다.
+
+1. 코드 linter
+2. 코드 compiler
+3. 알고스팟(AOJ) 채점기
+
+이 repo는 PS 목적이기에 1번의 linter를 돌리기엔 부적절하다 판단했습니다. PS는 협업이 아니라서 딱히 클린코드를 생각하진 않기 때문입니다.
+
+2번은 다른 repo에서 구축한 것을 본 적 있습니다. 만들기엔 간단하나 굳이? 싶었습니다. 오직 CTE 밖에 못 잡으므로...
+
+3번은 평소에도 *이런 거 하나 있었음 좋겠다* 싶은 제 아이디어였습니다. 이번에 만들어보지 않으면 다음에는 기회가 없겠다 싶어서 이걸 선택했습니다.
+
+## 고려할 사항
+
+알고스팟 채점기를 구현하려면 추가로 고려할 점들이 있습니다.
+
+- commit 정보를 복잡한 과정 없이 가져올 수 있는지?
+- AOJ 서버에 부하가 가지 않을지?
+
+commit 정보는 최악의 경우 git 로그나 html을 파싱해서 가져오는 조악한(?) 방법을 우려했으나, 다행히 git 명령어 한 줄로 해결할 수 있었습니다. ~~*(고마워요 구글신!)*~~
+
+한편, 알고스팟 서버가 제 소유도 아니고 비교적 느리기 때문에 매 커밋마다 모든 코드를 검토(제출)하는 식의 일반적인 CI 방식 적용은 어렵다고 생각했습니다. 다행히 알고스팟은 백준보다 채점 변동사항이 현저히 적어서 이 부분은 직접적으로 해당 코드 파일이 커밋될 때만 제출하는 것으로 간소화했습니다.
+
+## 플로우 차트
+
+<iframe style={{border:'none'}} width="800" height="450" src="https://whimsical.com/embed/VVKingnKXhtiYsi3bKfAt7"></iframe>
