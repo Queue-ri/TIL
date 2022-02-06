@@ -16,6 +16,7 @@ import TOCCollapsible from '@theme/TOCCollapsible';
 import Heading from '@theme/Heading';
 import styles from './styles.module.scss';
 import {ThemeClassNames, useWindowSize} from '@docusaurus/theme-common';
+import Comment from './custom-component/utterances';
 export default function DocItem(props) {
   const {content: DocContent} = props;
   const {metadata, frontMatter} = DocContent;
@@ -91,6 +92,7 @@ export default function DocItem(props) {
             </article>
 
             <DocPaginator previous={metadata.previous} next={metadata.next} />
+            <Comment />
           </div>
         </div>
         {renderTocDesktop && (

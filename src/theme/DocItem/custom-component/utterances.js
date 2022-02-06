@@ -1,10 +1,10 @@
 import React, {useEffect, useRef} from 'react';
-import useThemeContext from '@theme/hooks/useThemeContext';
+import {useColorMode} from '@docusaurus/theme-common';
 
 const utterancesSelector = 'iframe.utterances-frame';
 
 function Comment() {
-  const {isDarkTheme} = useThemeContext();
+  const {isDarkTheme} = useColorMode();
   const utterancesTheme = isDarkTheme ? 'photon-dark' : 'github-light';
   const containerRef = useRef(null);
 
