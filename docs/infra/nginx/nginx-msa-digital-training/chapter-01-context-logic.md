@@ -18,7 +18,8 @@ created_date: 2022-03-01
 - `nginx -t`: configuration syntax 검사 (테스트, 보통 push 전에 사용)
 - `nginx -T`: 인스턴스의 현재 configuration 확인
 - `nginx -s reload`: configuration 파일을 인스턴스로 push
--t, -T는 sudo 권한 필요함
+
+-t, -T는 sudo 권한이 필요합니다.
 
 ## Configuration 파일 위치
 - main configuration 파일 경로: `/etc/nginx/nginx.conf`
@@ -27,7 +28,7 @@ created_date: 2022-03-01
 ## Context 구조 및 설명
 **configuration = context + directives**
 
-각 configuration은 한 개의 Main, HTTP context를 가진다.
+각 configuration은 한 개의 Main, HTTP context를 가집니다.
 
 ### Context 구조 개요
 - **Main**
@@ -85,4 +86,4 @@ virtual server(프로세스가 http 요청 받는 가상 호스트) 정의
 directive들이 중괄호로 묶인 영역
 
 ## 주의사항
-NGINX는 `include` directive로 configuration들을 읽을 때 알파벳 순으로 읽어들인다.
+NGINX는 `include` directive로 configuration들을 읽을 때 알파벳 순으로 읽어들입니다.
