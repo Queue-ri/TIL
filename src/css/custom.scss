@@ -208,6 +208,19 @@ html[data-theme=dark] p code:not(.admonition-content p code), html[data-theme=da
   vertical-align: middle;
 }
 
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 /* Announcement Bar 
 div[class^='announcementBarContent'] {
   background-color: var(--ifm-background-surface-color);
