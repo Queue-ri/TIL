@@ -5,6 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 2
 sidebar_label: '02장'
 created_date: 2022-02-06
+updated_date: 2022-03-01
 ---
 
 # 02장 정리
@@ -133,3 +134,35 @@ public class HelloControllerTest {
 책에서는 JUnit4 기준으로 `RunWith`, `SpringRunner`를 사용하고 있지만, 이는 JUnit5에서 각각 `ExtendWith`, `SpringExtension`으로 변경되었으므로 작성 시 유의합니다.
 
 그 다음 코드에 하이라이팅 되어있는 라인의 ▶ 버튼을 눌러 Test 클래스를 Run 합니다. 이후 ✔️*Tests Passed* 표시가 뜨면 테스트를 통과한 것입니다.
+
+## 4. 롬복
+
+### 롬복이란?
+Getter, Setter, 기본생성자, toString 등을 어노테이션으로 자동 생성해주는 자바 라이브러리
+
+### 롬복 설치하기
+#### 라이브러리 설치
+dependencies에 다음의 코드를 추가합니다.
+
+```java title=build.gradle
+implementation 'org.projectlombok:lombok'
+```
+
+#### 플러그인 설치
+*`Settings` > `Plugins` (또는 ctrl + shift + A > Plugins) 에서 install 하라고 나와있지만 이미 되어있네..'ㅁ'?*
+
+#### 어노테이션 기능 활성화
+hoxy..? 하면서 `Settings` > `Build, Execution, Deployment` > `Compiler` > `Annotation Processors`를 확인해봅니다.
+
+- [ ] Enable annotation processing
+
+그럼 그렇지, 인텔리제이에 지성이 깃들었을리가 없습니다. 체크해줍시다.
+
+### 롬복으로 전환하기
+WAS를 실행하지 않고, 테스트 코드로 검증해봅니다.
+
+`src` > `test` > `java` 에 이전의 패키지를 그대로 생성한 후, 해당 패키지에 테스트 클래스를 생성합니다. <br />
+테스트 클래스명은 일반적으로 *대상 클래스명 + Test* 로 짓습니다.
+
+클래스가 생성되었다면 하단의 코드를 작성해줍니다.
+
