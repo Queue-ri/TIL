@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 2
 sidebar_label: '02장'
 created_date: 2022-02-06
-updated_date: 2022-03-01
+updated_date: 2022-03-15
 ---
 
 # 02장 정리
@@ -99,9 +99,8 @@ WAS를 실행하지 않고, 테스트 코드로 검증해봅니다.
 클래스가 생성되었다면 하단의 코드를 작성해줍니다.
 
 ```java {18} title=HelloControllerTest.java
-package com.hellspring;
+package com.hellspring.web;
 
-import com.hellspring.web.HelloController;
 import org.junit.jupiter.api.Test;
 // import org.junit.runner.RunWith;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -159,10 +158,70 @@ hoxy..? 하면서 `Settings` > `Build, Execution, Deployment` > `Compiler` > `An
 그럼 그렇지, 인텔리제이에 지성이 깃들었을리가 없습니다. 체크해줍시다.
 
 ### 롬복으로 전환하기
-WAS를 실행하지 않고, 테스트 코드로 검증해봅니다.
+안전하게 롬복으로 전환하기 위해 여기서도 테스트 코드를 사용합니다.
 
-`src` > `test` > `java` 에 이전의 패키지를 그대로 생성한 후, 해당 패키지에 테스트 클래스를 생성합니다. <br />
-테스트 클래스명은 일반적으로 *대상 클래스명 + Test* 로 짓습니다.
+#### Dto 클래스 생성하기
+`src` > `main` > `java` > `...` > `web` 의 하위에 `dto`를 생성한 후, 해당 패키지에 `HelloResponseDto` 클래스를 생성합니다.
 
-클래스가 생성되었다면 하단의 코드를 작성해줍니다.
+```java title=HelloResponseDto.java
+package com.hellspring.web.dto;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public class HelloResponseDto {
+    private final String name;
+    private final int amount;
+}
+```
+#### Getter
+- 선언된 모든 필드의 get 메소드 생성
+
+#### RequiredArgsConstructor
+- final로 선언된 필드에 한해 생성자 생성
+
+### Dto에 적용한 롬복 테스트하기
+`src` > `test` > `java` > `...` > `web` > `dto` 패키지에 `HelloResponseDtoTest` 클래스를 생성합니다.
+
+```java title=HelloResponseDtoTest.java
+package com.hellspring.web.dto;
+
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class HelloResponseDtoTest {
+    @Test
+    public void lombok_test() {
+        String name = "test";
+        int amount = 1000;
+
+        HelloResponseDto dto = new HelloResponseDto(name, amount);
+
+        assertThat(dto.getName()).isEqualTo(name);
+        assertThat(dto.getAmount()).isEqualTo(amount);
+    }
+}
+```
+
+#### assertThat
+- 테스트 라이브러리 assertj의 테스팅 메소드
+- 테스트 대상 = 파라미터
+- 메소드 체이닝 ok (isEqualTo 등 뒤에 이어붙이기 가능)
+
+### Controller에 Dto 추가하기
+HelloController.java에 다음의 코드를 추가합니다.
+
+```java
+@GetMapping("/hello/dto")
+public HelloResponseDto helloDto(@RequestParam("name") String name,
+									@RequestParam("amount") int amount) {
+	return new HelloResponseDto(name, amount);
+}
+```
+
+#### RequestParam
+- 외부에서 API로 넘긴 파라미터를 가져옵니다.
+
+### 추가한 API 테스트하기
