@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 2
 sidebar_label: '02장'
 created_date: 2022-02-06
-updated_date: 2022-03-15
+updated_date: 2022-03-24
 ---
 
 # 02장 정리
@@ -225,3 +225,40 @@ public HelloResponseDto helloDto(@RequestParam("name") String name,
 - 외부에서 API로 넘긴 파라미터를 가져옵니다.
 
 ### 추가한 API 테스트하기
+```java title=HelloControllerTest.java
+...
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.is;
+
+...
+public class HelloControllerTest {
+    ...
+
+    @Test
+	public void return_helloDto() throws Exception {
+		String name = "hello";
+		int amount = 1000;
+
+		mvc.perform(
+				get("/hello/dto")
+					.param("name", name)
+					.param("amount", String.valueOf(amount)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.name", is(name)))
+				.andExpect(jsonPath("$.amount", is(amount)));
+	}
+}
+
+```
+
+#### param
+- API 테스트에 사용될 request 파라미터를 설정
+- String 값만 허용하기에, 숫자/날짜 등의 데이터는 문자열로 변환하여 넘겨주어야 합니다.
+
+#### jsonPath
+- json 응답값을 필드 별로 검증할 수 있는 메소드
+- $를 기준으로 필드명 명시
+
+이제 ▶ 버튼을 눌러 추가한 테스트를 실행해봅니다. ✔️*Tests Passed* 표시가 뜨나요? 그럼 드디어 챕터 2가 끝났습니다!
+
+~~불시에 gradle dependency가 맛가도 샷건치지 않고 묵묵히 고치는 나에게 칭찬합니다~~
