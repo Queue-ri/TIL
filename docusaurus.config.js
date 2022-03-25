@@ -16,6 +16,10 @@ const docNavItems = [
     label: 'Backend',
   },
   {
+    to: 'featured/devops/jenkins/setting-jenkins-server-with-oracle-cloud',
+    label: 'DevOps',
+  },
+  {
     to: 'featured/infra/setting-redirection-in-apache-server-with-oracle-cloud',
     label: 'Infra',
   },
