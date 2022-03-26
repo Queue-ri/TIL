@@ -56,7 +56,42 @@ domain 패키지 하위에 `posts` 패키지, 그 안에 `Posts` 클래스를 �
 ### 엔티티 생성
 Posts 클래스에 다음의 코드를 작성합니다.
 ```java
+package com.hellspring.domain.posts;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Getter
+@NoArgsConstructor
+@Entity
+
+public class Posts {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 500, nullable = false)
+    private String title;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String content;
+
+    private String author;
+
+    @Builder
+    public Posts(String title, String content, String author) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+    }
+}
 ```
 **Posts 클래스는 실제 DB 테이블과 매칭**되는 클래스이며, Entity 클래스라고도 합니다.
 
