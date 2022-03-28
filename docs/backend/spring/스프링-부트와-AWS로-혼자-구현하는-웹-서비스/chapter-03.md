@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 3
 sidebar_label: '03장'
 created_date: 2022-03-25
-updated_date: 2022-03-27
+updated_date: 2022-03-28
 ---
 
 # 03장 정리
@@ -230,6 +230,16 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialec
 2. API 요청 받을 Controller
 3. 트랜잭션과 도메인 기능 간 순서 보장하는 Service
 
-이 책에선 도메인이 비즈니스 로직을 다루는 도메인 모델을 따릅니다.
+- 도메인이 비즈니스 로직을 다루면 -> 도메인 모델
+- 서비스가 비즈니스 로직을 처리하면 -> 트랜잭션 스크립트
+
+### Spring 웹 계층
+- Web Layer: 컨트롤러, JSP/Freemarker 등의 뷰 템플릿 영역
+- Service Layer: Controller와 Dao의 중간이자, Transactional이 사용되어야 하는 영역
+- Repository Layer: DB 접근 영역, Dao(Data Access Object)
+- Dtos: 계층 간 데이터 교환을 위한 객체(Dto, Data Transfer Object)들의 영역
+- Domain Model: 도메인을 모든 사람이 동일 관점에서 이해하고 공유할 수 있도록 단순화시킨 것
 
 ### 클래스 생성
+`service` > `posts`에 PostsService, `web` 에 PostsApiController, `web.dto` 에 PostsSaveRequestDto를 생성합니다.
+
