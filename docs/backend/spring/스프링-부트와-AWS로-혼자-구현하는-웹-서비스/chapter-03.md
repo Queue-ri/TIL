@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 3
 sidebar_label: '03장'
 created_date: 2022-03-25
-updated_date: 2022-03-28
+updated_date: 2022-03-29
 ---
 
 # 03장 정리
@@ -241,5 +241,79 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialec
 - Domain Model: 도메인을 모든 사람이 동일 관점에서 이해하고 공유할 수 있도록 단순화시킨 것
 
 ### 클래스 생성
-`service` > `posts`에 PostsService, `web` 에 PostsApiController, `web.dto` 에 PostsSaveRequestDto를 생성합니다.
+`service` > `posts`에 PostsService, `web` 에 PostsApiController, `web.dto` 에 PostsSaveRequestDto를 생성하고, 각자 다음의 코드를 작성합니다.
 
+```java title=PostsSaveRequestDto
+package com.hellspring.web.dto;
+
+import com.hellspring.domain.posts.Posts;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+public class PostsSaveRequestDto {
+    private String title;
+    private String content;
+    private String author;
+    @Builder
+    public PostsSaveRequestDto(String title, String content, String author) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+    }
+
+    public Posts toEntity() {
+        return Posts.builder()
+                .title(title)
+                .content(content)
+                .author(author)
+                .build();
+    }
+}
+```
+
+```java title=PostsService
+package com.hellspring.service.posts;
+
+import com.hellspring.domain.posts.PostsRepository;
+import com.hellspring.web.dto.PostsSaveRequestDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+
+@RequiredArgsConstructor
+@Service
+public class PostsService {
+    private final PostsRepository postsRepository;
+
+    @Transactional
+    public Long save(PostsSaveRequestDto requestDto) {
+        return postsRepository.save(requestDto.toEntity()).getId();
+    }
+}
+```
+
+```java title=PostsApiController
+package com.hellspring.web;
+
+import com.hellspring.service.posts.PostsService;
+import com.hellspring.web.dto.PostsSaveRequestDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RequiredArgsConstructor
+@RestController
+public class PostsApiController {
+    private final PostsService postsService;
+
+    @PostMapping("/api/v1/posts")
+    public Long save(@RequestBody PostsSaveRequestDto requestDto) {
+        return postsService.save(requestDto);
+    }
+}
+```
