@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 3
 sidebar_label: '03장'
 created_date: 2022-03-25
-updated_date: 2022-03-29
+updated_date: 2022-03-31
 ---
 
 # 03장 정리
@@ -234,13 +234,13 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialec
 - 서비스가 비즈니스 로직을 처리하면 -> 트랜잭션 스크립트
 
 ### Spring 웹 계층
-- Web Layer: 컨트롤러, JSP/Freemarker 등의 뷰 템플릿 영역
-- Service Layer: Controller와 Dao의 중간이자, Transactional이 사용되어야 하는 영역
-- Repository Layer: DB 접근 영역, Dao(Data Access Object)
-- Dtos: 계층 간 데이터 교환을 위한 객체(Dto, Data Transfer Object)들의 영역
-- Domain Model: 도메인을 모든 사람이 동일 관점에서 이해하고 공유할 수 있도록 단순화시킨 것
+- **Web Layer:** 컨트롤러, JSP/Freemarker 등의 뷰 템플릿 영역
+- **Service Layer:** Controller와 Dao의 중간이자, Transactional이 사용되어야 하는 영역
+- **Repository Layer:** DB 접근 영역, Dao(Data Access Object)
+- **Dtos:** 계층 간 데이터 교환을 위한 객체(Dto, Data Transfer Object)들의 영역
+- **Domain Model:** 도메인을 모든 사람이 동일 관점에서 이해하고 공유할 수 있도록 단순화시킨 것
 
-### 클래스 생성
+### 등록 API 작성
 `service` > `posts`에 PostsService, `web` 에 PostsApiController, `web.dto` 에 PostsSaveRequestDto를 생성하고, 각자 다음의 코드를 작성합니다.
 
 ```java title=PostsSaveRequestDto
@@ -273,6 +273,7 @@ public class PostsSaveRequestDto {
     }
 }
 ```
+Service와 Controller에서 사용하는 Dto입니다. 이 Dto는 이전에 작성한 Entity와 유사한 형태이지만, View를 위한 클래스는 수정이 잦기 때문에 DB 스키마와 직결되고 의존성이 복잡한 Entity를 여기에 사용하면 안됩니다. **View Layer와 DB Layer의 역할 분리를 철저하게 하는 것이 좋습니다.**
 
 ```java title=PostsService
 package com.hellspring.service.posts;
@@ -317,3 +318,111 @@ public class PostsApiController {
     }
 }
 ```
+
+### 등록 API 테스트
+--
+
+### 수정/조회 API 작성
+
+```java title=PostsApiController
+...
+public class PostsApiController {
+    ...
+    @PutMapping("/api/v1/posts/{id}")
+    public Long update(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
+        return postsService.update(id, requestDto);
+    }
+
+    @GetMapping("api/v1/posts/{id}")
+    public PostsResponseDto findById (@PathVariable Long id) {
+        return postsService.findById(id);
+    }
+}
+```
+
+`web` > `dto`에 PostsResponseDto를 생성합니다.
+```java title=PostsResponseDto
+package com.hellspring.web.dto;
+
+import com.hellspring.domain.posts.Posts;
+
+public class PostsResponseDto {
+    private Long id;
+    private String title;
+    private String content;
+    private String author;
+
+    public PostsResponseDto(Posts entity) {
+        this.id = entity.getId();
+        this.title = entity.getTitle();
+        this.content = entity.getContent();
+        this.author = entity.getAuthor();
+    }
+}
+```
+
+`web` > `dto`에 PostsUpdateRequestDto도 생성합니다.
+```java title=PostsUpdateRequestDto
+package com.hellspring.web.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+public class PostsUpdateRequestDto {
+    private String title;
+    private String content;
+
+    @Builder
+    public PostsUpdateRequestDto(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+}
+```
+
+Posts에 다음 메소드를 추가합니다.
+```java title=Posts
+public class Posts {
+    ...
+    public void update(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
+}
+```
+
+PostsService에 다음 메소드를 추가합니다.
+```java title=PostsService
+public class PostsService {
+    ...
+    @Transactional
+    public Long update(Long id, PostsUpdateRequestDto requestDto) {
+        Posts posts = postsRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("선생님 그런 게시물은 없어요 (id = " + id + ")")
+        );
+
+        posts.update(requestDto.getTitle(), requestDto.getContent());
+        return id;
+    }
+    
+    public PostsResponseDto findbyId(Long id) {
+        Posts entity = postsRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("선생님 그런 게시물은 없어요 (id = " + id + ")")
+        );
+        return new PostsResponseDto(entity);
+    }
+}
+```
+update에서 DB에 쿼리를 날리지 않는 이유는 JPA의 영속성 컨텍스트 때문입니다.
+- **영속성 컨텍스트:** 엔티티를 영구 저장하는 환경
+
+영속성 컨텍스트는 Spring Data JPA의 기본 옵션으로 켜져 있습니다.
+
+#### 더티 체킹
+트랜잭션 안에서 DB 데이터를 가져오면 이 데이터는 영속성 컨텍스트가 유지된 상태이고, 이 상태에서 데이터를 변경하면 트랜잭션이 끝나는 시점에 변경이 반영됩니다. 즉, **Entity 객체의 값만 변경하면 따로 update 쿼리를 날릴 필요가 없습니다.**
+
+### 수정/조회 API 테스트
+--
