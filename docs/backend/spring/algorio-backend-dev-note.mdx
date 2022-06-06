@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-05
+updated_date: 2022-06-06
 ---
 
 ## 📅 22-03-24
@@ -12,3 +12,31 @@ updated_date: 2022-06-05
 - 잘 돌아가다가 어느날 갑자기 모든 import에 빨간줄 그어져서 당황
 - Refresh Gradle Dependencies로 해결
     - [아주 좋은 글](https://ottl-seo.tistory.com/entry/IntelliJ-Cannot-resolve-symbol-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0)
+
+## 📅 22-03-25
+### 📌 **젠킨스 설치 삽질 끝**
+
+- **링크:** [http://qriositylog.com:8081](http://qriositylog.com:8081)
+- **기록:** [https://til.qriositylog.com/featured/devops/jenkins/setting-jenkins-server-with-oracle-cloud](https://til.qriositylog.com/featured/devops/jenkins/setting-jenkins-server-with-oracle-cloud)
+
+### 📌 알게된 것
+
+- 포트가 바뀌지 않았던 이유가 포트 충돌이 아니라 conf 수정 후 `jenkins start` 대신 `install jenkins`를 또 해서 버그가 터졌던 것 같음
+    - 이 경우 **무조건 재설치** 해야 함. 백날천날 `jenkins restart` 해도 버그 안풀림
+- GitHub에 있는 [jenkins App](https://github.com/apps/ci-jenkins-io)은 jenkins 프로젝트 ci 전용임: [https://ci.jenkins.io/](https://ci.jenkins.io/)
+    - 내 프로젝트에 같은 방식 쓰고 싶으면 App을 따로 만들어야 함 [[튜토리얼](https://www.jenkins.io/blog/2020/04/16/github-app-authentication/)]
+- *jenkins.qriositylog.com* 과 같은 서브도메인을 원한다면 리버스 프록시 설정해야 함
+- **‘docker는 왜 쓰는걸까’**에 대한 결론
+    - jar 말고 도커 이미지로 배포하면 편함
+    - 컨테이너 단위 백업이 편함
+    - Ops의 편의성 때문이고 없어도 문제 생기진 않음
+
+### 📌 추가로 생각해본 것
+
+- docker ci를 사용하면 얘가 다 빌드할건데 그때 jenkins는 무엇을 하는가
+    - 아마 unit test...?
+    - 젠킨스 + docker 사용 사례 더 찾아보고 무난한 조합법으로 결정하기
+
+![architecture_0](https://user-images.githubusercontent.com/77003554/178111719-2345435e-d0df-4285-8f15-7cf3f9aaf543.png)
+
+![architecture_1](https://user-images.githubusercontent.com/77003554/178111657-dd36c4ec-8c54-41dc-b100-fa746a7aa85b.png)
