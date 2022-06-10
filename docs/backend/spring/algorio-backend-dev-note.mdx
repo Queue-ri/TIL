@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-09
+updated_date: 2022-06-10
 ---
 
 ## 📅 22-03-24
@@ -55,3 +55,30 @@ updated_date: 2022-06-09
 ### 📌 등록/수정/조회 API 테스트 코드 작성 및 push
 
 - **기록:** `작성예정`
+
+## 📅 22-04-03
+### 📌 젠킨스 GH App 생성 및 연결
+
+- [아주 좋은 글](https://fwani.tistory.com/23)
+    - App credential config에서 owner 명시해주어야 500 internal error 풀림
+- pem 변환은 WSL로 함: [경로 찾기](https://unix.stackexchange.com/questions/531576/how-do-i-access-my-windows-desktop-directory-from-inside-windows-subsystem-for-l)
+- gradle test 돌리기에 인스턴스가 너무 협소해서 하루종일 돌아감...
+    - 서버 마비돼서 reboot 하고 `iptables` 다시 설정해줌
+- App을 써도 WebHook으로 트리거 시키는건 똑같음. App은 그냥 Credential 용도같음. WebHook으로 할 때 commit status는 어떻게 돌아오는지 나중에 확인해보기
+    - [참고 레퍼런스 1](https://applitools.com/blog/how-to-update-jenkins-build-status-in-github-pull-requests-step-by-step-tutorial/)
+    - [참고 레퍼런스 2](https://stackoverflow.com/questions/14274293/show-current-state-of-jenkins-build-on-github-repo)
+- 젠킨스 UI가 너무 구려서 [Blue Ocean 플러그인](https://logical-code.tistory.com/179)이 필수인듯,,
+- **더 좋은 무료 서버 구할 시간 없어서 일단 GH Action으로 테스트 CI 구축함.**
+
+### 📌 GH Action Test, Build & Deploy CI 구축
+
+- Test는 간단히 템플릿에서 꺼내다 씀
+    - **테스트 CLI 로그 이쁘게 보여주는 플러그인:** `com.adarshr.test-logger`
+- [x]  Build는 아직 Dockerfile 없어서 도커 배포까진 안됨. 나중에 작성하기
+- `workflow_run` 트리거가 default branch(main) 에서만 작동된다는 점은 괜찮은데, commit status 안나오는건 좀 치명적이라 WebHook으로 status 보여주는 workflow를 하나 더 추가함.
+    - [아주 좋은 글](https://dev.to/doctolib/github-actions-how-to-push-a-github-status-in-addition-of-github-checks-3d27)
+- GH Action 커스텀 뱃지 가능한거 오늘 처음 알음. url에 workflow filename이 아니라 workflow name이 들어가는게 특이함.
+    - [여기서 배움](https://github.com/docker/build-push-action)
+- 처음에 [도커허브에서 build 시켜서 이쁘게 commit status가 App으로 나오는 걸](https://github.com/docker/app) 의도했으나, 최근 도커허브 빌드 기능이 유료화되어서 빠른 손절.
+- [x]  branch 전략 시간날때 정리하기
+- [x]  배포 전략 고민하기 ([프론트, 백 분리 관련](https://okky.kr/article/874573))
