@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-10
+updated_date: 2022-06-11
 ---
 
 ## 📅 22-03-24
@@ -82,3 +82,50 @@ updated_date: 2022-06-10
 - 처음에 [도커허브에서 build 시켜서 이쁘게 commit status가 App으로 나오는 걸](https://github.com/docker/app) 의도했으나, 최근 도커허브 빌드 기능이 유료화되어서 빠른 손절.
 - [x]  branch 전략 시간날때 정리하기
 - [x]  배포 전략 고민하기 ([프론트, 백 분리 관련](https://okky.kr/article/874573))
+
+## 📅 22-04-05
+### 📌 Docker 배포 CI 에러 해결
+
+- Dockerfile 작성했더니 다음의 에러 발생
+
+```
+Step 3/4 : COPY ${JAR_FILE} app.jar
+When using COPY with more than one source file, the destination must be a directory and end with a /
+```
+
+- 로그 읽어보면 여러개 jar이라 단일 jar에 copy가 안되니 path 형식으로 arg를 넘기라는 건데, 다른 사람들은 똑같은 명령어로도 잘만 돌리니까 의문.
+    - 확인 결과 내가 `gradle build` 시키면 `build/libs`경로에 plain이 붙는 jar이 하나 더 생겼음
+    - 이유 찾아보니 스프링부트 2.5 부터 plain도 생기도록 바뀌었다고 함. [[참고](https://dev-j.tistory.com/22)]
+    - plain 없이 그냥 executable jar만 빌드하려면 `gradle bootJar` 을 사용해야 함
+        - [build와 bootJar의 차이?](https://stackoverflow.com/questions/64747475/difference-between-gradle-build-and-gradle-bootjar)
+    - Dockerfile은 그대로 둔 채로 yml에 gradle 명령어만 바꿔주고 에러 해결
+
+### 📌 Package Publish CI 구축
+
+- 도커 이미지를 위한 GH 레지스트리도 있더라.. Dockerfile `LABEL`에 내 repo 넣고 GH 레지스트리에 push하면 package에 뜬대서 release 때마다 트리거되는 CI 구축
+    - [아주 친절한 글](https://blog.codecentric.de/en/2021/03/github-container-registry/)
+    - [덜 친절하지만 한글](https://blog.outsider.ne.kr/1530)
+    - [GH 레퍼런스](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release)
+
+![reference](https://user-images.githubusercontent.com/77003554/178112382-afacdb34-6a1b-4dde-9cf0-d040a4a33535.png)
+
+- GH에서 release 할때 태그 추가하면 ref가 `refs/heads/main`이 아닌 ~~ 이다. [[정답은 여기에](https://stackoverflow.com/questions/58475748/github-actions-how-to-check-if-current-push-has-new-tag-is-new-release)]
+
+### 📌 `1.0.0-beta.1` 릴리즈 👏
+
+- GH에서 prerelease 말고 그냥 release로 작성해야 제목이 뜸
+
+### 📌 Branch 전략
+
+- **main:** 푸시되면 도커로 자동 배포됨. 나중에 EC2 SSH까지 연결할거니 주의..
+    - docs 수정은 대체 어디서 할지 모르겠음.
+- **develop:** 각 릴리즈 별로 feature merge 한 뒤 버전 수정같은거 해놓는 브랜치
+    - CI 수정은 가급적 develop에서 하기
+- **feature:** 필요할때마다 develop에서 분기하고 merge되면 자유롭게 삭제 가능한 브랜치
+- release 브랜치는 개인 프로젝트 운영하는데 너무 과하다 싶어서 안 씀.
+
+### 📌 Frontend, Backend repo 분리
+
+- 합치면 다루기도 불편하고 폴더 구조도 마음에 안들 것 같아서 결국 분리하기로 결정
+- 여태까지 작업한 repo는 `Algorio`에서 `Algorio-Backend`로 리포명 수정
+- Frontend는 AWS말고 Vercel 같은거 쓰면 좋을듯. commit status도 이쁘게 써줌.
