@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-11
+updated_date: 2022-06-12
 ---
 
 ## 📅 22-03-24
@@ -129,3 +129,36 @@ When using COPY with more than one source file, the destination must be a direct
 - 합치면 다루기도 불편하고 폴더 구조도 마음에 안들 것 같아서 결국 분리하기로 결정
 - 여태까지 작업한 repo는 `Algorio`에서 `Algorio-Backend`로 리포명 수정
 - Frontend는 AWS말고 Vercel 같은거 쓰면 좋을듯. commit status도 이쁘게 써줌.
+
+## 📅 22-04-06
+### 📌 GitHub 설정 관련
+
+- Environments 설정 [very EZ..](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
+- organization 멤버인거 People에서 Public으로 맞춰야 프로필에 보여짐;
+
+### 📌 프론트엔드 초안 완성
+
+- 책의 `@material-ui/core` 가 예전 버전이어서 최신 버전인 `@mui/material` 설치
+
+--- 
+[Installation - MUI](https://mui.com/getting-started/installation/)
+--- 
+
+- create-react-app을 현재 경로에 하고 싶으면 `create-react-app .` 하면 됨
+- 프로젝트 생성시 기본으로 주어지는 App.css에 center로 강제하는 CSS가 있으므로 제거하든가 해야 함
+- [아주 좋은 뉴비 튜토리얼](https://reactgo.com/material-ui-react-tutorial/)
+    - 근데 최신버전 아니라서 조금씩 수정해서 써야 함
+    - justify → justifyContent
+    - spacing은 예전 버전에서 40 적용 안됨. 스펙에 없음.
+
+--- 
+[React App](https://624dcfa39aec670a54b5386e--algorio.netlify.app/)
+--- 
+
+- 부모 하위에 `flex-grow: 1` 자식과 `flex-grow: 0` 자식이 있으면 0 자식이 우측으로 정렬됨
+- [ ]  excerpt 영역 왼쪽을 날짜, 오른쪽을 티어표로 바꾸기
+
+### 📌 Deploy 관련
+
+- Vercel은 organization repo의 경우 유료 플랜 필요함.....
+- Netlify 쓰는데 commit status 안와서 webhook 날려야 할 것 같음 (CI repo 파서 테스트 해보기)
