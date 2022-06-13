@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-12
+updated_date: 2022-06-13
 ---
 
 ## 📅 22-03-24
@@ -162,3 +162,32 @@ When using COPY with more than one source file, the destination must be a direct
 
 - Vercel은 organization repo의 경우 유료 플랜 필요함.....
 - Netlify 쓰는데 commit status 안와서 webhook 날려야 할 것 같음 (CI repo 파서 테스트 해보기)
+
+## 📅 22-04-08
+### 📌 Database “mem:testdb” not found 오류 해결
+
+![h2_console](https://user-images.githubusercontent.com/77003554/178112808-81193f06-6d20-4f75-88b7-fab60c07c24e.png)
+
+- 최신 스프링 버전부터 h2 연동 시 기본url 값으로 testdb 가 아니라 랜덤으로 생성되어 testdb를 찾을 수 없는 것이었음.
+- [application.properties](http://application.properties) 에 `spring.datasource.generate-unique-name=false` 를 추가해서 testdb로 고정시켜주니 해결
+
+### 📌 /api/v1/posts/1 으로 조회 시 406 Whitelabel error 버그 해결
+
+- h2에서 insert into .. values .. 해서 데이터 넣은 뒤 /api/v1/posts/1 로 브라우저 접속했는데 에러 페이지 (status는 406)
+    - PostsResponseDto에 getter 빼먹었더라...........추가해서 해결
+    - 이건 에러 원인이 아니지만 원인 찾다가 PostMapping url이 /api/... 가 아닌 api/... 으로 되어있는걸 발견. 작동 차이는 없는데 앞에 slash 붙는게 시멘틱이라고 함.
+
+- error 코드 별 특징을 발견함 (500이랑 406 서로 거꾸로 쓴거 아님)
+
+![wlabel_500](https://user-images.githubusercontent.com/77003554/178112824-b9d56b85-0d04-4d91-9264-027249a4651a.png)
+
+- error 페이지에서 status가 500이면 파라미터를 잘못 넣은 것 (아예 불가능한 url)
+
+![wlabel_406](https://user-images.githubusercontent.com/77003554/178112832-b5209e4e-a840-4775-b393-dcc13a499269.png)
+
+- status가 406이면 파라미터가 이상한건 아니고 내부에서 처리하다가 어떤 오류로 인해 response를 줄 수 없는 것 (어노테이션같은거 잘 보기)
+
+### 📌 추가로 공부한 것
+
+- Service와 Controller가 하는게 비슷한 것 같은데 왜 따로 두는지 의문이 들어 이론글을 읽어봄.
+    - 👉 [Controller, Service, Repository 가 무엇일까?](https://velog.io/@jybin96/Controller-Service-Repository-%EA%B0%80-%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C)
