@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-13
+updated_date: 2022-06-14
 ---
 
 ## 📅 22-03-24
@@ -191,3 +191,45 @@ When using COPY with more than one source file, the destination must be a direct
 
 - Service와 Controller가 하는게 비슷한 것 같은데 왜 따로 두는지 의문이 들어 이론글을 읽어봄.
     - 👉 [Controller, Service, Repository 가 무엇일까?](https://velog.io/@jybin96/Controller-Service-Repository-%EA%B0%80-%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C)
+
+## 📅 22-04-09
+### 📌 백엔드 API 추가
+
+- findAll(): `posts/all`
+- 좋은 스프링 공짜 레퍼런스 발견함
+--- 
+[점프 투 스프링부트](https://wikidocs.net/book/7601)
+--- 
+
+### 📌 백엔드 CORS 설정
+
+- [localhost:3000](http://localhost:3000) 에 대하여 허용
+--- 
+[React 프로젝트에서 api 호출하기](https://enfanthoon.tistory.com/146)
+--- 
+
+### 📌 프론트엔드 axios로 REST API 호출
+
+- 빠르게 요청 날려두기 위해 useEffect 안에서 호출
+- rendering block 하지 않기 위해 async로 호출: 나머지 컴포넌트는 렌더링 ㄱㄱ
+- response 오면 setState로 re-render 시킴: posts 영역만 다시 렌더링
+--- 
+[React Hooks 이해하기 (1)](https://velog.io/@gwak2837/React-Hooks%EC%9D%98-%EC%9D%B4%ED%95%B4)
+--- 
+
+### 📌 백엔드 게시글 metadata 연동
+
+- 백엔드 H2에서 SQL로 테스트 데이터 넣은 후 프론트에서 posts/all로 API 호출하여 받은 데이터를 뿌려주는지 확인
+- tag를 `List<String>`으로 하려 했는데 DB에서 실제 Array형으로 들어갈 수 없기 때문에 두 가지 방법 중에 고민.
+    1. 엔티티는 separator와 다같이 String으로 저장하게끔 모델링하고, Service에서 이걸 파싱하여 `List<String>`으로 재가공해서 Controller에 넘겨주기. 그리고 tag를 누르면 그 tag에 해당하는 게시글만 따로 다 불러와야 하기 때문에, 각 tag마다 테이블을 만들어서 게시글 id를 저장.
+    2. M:N 다대다 관계에선 중간에 매핑 테이블 두고 관계를 해소해준다는데 해소되는게 맞는...지...?
+        - 결국 1번 선택
+        - **제 1정규형 깨진다는데** 현재 태그 시스템이 간단해서 그냥 String 묶음으로 처리하는게 훨씬 성능적으로 가벼워보임..
+
+### 📌 진행 상황
+
+![h2_table](https://user-images.githubusercontent.com/77003554/178113884-7e609e25-e7c6-40c1-a63c-c8d4f513746f.png)
+
+![response](https://user-images.githubusercontent.com/77003554/178113902-53a0905a-ff94-471c-af8d-673d4e668d92.png)
+
+![render](https://user-images.githubusercontent.com/77003554/178113937-65adba8a-f75a-4ebe-8be9-97961df8cce9.png)
