@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-14
+updated_date: 2022-06-15
 ---
 
 ## 📅 22-03-24
@@ -233,3 +233,27 @@ When using COPY with more than one source file, the destination must be a direct
 ![response](https://user-images.githubusercontent.com/77003554/178113902-53a0905a-ff94-471c-af8d-673d4e668d92.png)
 
 ![render](https://user-images.githubusercontent.com/77003554/178113937-65adba8a-f75a-4ebe-8be9-97961df8cce9.png)
+
+# 📅 22-04-10
+### 📌 프론트엔드 로그인 페이지 제작
+
+![login_page](https://user-images.githubusercontent.com/77003554/178114949-a52a607d-73e6-4883-b8b8-cb82426fd22f.png)
+
+
+- 비로그인 상태 아바타 이미지 바꿈
+- [이 글](https://stackoverflow.com/questions/50644976/react-button-onclick-redirect-page)의 `useNavigate` 이용하여 Login 메뉴 클릭 시 `/login` 으로 이동
+    - 같은 패키지로 path 별 컴포넌트 렌더링을 App.js에서 제어 - [v6에서 스펙 변경 있으니 주의](https://miracleground.tistory.com/entry/Error-Switch-is-not-exported-from-react-router-dom-%ED%95%B4%EA%B2%B0)
+    - 메뉴 구분은 `event.target.textContent` 로 함
+
+### 📌 구글 OAuth 클라이언트 생성
+
+![gcp_oauth](https://user-images.githubusercontent.com/77003554/178114982-59427569-242b-4281-a097-1f7383dd7cbd.png)
+
+- UI가 너무 바뀌어있어서 책 말고 인터넷 자료 찾아보는게 더 편하다.
+
+### 📌 docker run 시점에서의 스프링 property 설정
+
+- client id랑 secret을 GH에 안올릴건데 CD 때문에 고민
+    - 고민 결과 어차피 CD에서 EC2 SSH까지 담당할거니까, GH Secret에 id랑 secret 저장하고 yml에서 docker run 할때 넘겨주면 되겠다고 생각함. [그리고 구세주같은 글(Case 3 참고함)](https://browndwarf.tistory.com/46)
+    - 이 방법이 가능한지 알아보기 위해 Dockerfile ENV 설정 및 로컬의 docker로 테스트해봄
+    - [ ] 되긴하는데 **로그에 넘겨준 파라미터 뜨진 않는지 double check 해보기!!!!!!!!!!!!!!!!!**
