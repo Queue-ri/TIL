@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-15
+updated_date: 2022-06-16
 ---
 
 ## 📅 22-03-24
@@ -257,3 +257,41 @@ When using COPY with more than one source file, the destination must be a direct
     - 고민 결과 어차피 CD에서 EC2 SSH까지 담당할거니까, GH Secret에 id랑 secret 저장하고 yml에서 docker run 할때 넘겨주면 되겠다고 생각함. [그리고 구세주같은 글(Case 3 참고함)](https://browndwarf.tistory.com/46)
     - 이 방법이 가능한지 알아보기 위해 Dockerfile ENV 설정 및 로컬의 docker로 테스트해봄
     - [ ] 되긴하는데 **로그에 넘겨준 파라미터 뜨진 않는지 double check 해보기!!!!!!!!!!!!!!!!!**
+
+# 📅 22-04-11
+### 📌 구글 OAuth 클라이언트 재설정
+
+- 책이랑 내가 하려는 스택이랑 일치하지 않아서 그냥 인터넷 보고 다시 정확히 해야겠다.😑
+- **승인된 자바스크립트 원본** = 내 웹사이트의 루트 경로
+    - [`http://localhost:3000`](http://localhost:3000/)로 설정
+- **승인된 리디렉션 URI** = 유저가 구글 로그인을 했을 때, 구글에서 내 서비스에게 유저 정보를 보내주는 경로.. 라는데 프론트에서 날려보니까 accessToken이랑 기본 프로필 정보가 다 프론트로 돌아오는데? 패키지 써서 그런가? 일단 이건 사용 보류.
+
+### 📌 구글 로그인 버튼 구현 및 accessToken 받아오기
+
+![google_login_btn](https://user-images.githubusercontent.com/77003554/178115327-3fa63fd9-7856-46d4-94ca-4628ad4c7ee7.png)
+
+프론트는 최대한 쉽고 빠르게 끝내도록 패키지 적극 활용..해서 만들었다. [[참고글](https://dodop-blog.tistory.com/260)]
+
+- `react-google-login` 패키지 사용
+- style 안먹어서 걍 render, renderProps로 mui 컴포넌트 사용함
+
+![response](https://user-images.githubusercontent.com/77003554/178115353-f1b18731-40ab-47d6-b298-10fd643609df.png)
+
+### 📌 SPA + 스프링부트 + 소셜로그인 관련 공부
+
+👉 [[보안동향] 인증, '토큰' 방식 새롭게 뜬다! 안전한 사용법은?](https://blog.lgcns.com/2687)
+
+👉 [OAuth2 인증 방식에 대해 알아보자.](https://velog.io/@piecemaker/OAuth2-%EC%9D%B8%EC%A6%9D-%EB%B0%A9%EC%8B%9D%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90)
+
+👉 [OKKY | 리액트 세션이나 쿠키가 필요한가요??](https://okky.kr/article/871550?note=2237836)
+
+### 📌 구글 로그인 관련 마저 구현해야 하는 것
+
+- [x]  accessToken 백엔드에 넘기는 부분(axios) - request A
+- [x]  백엔드가 구글서버에서 accessToken 유효성 검사 및 유저 정보 받는 부분
+- [ ]  백엔드 유저 정보(google_id, email, name, role...) DB 저장
+- [ ]  JWT token 발급 및 프론트의 request A에 대하여 response
+- [ ]  프론트 JWT token 저장
+- [ ]  프론트 로그인 state 관리(redux)
+
+![login_flow](https://user-images.githubusercontent.com/77003554/178115427-d01c72a4-e4d3-4c8b-b8aa-77dd3bfa2b0c.png)
