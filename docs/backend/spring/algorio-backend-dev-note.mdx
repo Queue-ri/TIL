@@ -3,7 +3,7 @@ title: 'Algorio 백엔드 개발 노트'
 eng_title: 'Algorio backend dev note'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2022-06-04
-updated_date: 2022-06-16
+updated_date: 2022-06-17
 ---
 
 ## 📅 22-03-24
@@ -295,3 +295,65 @@ When using COPY with more than one source file, the destination must be a direct
 - [ ]  프론트 로그인 state 관리(redux)
 
 ![login_flow](https://user-images.githubusercontent.com/77003554/178115427-d01c72a4-e4d3-4c8b-b8aa-77dd3bfa2b0c.png)
+
+# 📅 22-04-13
+### 📌 console.log(...) is not a function 에러 해결
+
+- [https://stackoverflow.com/questions/31013221/typeerror-console-log-is-not-a-function](https://stackoverflow.com/questions/31013221/typeerror-console-log-is-not-a-function)
+- 비동기 함수 IIFE가 console.log 밑에 있어서 파싱 에러가 났다. 자스 파서 개구려
+
+### 📌 AuthController 작성 및 request 테스트
+
+- login/oauth2/code/google 은 `spring-boot-starter-oauth2-client` 디펜던시 추가했으면 컨트롤러가 필요 없는데 왜 안먹나 했더니 내가 gradle 빌드 안하고 도커빌드만 하고 있었다...............................................😠😡 .....................................................
+- 다시 빌드 제대로 하니 CORS가 터졌다. 책에선 설정 안했는데 뭔가 이상하다.
+
+![result_cors](https://user-images.githubusercontent.com/77003554/178115619-afe79ca0-33ef-49d7-b731-a2faff3dd5f5.png)
+
+- `login/**` 을 CORS 허용해줬더니 404가 뜬다. 컨트롤러가 없다는 뜻이다... 이 부분은 상당히 의문이다. 디폴트로 컨트롤러 만들어준다며? 하지만 돌려보니 없었다. 비록 책의 의도와 다른 방식으로 쓰려고 한거라 없는지 100% 확신은 못하지만 CORS도 그렇고 내 케이스에서 컨트롤러는 안만들어준걸로 생각하련다.
+
+![result_404](https://user-images.githubusercontent.com/77003554/178115622-f7cae196-48ec-4056-9e19-0a19cc673c1a.png)
+
+- **그래서 때려치고 컨트롤러를 내가 작성하기로 한다.** 프론트에서 구글의 response를 그대로 토스했다. 서비스는 책 따라서 작성했던걸 그대로 연결한거라 호환이 안될것이다. 결과는 당근 500이고 어차피 500이어도 컨트롤러는 제대로 작동했단 소리니 상관없다.
+
+![result_500](https://user-images.githubusercontent.com/77003554/178115626-86a4c6d0-2baf-4193-b6d6-def94c04092d.png)
+
+### 📌 새로운 CustomOAuth2UserService 작성 및 id_token 검증/파싱
+
+👉 [Authenticate with a backend server | Google Sign-In for Websites | Google Developers](https://developers.google.com/identity/sign-in/web/backend-auth)
+
+- 왜 access token이 아닌 id token이냐면 구글이 그렇게 하라고 해서. 문제는 얘가 방법을 반쪼가리만 적어놨다.
+
+👉 [Securing your APIs when building Web Applications](https://medium.com/@harittweets/securing-your-apis-when-building-web-applications-5643d12e84d8)
+
+- 나머지 반쪽은 여기서 찾았다. 하단의 레퍼런스를 참고해서 구글 api 클라이언트 디펜던시를 추가했다.
+
+👉 [API Client Library for Java | Google Developers](https://developers.google.com/api-client-library/java/)
+
+- `JacksonFactory` 가 deprecated 라서 GsonFactory 쓰라는데 호환이 될지 모르겠다.
+    - [x]  ~~나중에 알아보자.~~
+    - 👉 호환된다. 하단 링크 코드 참고.
+        - [[Vue.js] 20. Google OAuth 2.0 사용하기 (3)](https://ayoteralab.tistory.com/entry/Vuejs-20-Google-OAuth-20-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-3)
+    
+
+![post_result](https://user-images.githubusercontent.com/77003554/178115740-c38ea181-9336-41b6-9e78-f227d6edb218.png)
+
+![google_userinfo](https://user-images.githubusercontent.com/77003554/178115809-21447160-af59-4ec2-ac09-24ea03236855.png)
+
+- 서비스까지 고쳐놓으니 200으로 응답하고 원하는 유저 정보도 잘 파싱한다.
+
+### 📌 property 변수 클래스에서 사용하기
+
+- id token validate할 때 내 클라이언트(algorio)의 id가 필요한데, 난 id도 노출시키기 싫기 때문에 `@Value` 로 런타임에 주입한다.
+
+👉 [Spring @Value annotation tricks](https://dev.to/habeebcycle/spring-value-annotation-tricks-1a80)
+
+- 런타임 initialization 이기 때문에 final은 붙을 수 없다.
+
+### 📌 프론트 로그인 버튼 렌더 직후 클릭하면 팝업 안뜨는 문제
+
+👉 [https://github.com/anthonyjgrove/react-google-login/issues/16](https://github.com/anthonyjgrove/react-google-login/issues/16)
+
+- 원인은 script 받아오기도 전에 렌더링이 빠르게 다 되어서 그렇다.
+- 이미 관련 이슈가 2016년에 있었고 수정되었다.
+- 이슈의 커밋 내역과 repo의 README.md를 다시 참고한 후에 하단의 옵션을 추가하여 해결함
+    - `disabled={renderProps.disabled}`
