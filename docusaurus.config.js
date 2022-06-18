@@ -124,7 +124,17 @@ const config = {
         routeBasePath: 'date-tmp',
         sidebarPath: require.resolve('./sidebars-custom.js'),
         editUrl: 'https://github.com/Queue-ri/til/edit/main/',
-      }, 
+      },
+    ],
+    [ /* dev-note path & sidebar configurations */
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'dev-note',
+        path: './dev-note',
+        routeBasePath: 'dev-note',
+        sidebarPath: require.resolve('./sidebars-custom.js'),
+        editUrl: 'https://github.com/Queue-ri/til/edit/main/',
+      },
     ],
   ],
 
@@ -151,6 +161,7 @@ const config = {
             position: 'left'
           }, */
           {to: '/featured', label: 'Featured', position: 'left', items: docNavItems},
+          {to: '/dev-note/algorio-dev-note', label: 'Dev Note', position: 'left'},
           {
             type: 'localeDropdown',
             position: 'right',
