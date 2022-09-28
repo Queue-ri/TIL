@@ -23,7 +23,7 @@ jobs:
                 git config --global url."https://github.com/".insteadOf ssh://git@github.com/
 
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3.4.1
+              uses: actions/setup-node@v3.5.0
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'npm'
