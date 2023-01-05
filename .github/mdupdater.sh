@@ -7,17 +7,17 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NOCOLOR='\033[0m'
 
-TODAY=`date -d "+9 hours" "+%Y-%m-%d"`
-YEAR=`date -d "+9 hours" +'%Y'`
-MONTH=`date -d "+9 hours" +'%m'`
+TODAY=`date -u -d "+9 hours" "+%Y-%m-%d"`
+YEAR=`date -u -d "+9 hours" +'%Y'`
+MONTH=`date -u -d "+9 hours" +'%m'`
 FILE="md/date/${YEAR}/${MONTH}/${TODAY}.md"
 FOLDER="md/date/${YEAR}/${MONTH}"
 
 echo -e "\n${GREEN}** MDUPDATER by Queue-ri${NOCOLOR}"
-date -d "+9 hours"
+date -u -d "+9 hours"
 echo -e "${GREEN}** configuring ${TODAY}.md...${NOCOLOR}"
 
-find docs -name "*.md" -o -name "*.mdx" > .github/filepath_prelist # All md(x) path. Root is not a .sh path
+find docs dev-note -name "*.md" -o -name "*.mdx" > .github/filepath_prelist # All md(x) path. Root is not a .sh path
 touch .github/filepath_list
 
 while read filepath; do
@@ -40,7 +40,7 @@ else
 fi
 
 while read filepath; do
-    pagepath=`echo https://til.qriositylog.com/${filepath%.*} | sed 's/docs/featured/'`
+    pagepath=`echo https://til.qriosity.io/${filepath%.*} | sed 's/docs/featured/'`
     filedate=`grep "created_date" $filepath | cut -f2 -d " " | head -1` # should be a single space, not ":".
     fileupdate=`grep "updated_date" $filepath | cut -f2 -d " " | head -1`
     filetitle=`grep "title" $filepath | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
