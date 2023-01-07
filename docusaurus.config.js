@@ -37,12 +37,12 @@ const docNavItems = [
 const config = {
   title: 'Queue-ri\'s TIL',
   tagline: 'Today I Learned',
-  url: 'https://til.qriositylog.com',
+  url: 'https://til.qriosity.io',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/icon/favicon.ico',
-  organizationName: 'qriositylog', // Usually your GitHub org/user name.
+  organizationName: 'Queue-ri\'s TIL', // Usually your GitHub org/user name.
   projectName: 'TIL', // Usually your repo name.
   trailingSlash: false,
 
@@ -231,12 +231,12 @@ const config = {
             items: [
               {
                 html: `
-                  <img src="https://til.qriositylog.com/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
+                  <img src="https://til.qriosity.io/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
                 `,
               },
               {
                 html: `
-                  <img src="https://til.qriositylog.com/img/facebook_oss.png" alt="Built with Docusaurus" width="150px" style="margin-left:10px;" />
+                  <img src="https://til.qriosity.io/img/facebook_oss.png" alt="Built with Docusaurus" width="150px" style="margin-left:10px;" />
                 `,
               },
             ],
