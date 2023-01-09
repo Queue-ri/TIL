@@ -1,13 +1,120 @@
 ---
 title: 'GDSC 토이프로젝트 개발 노트'
 eng_title: 'GDSC toy project dev note'
-image: https://til.qriositylog.com/img/m_banner_background.jpg
+image: https://til.qriosity.io/img/gdsc_banner.png
 created_date: 2022-12-26
-updated_date: 2022-12-26
+updated_date: 2023-01-09
 ---
 
 ## 📅 22-12-26
+
+### 📌 로그인 API 구현
+- 어차피 2주차에 JWT 붙이면서 또 수정 들어갈테니 DB 접근만 우선 구현하기로 했다.
+- ChatGPT에게 코드를 내놓으라고 협박했다.
+    - ✅ 해당 코드를 읽어보면 대강 이런식으로 하는구나, 하고 감이 빨리 잡힌다.
+    - ⚠️ **매번 이러면 안되고** 생산성이 우선일 때 추천한다.
+
+![ChatGPT result](https://user-images.githubusercontent.com/77003554/211281233-603d27c3-ea51-43a0-8b1f-9cc6201026e7.png)
+
 ### 📌 프리즈마 연결
-- `sequelize` 쓰려다가 `prisma`를 추천받음 -> 코드 매우 간결해짐
-- ORM 없는 쌩 쿼리도 작성함
-- 파일링 방식 알아보기
+
+- `sequelize` 쓰려다가 `prisma`를 추천받음 -> 매우 간결해진 코드
+- `mysql`로 ORM 없는 쌩 쿼리도 연습 차 작성해보았다.
+
+<details><summary>가독성 끝내주는 쌩쿼리 보기</summary>
+
+```javascript
+connection.query(
+    'INSERT INTO Users (nickname, name, studentId, department, status) values (?, ?, ?, ?, ?);',
+    [nickname, name, studentId, department, status],
+    (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({error: 'An error occurred while saving..'});
+        } else {
+            // Query the database for the name
+            const query = 'SELECT nickname, name FROM users WHERE name = ?';
+            connection.query(query, [name], (error, results) => {
+                if (error) {
+                console.error(error);
+                res.sendStatus(500);
+                } else {
+                res.send(results);
+                }
+            });
+        }
+    }
+);
+```
+</details>
+
+## 📅 23-01-01
+### 📌 Cloud Functions 배포
+
+- 일반적으로 Functions는 한 개 당 하나의 로직을 의도했다고 한다.
+    - 하지만 난 하나의 Functions에 전체 API를 연결했다.
+- CJS에서 ESM으로 변경, 모듈 분리하여 배포
+    - ESM으로 갈아탄 이유는 리액트 부작용이다.
+    - 원래 Functions는 CJS만 지원했는데 수요가 많아 21년도부터 ESM도 지원하기 시작했다. [[참고]](https://medium.com/google-cloud/es-modules-in-cloud-functions-f5be1676c8b5)
+- prisma 때문에 커스텀 빌드 커맨드를 넣어야 했다. [이걸](https://cloud.google.com/functions/docs/writing/specifying-dependencies-nodejs#executing_custom_build_steps_during_deployment) 참고했다.
+
+### 📌 호출 테러? 디도스?
+
+Functions를 보며 들었던 의문이다. 누군가 악의적으로 이 함수를 엄청 많이 호출한다면? <br/>
+물론 공격자에게 금전적 이득이 없으니 세상에 어떤 관종이 그러겠나 싶겠지만, *[세상은 넓고 관종은 많다.]("https://imgur.com/a/7DPw1M1")*
+
+![image](https://user-images.githubusercontent.com/77003554/211312722-5462db7a-88ac-49b2-bf28-448bd2d75c5b.png)
+
+[인터뷰]("https://www.inflearn.com/pages/weekly-inflearn-45-20220330")에 따르면 rate limit 밖에 별다른 뾰족한 수가 없는 듯 싶다.
+
+해당 사건은 Azure에서 처리해줬다 들었고, AWS의 선례 덕분인지 전반적으로 클라우드 업계에서 비정상 트래픽은 봐주는 관행이 보인다. 하지만 애초에 문제가 안터지는 것이 좋지 않을까?
+
+rate limit을 걸어도 호출 자체가 곧 과금이니, 과연 서버리스가 웹 백엔드로써의 좋은 '상품'인지는 좀 의구심이 든다. (기술 자체는 흥미롭고 좋다.)
+
+
+## 📅 23-01-06
+### 📌 파일 업로드 기능 구현
+
+- GCP Cloud storage 연결 및 업로드
+    - 아래 두 레퍼런스를 적당히 짬뽕해서 구현 ~~[[그리고 아무도 안적어놓은 key 설명]](https://github.com/googleapis/google-auth-library-nodejs/issues/137)~~
+
+---
+['Cloud Storage 사용' GCP 문서](https://cloud.google.com/appengine/docs/standard/nodejs/using-cloud-storage?hl=ko)와 [그 문서를 93.5% 따라한 글](https://r4bb1t.tistory.com/29)
+
+---
+
+- BE에서 FE로부터 날라온 이미지 파일 받기
+    - `multer`로 multipart 받아서 처리
+
+
+- Postman에서 multipart를 쏘는 법은 다음과 같다.
+    - 그런데 json을 text가 아닌 형태로 보낼 수 있을지 알아보아야 한다.
+    - 저 쩜쩜쩜을 누르면 Content Type이 있던데 이걸 `application/json`으로 설정하면..? (내심 기대중)
+
+![postman capture](https://user-images.githubusercontent.com/77003554/211240945-9daa006c-be8c-4e4b-98df-59d189271a60.png)
+
+- BE 인증 미들웨어에서 `Authorization` 헤더를 못잡길래 로그 찍었더니 `authorization`으로 되어있다.
+    - 범인은 express였다.
+    - RFC에 의거하면 HTTP 헤더 필드는 case insensitive라 여기까진 ok..이다.
+    - 그런데 express에서 제공하는 메소드의 네이밍에 낚였다. 하단 참고.
+    
+
+### 📌 header와 headers의 차이
+
+[이 답변](https://stackoverflow.com/questions/60855411/req-header-vs-req-headers-in-express)에 따르면, 다음과 같다고 한다.
+- `req.header`(=`req.get`): case-insensitive한 서치
+- `req.headers`: case-sensitive, JS 객체의 프로퍼티 서치
+
+다시말해
+```javascript
+req.header['aUtHoRiZaTiOn'] // ok
+req.header['Authorization'] // ok
+req.header['authorization'] // ok
+
+req.headers['authorization'] // ok
+req.headers['Authorization'] // ERROR
+```
+이렇다는 것이다.
+
+그런데 `headers`의 s가 더 광범위한 서치를 의미하는 줄 알고 바꿔쓴 것이 원인이었다. express가 모든걸 lowercase로 눌러버리는데 대문자 들은 것을 찾으라 했으니😑
+
