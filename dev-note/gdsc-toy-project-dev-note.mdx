@@ -3,7 +3,7 @@ title: 'GDSC 토이프로젝트 개발 노트'
 eng_title: 'GDSC toy project dev note'
 image: https://til.qriosity.io/img/gdsc_banner.png
 created_date: 2022-12-26
-updated_date: 2023-01-09
+updated_date: 2023-01-17
 ---
 
 ## 📅 22-12-26
@@ -63,7 +63,7 @@ connection.query(
 Functions를 보며 들었던 의문이다. 누군가 악의적으로 이 함수를 엄청 많이 호출한다면? <br/>
 물론 공격자에게 금전적 이득이 없으니 세상에 어떤 관종이 그러겠나 싶겠지만, *[세상은 넓고 관종은 많다.](https://imgur.com/a/7DPw1M1)*
 
-![image](https://user-images.githubusercontent.com/77003554/211312722-5462db7a-88ac-49b2-bf28-448bd2d75c5b.png)
+![인터뷰 Q8](https://user-images.githubusercontent.com/77003554/211312722-5462db7a-88ac-49b2-bf28-448bd2d75c5b.png)
 
 [인터뷰](https://www.inflearn.com/pages/weekly-inflearn-45-20220330)에 따르면 rate limit 밖에 별다른 뾰족한 수가 없는 듯 싶다.
 
@@ -102,14 +102,14 @@ rate limit을 걸어도 호출 자체가 곧 과금이니, 과연 서버리스�
 ### 📌 header와 headers의 차이
 
 [이 답변](https://stackoverflow.com/questions/60855411/req-header-vs-req-headers-in-express)에 따르면, 다음과 같다고 한다.
-- `req.header`(=`req.get`): case-insensitive한 서치
+- `req.header`(=[`req.get`](https://expressjs.com/en/api.html#req.get)): case-insensitive한 서치
 - `req.headers`: case-sensitive, JS 객체의 프로퍼티 서치
 
 다시말해
 ```javascript
-req.header['aUtHoRiZaTiOn'] // ok
-req.header['Authorization'] // ok
-req.header['authorization'] // ok
+req.header('aUtHoRiZaTiOn') // ok
+req.header('Authorization') // ok
+req.header('authorization') // ok
 
 req.headers['authorization'] // ok
 req.headers['Authorization'] // ERROR
@@ -118,3 +118,30 @@ req.headers['Authorization'] // ERROR
 
 그런데 `headers`의 s가 더 광범위한 서치를 의미하는 줄 알고 바꿔쓴 것이 원인이었다. express가 모든걸 lowercase로 눌러버리는데 대문자 들은 것을 찾으라 했으니😑
 
+## 📅 23-01-13
+### 📌 이메일 인증 기능 구현
+
+![인증 이메일 캡쳐](https://user-images.githubusercontent.com/77003554/212867605-a59cd064-5b4c-4d26-81cd-8d4ea0aefcaf.png)
+
+- `nodemailer`를 이용한 이메일 발송
+    - `NODEMAILER_USER`와 `NODEMAILER_PASS`라는 2가지 환경변수가 들어간다.
+- 인증코드 방식: 보안을 위해 정수코드는 피하기로 하였다. 지금도 좀 허술한 것 같지만..
+- `ejs`로 메일 내용 렌더링
+- 프로젝트 이메일은 gmail을 선택
+    - 환경변수에 로그인하듯 계정 아이디/비번을 넣으니 Bad Credential이라고 한다.
+    - 찾아보니 less secure sign-in을 쓰면 된다는데, 더 알아보니 이 방법은 outdated였다.
+    - **22년 5월부터 구글 정책이 바뀌어서** 2-step verification 설정 후 app password를 발급해야 한다. [[참고]](https://stackoverflow.com/a/45479968)
+    - app password도 보안 상 좋지는 않다고 한다. 근데 env 푸시하는 바보짓만 안하면 될듯?
+- regex로 특정 학교 이메일인지 검사
+    - RegExp로 test하면 boolean result를 반환한다.
+
+``` javascript
+// 학교 이메일이 asdf.edu일 경우
+const emailRegExp = new RegExp("^[a-zA-Z0-9._%+-]+@asdf.edu$");
+console.log(emailRegExp.test('qriosity@asdf.edu'));
+```
+
+- 인증코드 일치 검사
+    - 인증 이메일 발송 성공하면 Redis에 '이메일-코드' 형식으로 저장 (exp: 5분)
+    - `/auth/user/email/code`에서 POST로 받아서 Redis 데이터와 일치하는지 검사
+        - 잘못된 이메일을 받을때 500으로 주고 있어서 해당 부분 보수가 필요하다.
