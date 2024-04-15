@@ -37,7 +37,7 @@ const docNavItems = [
 const config = {
   title: 'Queue-ri\'s TIL',
   tagline: 'Today I Learned',
-  url: 'https://til.qriosity.io',
+  url: 'https://til.qriosity.dev',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
@@ -231,12 +231,12 @@ const config = {
             items: [
               {
                 html: `
-                  <img src="https://til.qriosity.io/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
+                  <img src="https://til.qriosity.dev/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
                 `,
               },
               {
                 html: `
-                  <img src="https://til.qriosity.io/img/facebook_oss.png" alt="Built with Docusaurus" width="150px" style="margin-left:10px;" />
+                  <img src="https://til.qriosity.dev/img/facebook_oss.png" alt="Built with Docusaurus" width="150px" style="margin-left:10px;" />
                 `,
               },
             ],

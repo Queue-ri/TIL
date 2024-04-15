@@ -76,7 +76,7 @@ export default function Home() {
     <Layout
       title={`Home`}
       description="Welcome to Queue.ri's Today-I-Learned page."
-      image="https://til.qriosity.io/img/m_banner_background.jpg">
+      image="https://til.qriosity.dev/img/m_banner_background.jpg">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

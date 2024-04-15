@@ -1,10 +1,10 @@
 {
   "index_name": "til",
   "start_urls": [
-    "https://til.qriositylog.com/"
+    "https://til.qriosity.dev/"
   ],
   "sitemap_urls": [
-    "https://til.qriositylog.com/sitemap.xml"
+    "https://til.qriosity.dev/sitemap.xml"
   ],
   "sitemap_alternate_links": true,
   "stop_urls": [
