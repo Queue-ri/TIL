@@ -254,9 +254,9 @@ const config = {
         additionalLanguages: ['bash','java','apacheconf'],
       },
       algolia: {
-        apiKey: 'b7a1e2c35a7eec2662ce86440fa45a14',
+        apiKey: '1e840cb68e840b79c0dbad8b4b02b783',
         indexName: 'til',
-        appId: 'NZLP2AD5K1',
+        appId: 'RYWXQ4NAXQ',
         contextualSearch: true,
       },
     }),
