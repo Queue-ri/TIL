@@ -4,7 +4,7 @@ eng_title: 'Primitive Data Types of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '기본 자료형'
 created_date: 2021-11-08
-updated_date: 2021-11-16
+updated_date: 2024-04-17
 ---
 
 # Java의 기본 자료형
@@ -13,8 +13,9 @@ updated_date: 2021-11-16
 
 여느 때와 다름없이 익숙한 타입들이 자바에서도 기본에 해당합니다.
 
-- 정수: `byte` `char` `short` `int` `long`
+- 정수: `byte` `short` `int` `long`
 - 실수: `float` `double`
+- 문자: `char`
 - 논리: `boolean`
 
 <br />
