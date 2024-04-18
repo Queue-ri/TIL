@@ -4,7 +4,7 @@ eng_title: 'Array of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '배열'
 created_date: 2021-11-11
-updated_date: 2021-11-16
+updated_date: 2024-04-18
 ---
 
 # Java의 배열
@@ -27,6 +27,19 @@ int arr[];
 int[] arr;
 arr = new int[99]; // 0 값으로 초기화 됨
 ```
+
+타입 별 기본 초기화 값은 다음과 같습니다.
+
+| Data Type | Init Value |
+| :-------: | :--------: |
+| `byte` | `0` |
+| `int` | `0` |
+| `long` | `0L` |
+| `float` | `0.0F` |
+| `double` | `0.0` |
+| `char` | `'\u0000'` |
+| `boolean` | `false` |
+| `reference` | `null` |
 <br />
 
 ## 선언과 동시에 초기화
@@ -47,6 +60,42 @@ String[] srr = {"대학생학대는", "거꾸로읽어도", "대학생학대"};
 int[][] crr = new int[2][3];
 int[][] drr = { {9, 5, 0}, {5, 2, 4} };
 ```
+
+2차원 배열부턴 낮은 차원의 크기를 생략할 수 있습니다.
+
+```java
+// int arr1[] = new int[]; // err: 크기 생략 불가
+int arr2[][] = new int[3][]; // ok: 1차원 크기 생략 가능
+int arr3[][][] = new int[99][][]; // ok: 1,2차원 크기 생략 가능
+```
+
+또한 자바에선 1차원 배열 요소에 배열을 저장하는 방식으로 고차원 배열을 구성하기 때문에, 각 행마다 길이가 다른 배열을 저장할 수도 있습니다.
+
+:::note
+
+각 행마다 크기가 다른 배열을 `Ragged Array`라고 합니다.
+
+:::
+
+```java
+int ragged[][] = {
+    {1, 2, 3, 4},
+    {5, 6, 7},
+    {8, 9}
+};
+
+for (int[] x : ragged) {
+    for (int y : x)
+        System.out.print(y + " ");
+    System.out.println("");
+}
+```
+```text title=결과
+1 2 3 4
+5 6 7
+8 9
+```
+
 <br />
 
 ## 배열 길이 확인
