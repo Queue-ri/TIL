@@ -11,9 +11,9 @@ TIL 문서들을 특정 주제로 분류하여 정리한 페이지입니다.
 ## 하위 카테고리
 
 ⭐바로가기: 
-[`PL`](https://til.qriositylog.com/featured/pl/java/java-introduction)
-[`Backend`](https://til.qriositylog.com/featured/backend/spring/spring_main)
-[`English`](https://til.qriositylog.com/featured/english/dev-vocab/a)
+[`PL`](https://til.qriosity.dev/featured/pl/java/java-introduction)
+[`Backend`](https://til.qriosity.dev/featured/backend/spring/spring_main)
+[`English`](https://til.qriosity.dev/featured/english/dev-vocab/a)
 <br />
 
 ### 📕 PL (Programming Language)
@@ -25,15 +25,47 @@ TIL인 만큼 엄밀하게 작성하기보다는 편하게 기억을 돕기 위�
 이곳의 글이 좀 더 검증과 가공을 거치면 블로그 포스트로 발행됩니다.
 <br />
 
-### 📒 Backend
+### 📙 Backend
 
-백엔드에 관하여 기록되어 있습니다.
+백엔드 프레임워크에 관하여 기록되어 있습니다.
 
 스프링, 노드JS 위주로 우선 작성할 계획입니다. _~~노드가 더 재밌는데 스프링부터 써야함~~_
 
 <br />
 
-### 📗 English
+### 📒 DevOps
+
+자동화, CI/CD에 관하여 기록되어 있습니다.
+
+예외적으로 GitHub Actions는 Git/GitHub 카테고리로 분류합니다.
+
+<br />
+
+### 📗 Infra
+
+기타 서버 관련 내용이 기록되어 있습니다.
+
+리눅스, NGINX 토픽이 여기에 해당합니다.
+
+<br />
+
+### 📘 Git/GitHub
+
+Git 또는 GitHub 관련 내용이 기록되어 있습니다.
+
+:::note
+
+***왜 GitHub를 DevOps로 분류하지 않나요?***
+
+GitHub 토픽은 많은 경우 Git 내용을 포함하고 있습니다.
+
+따라서 DevOps로 분류할 경우 카테고리 구분이 모호해지기에 예외적으로 Git과 같이 분류합니다.
+
+:::
+
+<br />
+
+### 📓 English
 
 영어에 관하여 기록되어 있습니다. 신성한 프밍 얘기 중에 웬 갑자기 영어냐구요?
 
