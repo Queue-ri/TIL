@@ -3,6 +3,7 @@ title: 'Java 객체지향 2: 상속과 오버라이딩'
 eng_title: 'Java OOP 2: Inheritance and Overriding'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '객체지향 2: 상속과 오버라이딩'
+sidebar_position: 5
 created_date: 2021-11-26
 ---
 

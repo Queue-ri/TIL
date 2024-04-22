@@ -3,6 +3,7 @@ title: 'Java의 배열'
 eng_title: 'Array of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '배열'
+sidebar_position: 3
 created_date: 2021-11-11
 updated_date: 2024-04-18
 ---

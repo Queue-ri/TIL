@@ -3,6 +3,7 @@ title: 'Java의 기본 자료형'
 eng_title: 'Primitive Data Types of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '기본 자료형'
+sidebar_position: 1
 created_date: 2021-11-08
 updated_date: 2024-04-17
 ---

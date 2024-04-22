@@ -3,6 +3,7 @@ title: 'Java의 기본 출력'
 eng_title: 'Basic Print of Java'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '기본 출력'
+sidebar_position: 2
 created_date: 2021-11-07
 updated_date: 2021-11-16
 ---

@@ -3,6 +3,7 @@ title: 'Java 객체지향 1: 클래스와 인스턴스'
 eng_title: 'Java OOP 1: Class and Instance'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '객체지향 1: 클래스와 인스턴스'
+sidebar_position: 4
 created_date: 2021-11-16
 updated_date: 2021-11-26
 ---
