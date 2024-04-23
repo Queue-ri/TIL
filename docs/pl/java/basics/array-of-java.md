@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_label: '배열'
 sidebar_position: 3
 created_date: 2021-11-11
-updated_date: 2024-04-18
+updated_date: 2024-04-23
 ---
 
 # Java의 배열
@@ -163,6 +163,40 @@ public class Main {
 ```text title=결과
 1 * 2 * 3 * 4 * 5 * 6 * 7
 ```
+<br />
+
+## 배열 정렬
+
+`Arrays.sort` 함수를 사용하여 배열을 정렬할 수 있습니다.
+
+:::info
+
+`Arrays.sort`와 같이 원본 데이터를 수정하는 함수를 **파괴함수**라고 합니다.
+
+:::
+
+:::caution
+
+`Collections.reverseOrder` 함수는 Primitive Type 배열에 사용할 수 없습니다.
+
+:::
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Integer[] arr = {3, 2, 1, 5, 4};
+        Arrays.sort(arr);
+        System.out.println("오름차순 정렬: " + Arrays.toString(arr));
+        Arrays.sort(arr, Collections.reverseOrder());
+        System.out.println("내림차순 정렬: " + Arrays.toString(arr));
+    }
+}
+```
+```text title=결과
+오름차순 정렬: [1, 2, 3, 4, 5]
+내림차순 정렬: [5, 4, 3, 2, 1]
+```
+
 <br />
 
 ## 배열 복사
