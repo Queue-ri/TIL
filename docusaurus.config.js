@@ -12,6 +12,10 @@ const docNavItems = [
     label: 'PL',
   },
   {
+    to: 'featured/ps/boj/11660',
+    label: 'PS',
+  },
+  {
     to: 'featured/backend/spring/spring_main',
     label: 'Backend',
   },
