@@ -48,7 +48,8 @@ while read filepath; do
 
     if [[ "$filedate" == "$TODAY" ]]; then
         echo "- [New!] 📗 [$filetitle ($filetitle_en)]($pagepath) \`repo: $filepath\`" >> $FILE
-    elif [[ "$fileupdate" == "$TODAY" ]]; then
+    fi
+    if [[ "$fileupdate" == "$TODAY" ]]; then
         echo "- [Update] 📙 [$filetitle ($filetitle_en)]($pagepath) 📃🔍 [history](https://github.com/Queue-ri/TIL/commits/main/${filepath}?since=${TODAY}T00:00:00Z&until=${TODAY}T23:59:59Z) \`repo: $filepath\`" >> $FILE
     fi
 done < .github/filepath_list
