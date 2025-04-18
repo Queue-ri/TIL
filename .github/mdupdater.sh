@@ -20,9 +20,9 @@ echo -e "${GREEN}** configuring ${TODAY}.md...${NOCOLOR}"
 find docs dev-note -name "*.md" -o -name "*.mdx" > .github/filepath_prelist # All md(x) path. Root is not a .sh path
 touch .github/filepath_list
 
-while read filepath; do
-    filedate=`grep "created_date" $filepath | cut -f2 -d " " | head -1` # should be a single space, not ":".
-    fileupdate=`grep "updated_date" $filepath | cut -f2 -d " " | head -1`
+while IFS='' read filepath; do
+    filedate=`grep "created_date" "$filepath" | cut -f2 -d " " | head -1` # should be a single space, not ":".
+    fileupdate=`grep "updated_date" "$filepath" | cut -f2 -d " " | head -1`
 
     if [[ "$filedate" == "$TODAY" || "$fileupdate" == "$TODAY" ]]; then
         echo $filepath >> .github/filepath_list
@@ -39,12 +39,12 @@ else
     exit 0
 fi
 
-while read filepath; do
-    pagepath=`echo https://til.qriosity.dev/${filepath%.*} | sed 's/docs/featured/'`
-    filedate=`grep "created_date" $filepath | cut -f2 -d " " | head -1` # should be a single space, not ":".
-    fileupdate=`grep "updated_date" $filepath | cut -f2 -d " " | head -1`
-    filetitle=`grep "title" $filepath | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
-    filetitle_en=`grep "eng_title" $filepath | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
+while IFS='' read filepath; do
+    pagepath=`echo https://til.qriosity.dev/${filepath%.*} | sed -e 's/docs/featured/' -e 's/ /%20/g'`
+    filedate=`grep "created_date" "$filepath" | cut -f2 -d " " | head -1` # should be a single space, not ":".
+    fileupdate=`grep "updated_date" "$filepath" | cut -f2 -d " " | head -1`
+    filetitle=`grep "title" "$filepath" | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
+    filetitle_en=`grep "eng_title" "$filepath" | cut -f2 -d "'" | head -1 | sed -e "s/^'//" -e "s/'$//"`
 
     if [[ "$filedate" == "$TODAY" ]]; then
         echo "- [New!] 📗 [$filetitle ($filetitle_en)]($pagepath) \`repo: $filepath\`" >> $FILE
