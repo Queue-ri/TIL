@@ -40,6 +40,7 @@ else
 fi
 
 while IFS='' read filepath; do
+    encoded_filepath=`echo ${filepath} | sed -e 's/ /%20/g'`
     pagepath=`echo https://til.qriosity.dev/${filepath%.*} | sed -e 's/docs/featured/' -e 's/ /%20/g'`
     filedate=`grep "created_date" "$filepath" | cut -f2 -d " " | head -1` # should be a single space, not ":".
     fileupdate=`grep "updated_date" "$filepath" | cut -f2 -d " " | head -1`
@@ -50,7 +51,7 @@ while IFS='' read filepath; do
         echo "- [New!] 📗 [$filetitle ($filetitle_en)]($pagepath) \`repo: $filepath\`" >> $FILE
     fi
     if [[ "$fileupdate" == "$TODAY" ]]; then
-        echo "- [Update] 📙 [$filetitle ($filetitle_en)]($pagepath) 📃🔍 [history](https://github.com/Queue-ri/TIL/commits/main/${filepath}?since=${TODAY}T00:00:00Z&until=${TODAY}T23:59:59Z) \`repo: $filepath\`" >> $FILE
+        echo "- [Update] 📙 [$filetitle ($filetitle_en)]($pagepath) 📃🔍 [history](https://github.com/Queue-ri/TIL/commits/main/${encoded_filepath}?since=${TODAY}T00:00:00Z&until=${TODAY}T23:59:59Z) \`repo: $filepath\`" >> $FILE
     fi
 done < .github/filepath_list
 
