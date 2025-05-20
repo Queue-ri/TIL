@@ -250,12 +250,12 @@ async function createConfig() {
               items: [
                 {
                   html: `
-                    <img src="https://til.qriosity.dev/img/cloudflare_pages.svg" alt="Deploys by Cloudflare Pages" width="150px" />
+                    <img src="https://til.qriosity.dev/img/cloudflare_pages.svg" alt="Deployed by Cloudflare Pages" width="150px" />
                   `,
                 },
                 {
                   html: `
-                    <img src="https://til.qriosity.dev/img/facebook_oss.png" alt="Built with Docusaurus" width="150px" style="margin-left:10px;" />
+                    <img src="https://til.qriosity.dev/img/meta_opensource_logo_negative.svg" alt="Built with Docusaurus" style="width:300px;min-width:300px;transform:translateX(-12px);" />
                   `,
                 },
               ],
