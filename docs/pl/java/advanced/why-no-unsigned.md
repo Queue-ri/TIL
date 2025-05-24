@@ -5,11 +5,12 @@ image: https://til.qriosity.dev/img/m_banner_background.jpg
 sidebar_label: 'unsigned 없찐?'
 sidebar_position: 2
 created_date: 2024-04-25
+updated_date: 2025-05-24
 ---
 
 # 왜 자바는 unsigned 타입이 없을까
 
-## C++의 unsigned int
+## C++의 unsigned 타입
 
 모두 알다시피 C++은 부호 없는 자료형인 `unsigned` 타입을 지원한다.
 
