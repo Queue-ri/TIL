@@ -1,10 +1,11 @@
 ---
 title: '자바의 한계와 개선 필요 사항'
-eng_title: "Limitations and Potential Improvements in Java"
+eng_title: 'Limitations and Potential Improvements in Java'
 image: https://til.qriosity.dev/img/m_banner_background.jpg
 sidebar_label: '자바의 한계와 개선 필요 사항'
 sidebar_position: 99
 created_date: 2025-05-23
+updated_date: 2025-05-24
 ---
 
 # 자바의 한계와 개선 필요 사항
@@ -40,7 +41,7 @@ created_date: 2025-05-23
 
 <br />
 
-### unsigned int의 부재
+### unsigned 타입의 부재
 
 > "자바 개발자는 내부 원리같은거 알 필요 없음"
 
@@ -61,22 +62,40 @@ created_date: 2025-05-23
 > "엥 그럼 뭔데"
 >
 > "StringBuilder 치환 문법임"
+>
+> "Integer끼리 연산자 써지는건?"
+> 
+> "그건 autoboxing 때문인데요"
 
-출처: [The C Family of Languages: Interview with Dennis Ritchie, Bjarne Stroustrup, and James Gosling](http://www.gotw.ca/publications/c_family_interview.htm)
+<br />
+
+#### 자바의 철학 (a.k.a 고슬링 취향)
+
+```java
+BigInteger a = new BigInteger("2364564564564645645");
+BigInteger b = BigInteger.valueOf(2);
+BigInteger c = BigInteger.valueOf(3);
+BigInteger d = b.multiply(a.add(c));
+```
+
+출처 1: [The C Family of Languages: Interview with Dennis Ritchie, Bjarne Stroustrup, and James Gosling](http://www.gotw.ca/publications/c_family_interview.htm)<br />
+출처 2: [milleniumbug/java_rant.txt](https://gist.github.com/milleniumbug/3bd74fcdce6355d1355f05cec1a909b2)
 
 <br />
 
 ### 원시 자료형 내림차순 정렬 시의 어려움
 
-> 오름차순은 되는데 아무튼 내림차순은 안돼요
+> 오름차순은 되는데 내림차순은 API 복잡해져서 만들어주기 싫었어요
 >
-> 아 근데 boxing하면 `Collections`에서 지원해줌
+> 어차피 boxing하면 `Collections`에서 지원해줌
 >
 > boxing 오버헤드? 싫으면 스케일업하세요
 >
 > 오름차순 정렬하고 O(n)으로 reverse하면 결과 똑같긴 함
 >
 > O(n) 비용? 싫으면 스케일업하세요
+
+출처: [Java SE 8 for the Really Impatient by Cay S. Horstmann](https://stackoverflow.com/a/23106578)
 
 <br />
 
@@ -106,7 +125,17 @@ created_date: 2025-05-23
 >
 > "아니 왜 이건 오버헤드 신경씀?"
 >
-> "자주 쓰이는건 C++급 성능을 내고 싶어서"
+> "자주 쓰이는건 C++급 성능을 내고 싶어서.
+
+<img src="https://velog.velcdn.com/images/qriosity/post/b045aed8-9045-465c-bc58-b7b107718e8e/image.png" width="700px" />
+
+*~하지만 사실 배열 length는 멤버변수가 아닌 JVM 특수 토큰이었다~*
+
+> "뭐야 성능때문에 멤버변수로 접근한다매; 멤버변수 아니잖아 왜 구라쳐"
+> 
+> "개발자는 몰라도 돼 아무튼 멤버변수임"
+
+출처: [How does Arrays work in the ByteCode of Java](https://stackoverflow.com/questions/20646022/how-does-arrays-work-in-the-bytecode-of-java)
 
 <br />
 
@@ -135,3 +164,25 @@ created_date: 2025-05-23
 > "........"
 >
 > "글고 그거 JIT 최적화하기 어려우니까 참고해"
+
+<br />
+
+### MZ한 unboxing 정책
+
+```java
+true ? 123 : (Integer)null
+```
+
+> "이거 왜 NPE 터져요?"
+> 
+> "RTFM."
+> 
+> "Type Promotion 처럼 작동하는거 아니었음??"
+> 
+> "맞음 그래서 primitive 우선이라 reference를 언박싱함"
+> 
+> "아니 C#, 코틀린 다 문제 없구만 왜 자바만 lossy conversion 하는건데"
+> 
+> "아무튼 정책은 그럼"
+
+출처: [Java Language Specification, Java SE 7 Edition, §5.6.2 Binary Numeric Promotion](https://docs.oracle.com/javase/specs/jls/se7/html/jls-5.html#jls-5.6.2)
