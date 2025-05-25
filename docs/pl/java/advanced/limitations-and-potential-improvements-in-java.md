@@ -1,16 +1,22 @@
 ---
 title: '자바의 한계와 개선 필요 사항'
 eng_title: 'Limitations and Potential Improvements in Java'
-image: https://til.qriosity.dev/img/m_banner_background.jpg
+image: https://velog.velcdn.com/images/qriosity/post/d78485d9-245a-4caf-8e80-5d0a0984399b/image.png
 sidebar_label: '자바의 한계와 개선 필요 사항'
 sidebar_position: 99
 created_date: 2025-05-23
-updated_date: 2025-05-24
+updated_date: 2025-05-25
 ---
 
 # 자바의 한계와 개선 필요 사항
 
 :::note 이 글은 자바 30주년 기념으로 작성되었습니다.
+
+<img src="https://velog.velcdn.com/images/qriosity/post/abb67f33-dab0-4c7e-93bd-08268302fa58/image.png" width="480px" height="auto" />
+
+<br />
+
+🎉 Happy 30th Anniversary!
 
 [30주년 기념 고슬링 ~~신화~~ 인터뷰 보러가기](https://thenewstack.io/java-at-30-the-genius-behind-the-code-that-changed-tech/) | [[한국어 번역](https://news.hada.io/topic?id=20964)]
 
@@ -139,9 +145,9 @@ BigInteger d = b.multiply(a.add(c));
 
 <br />
 
-### inline 함수의 부재
+### inline 함수 키워드의 부재
 
-> "왜 자바는 인라인 함수 지원 안함?"
+> "왜 자바는 인라인 키워드 지원 안함?"
 > 
 > "인라인으로 돌릴지는 JIT이 결정하니까 개발자는 신경쓰지 마"
 
@@ -186,3 +192,58 @@ true ? 123 : (Integer)null
 > "아무튼 정책은 그럼"
 
 출처: [Java Language Specification, Java SE 7 Edition, §5.6.2 Binary Numeric Promotion](https://docs.oracle.com/javase/specs/jls/se7/html/jls-5.html#jls-5.6.2)
+
+<br />
+
+### 벗어날 수 없는 명사 지옥
+
+#### C++ *(자바보다 10년 더 오래된 언어)*
+```cpp
+int add(int x, int y) {
+    return x + y;
+}
+
+int main() {
+    function<int(int, int)> f = add;
+    cout << f(1, 2) << endl;
+}
+```
+
+#### Python *(자바보다 4년 더 오래된 언어)*
+```python
+def add(x, y):
+    return x + y
+
+f = add
+print(f(1, 2))
+```
+
+#### Java
+```java
+public class Main {
+    public static void main(String[] args) {
+        BiFunction<Integer, Integer, Integer> f = (x, y) -> x + y;
+        System.out.println(f.apply(1, 2));
+    }
+}
+```
+
+> "apply() 이거 꼭 호출해야돼?"
+> 
+> "진짜 1급 시민으로 쓰려면 JVM도 수정해야돼서 안됨"
+
+#### Kotlin
+```kotlin
+val f: (Int, Int) -> Int = { x, y -> x + y }
+
+fun main() {
+    println(f(3, 5))
+}
+```
+> "그럼 코틀린은 같은 JVM 쓰는데 왜 잘만 돼??"
+>
+> "걔는 컴파일러가 ()를 invoke()로 치환해줌"
+> 
+> "자바도 치환해주면 되잖아"
+> 
+> "싫어"
