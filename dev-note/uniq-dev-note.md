@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-05-21
+updated_date: 2025-05-26
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -64,7 +64,7 @@ FE 지식이 많진 않은데 당장 목표하는 기본 기능만 구상해서 
 
 </details>
 
-### 📆 25-05-20
+### 📆 25-05-21
 
 MDX renderer 구현
 
@@ -113,7 +113,7 @@ Webpack + @mdx-js/loader 이다.
 
 1. 필요한 패키지 설치
 
-```sh
+```bash
 npm install @craco/craco @mdx-js/react @mdx-js/loader
 ```
 
@@ -239,5 +239,95 @@ CRA Webpack의 기본 설정은 mdx를 알 수 없는 파일로 간주하여 정
 요기까지 완성하고 내일의 나에게 맡긴다.
 
 ![https://velog.velcdn.com/images/qriosity/post/96f18959-895d-46b4-b825-b0b07502237b/image.png](https://velog.velcdn.com/images/qriosity/post/96f18959-895d-46b4-b825-b0b07502237b/image.png)
+
+</details>
+
+### 📆 25-05-26
+
+frontmatter 파싱, `1.0.0-beta.1` 릴리즈
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq/issues/1](https://github.com/Queue-ri/uniq/issues/1)
+
+<br />
+
+#### 📌 frontmatter 파싱
+
+MDX가 잘 렌더링되는 것 같지만 frontmatter는 사실 안그랬다.
+
+`-----`를 기점으로 안의 내용들이 한 뭉탱이로 다 h2 처리되더라.
+
+admonition도 별도로 처리해야하는 것 같지만 frontmatter는 메타데이터라 중요해서, 먼저 처리하기로 했다.
+
+목표는 이러했다.
+
+- `title`: 글 최상단에 h1으로 렌더링 & 사이드바에 렌더링
+- `created_date`: 사이드바에 렌더링
+- `updated_date`: 사이드바에 렌더링
+
+그리고 하단의 방식으로 해결했다.
+
+1. 필요한 패키지 설치
+
+```bash
+npm install remark-frontmatter remark-mdx-frontmatter
+```
+
+2. craco.config.js 수정
+
+상단에 요거 추가하고
+
+```js
+module.exports = async (env) => {
+  const { default: remarkFrontmatter } = await import('remark-frontmatter');
+  const remarkMdxFrontmatter = (await import('remark-mdx-frontmatter')).default;
+  ...
+```
+
+mdxRule의 options에 frontmatter 플러그인을 추가했다.
+
+```js
+options: {
+  providerImportSource: "@mdx-js/react",
+  remarkPlugins: [
+    remarkFrontmatter,
+    [remarkMdxFrontmatter, { name: 'frontmatter' }],
+  ],
+},
+...
+```
+
+`import` 구문 쓰는데 애 좀 먹었어서 default에 대해 알아봐야겠다.
+
+그나저나 모듈마다 CJS/ESM 호환 갈리는거 진심 탈모 요소 중 하나인듯
+
+3. EditorPage.js, EditorSideBar.js 수정
+
+- [EditorPage.js diff](https://github.com/Queue-ri/uniq/commit/ddaf1583b283330d1d1921c2fa2d7526d8200979)
+- [EditorSideBar.js diff](https://github.com/Queue-ri/uniq/commit/dcad5883477bb30d15ebf2abc82043a2b2aa0c30)
+
+<br />
+
+#### 📌 다음 릴리즈 계획
+
+서버 컴이 와서 놀고있기 때문에 좀 더 열심히 개발해야겠다.
+
+다음 버전에선 publish한 mdx를 서버쪽으로 보내고, 서버에선 이를 쏴주는 api를 만들어야 한다.
+
+그리고 private gh repo에 push가 되어야하기 때문에... 이리저리 고민한 결과
+
+백엔드 API를 통해서 처리하는 것이 제일 정석적인 flow라고 생각한다.
+
+왜냐하면,
+
+- 카테고리 정보 받으려면 결국 백엔드 통신이 필요함
+- Electron으로 렌더링 부분만 데스크탑 앱으로 빼면 프로젝트 복잡해짐
+- FE단에 뷰어와 private repo 접근 기능 모두를 넣으면 보안상 안좋음.
+- CORS 잘~ 설정하면 로컬 -> 리모트 통신 가능
+
+그래서 내일은 express 작업을 할 것 같다.
 
 </details>
