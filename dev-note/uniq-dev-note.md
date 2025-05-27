@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-05-26
+updated_date: 2025-05-27
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -329,5 +329,155 @@ options: {
 - CORS 잘~ 설정하면 로컬 -> 리모트 통신 가능
 
 그래서 내일은 express 작업을 할 것 같다.
+
+</details>
+
+### 📆 25-05-27
+
+MDX publish API 구현
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/1](https://github.com/Queue-ri/uniq-cms/issues/1)
+
+<br/>
+
+#### 📌 express 기본 세팅
+
+백엔드 단 프로젝트 명을 `uniq-cms`로 정하고 express 서버로 세팅했다.
+
+UI는 `uniq` CRA 프로젝트에서 다 맡고 있으니 `uniq-cms`는 headless CMS인 격이다.
+
+```bash
+npm install express
+npm install --save-dev nodemon
+```
+
+디펜던시를 상단과 같이 설치하고 index.js와 post.js를 생성했다.
+
+```js title="index.js"
+const express = require('express');
+const app = express();
+const port = 6229;
+
+// parse JSON body
+app.use(express.json());
+
+// set /api prefix for all endpoints
+const postRoutes = require('./routes/post');
+app.use('/api/post', postRoutes);
+
+app.listen(port, () => {
+    console.log(`🚀 uniq-cms running at http://localhost:${port}`);
+});
+```
+
+```js title="post.js"
+const express = require('express');
+const router = express.Router();
+
+router.get('/:id', (req, res) => {
+    const postId = req.params.id;
+    res.send(`Post content ${postId} :3`);
+});
+
+router.post('/', (req, res) => {
+    res.send('Post published.');
+});
+
+module.exports = router;
+```
+
+<br />
+
+#### 📌 MDX Publish API 구현 (1/2)
+
+Publish 요청이 들어오면 해당 MDX 파일에 대해 다음의 두 가지를 처리해야 한다.
+
+1. 서버의 `/post` 경로에 저장
+2. GH private repo에 push
+
+그 중 1번부터 작업했다.
+
+<br />
+
+#### mdx 파일 저장하기
+
+중복 파일명 문제에 대해선 MVP 단계에서 생각할 부분이 아닌 것 같아 나중에 처리하기로 했다.
+
+```bash
+npm install multer
+```
+
+```js title="post.js"
+// temporary upload
+const upload = multer({
+    dest: 'temp_uploads/',
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+});
+
+/* Publish MDX file */
+router.post('/', upload.single('file'), (req, res) => {
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).send('No mdx file uploaded.');
+    }
+
+    // Check if the file is mdx
+    if (path.extname(file.originalname) !== '.mdx') {
+        fs.unlinkSync(file.path); // delete file if not mdx
+        return res.status(400).send('Only mdx files are allowed.');
+    }
+
+    // set mdx save directory
+    const postDir = path.join(__dirname, '../../post');
+
+    // if not exist then mkdir
+    if (!fs.existsSync(postDir)) {
+        fs.mkdirSync(postDir, { recursive: true });
+    }
+
+    // final save path for the mdx file
+    const targetPath = path.join(postDir, file.originalname);
+
+    // move mdx file from temporary upload path
+    fs.rename(file.path, targetPath, (err) => {
+        if (err) {
+            return res.status(500).send('Failed to save file.');
+        }
+
+        res.send('Post published.');
+    });
+});
+```
+
+#### json 파싱하기
+
+mdx 뿐만 아니라 json 데이터도 같이 필요해질 확률이 99.99%라서 json 파싱 로직도 추가했다.
+
+```js
+// parse json
+let jsonData = null;
+if (req.body.json) {
+    try {
+        jsonData = JSON.parse(req.body.json);
+    } catch (err) {
+        return res.status(400).send('Invalid json payload.');
+    }
+}
+```
+
+```text title="console.log 결과"
+[DEBUG] Received json: { category: 'dev-note', title: 'uniQ 개발 노트' }
+```
+
+<br />
+
+#### 📌 MDX Publish API 구현 (2/2)
+
+
 
 </details>
