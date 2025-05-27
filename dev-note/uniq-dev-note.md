@@ -478,6 +478,64 @@ if (req.body.json) {
 
 #### 📌 MDX Publish API 구현 (2/2)
 
+```bash
+npm install simple-git
+npm install dotenv
+```
 
+서버 최상단에 env를 불러오도록 설정한다.
+
+```js
+require('dotenv').config();
+```
+
+그리고 repo 권한 추가한 GitHub PAT를 발급하여 env에 넣는다.
+
+그럼 push할때 sign in 창이 안뜨고 아묻따 push가 가능해진다.
+
+<br />
+
+#### 올바른 git 참조하기
+
+`simple-git`으로 push util을 만들어서 모듈화하고, 이 모듈을 post.js에서 불러와 처리하고자 했다.
+
+그런데 `/post`에서 git init하면 동기화를 못하기 때문에, 프로젝트 루트 경로의 git을 참조해야 한다.
+
+```js
+const gitPath = path.join(__dirname, '../../');
+const git = simpleGit(gitPath);
+```
+
+따라서 simpleGit에 이런식으로 .git이 있는 루트 path를 넣어준다.
+
+암튼 이렇게 해서 [pushToGithub.js](https://github.com/Queue-ri/uniq-cms/commit/1d08e7c0fec8f64a6ec5636148c6aa8e587683a2)를 작성했고
+
+publish api에 GH push flow를 추가했다. ([5e00690](https://github.com/Queue-ri/uniq-cms/commit/5e00690ea1cc0d1551fe4f5793049810d9f2b50a))
+
+<br />
+
+#### git 작업 시 참고사항
+
+push util로 main에 checkout 해서 push하려니까 현재 feature 브랜치에 있어서 stash 경고가 떴다.
+
+- ➡️ stash하고 main으로 checkout 했는데 stash때문에 util 작성한게 다 과거로 돌아감 ㅋ
+
+    - ➡️ stash pop을 했는데 merge conflict가 떠서 keep theirs로 stash 버전을 살리고 main에서 util 테스트를 진행했다.
+
+프로덕션에선 브랜칭할 일이 없을테니 상관없지만 개발하는 repo에선 이거 좀 불편하다. 😐
+
+그리고 publish 관련 커밋을 다이렉트로 main에 꽂아버리기 때문에 사용자 입장에서는 fork를 통한 CMS 관리가 어렵다. 업데이트를 위해 pull 땡길 시 충돌나기 때문.
+
+어떻게 하면 api 버전업이 용이할지는 다음의 고민 사항이다.
+
+<br />
+
+#### 아직 DB 연결은 안되어있음!
+
+push util 상의 설정 정보들은 (ex. remote url, username 등) 사용자가 수정할 수 있어야 한다.
+
+그래서 DB에서 퍼오는걸로 점진적 수정을 거쳐야 하는데
+
+우선 조회 api 먼저 구현해서 #1 이슈를 끝내고 #2에서 몽고DB 작업을 할 예정이다.
 
 </details>
