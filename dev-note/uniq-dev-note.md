@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-05-27
+updated_date: 2025-05-28
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -537,5 +537,148 @@ push util 상의 설정 정보들은 (ex. remote url, username 등) 사용자가
 그래서 DB에서 퍼오는걸로 점진적 수정을 거쳐야 하는데
 
 우선 조회 api 먼저 구현해서 #1 이슈를 끝내고 #2에서 몽고DB 작업을 할 예정이다.
+
+</details>
+
+### 📆 25-05-28
+
+MDX query API 구현, MongoDB 연결, publish API DB 연결
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/1](https://github.com/Queue-ri/uniq-cms/issues/1)
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/3](https://github.com/Queue-ri/uniq-cms/issues/3)
+
+<br/>
+
+#### 📌 MDX query API 구현
+
+DB 연결이 안된 상태라 mock으로 구색만 맞춰놓고 1번 이슈를 끝냈다.
+
+```js title="post.js"
+router.get('/:id', (req, res) => {
+    const postId = req.params.id;
+
+    if (postId === '1') {
+        const filePath = path.join(__dirname, '../../post/test.mdx');
+
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error('[Error] Failed to read MDX:', err);
+                return res.status(500).send('Failed to read post file.');
+            }
+
+            res.type('text/markdown').send(data);
+        });
+    } else {
+        res.status(404).send('Cannot find requested post.');
+    }
+});
+```
+
+<br />
+
+#### 📌 MongoDB 연결
+
+뭣모르고 썼는데 Express 4.16.0 이상부터 `body-parser`가 내장되어있다고 한다.
+
+```js
+app.use(express.json());
+```
+
+그래서 index.js에 이렇게 설정해주면 all set이었던 거였음!
+
+<br />
+
+#### 📌 MongoDB 연결
+
+```bash
+npm install mongoose
+```
+
+```js title="index.js"
+const mongoose = require('mongoose');
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/uniq-cms')
+.then(() => console.log('✅ Successfully connected to MongoDB'))
+.catch(err => console.error('❌ Failed to connect to MongoDB:', err));
+```
+
+<br />
+
+#### 📌 Post Collection 정의
+
+다음과 같이 Collection 스키마를 정의할 수 있다.
+
+별도의 설정을 넣지 않는다면 자동 생성되는 Collection은 소문자 & 복수형으로 네이밍된다. (ex. Post -> posts)
+
+`visibility`는 포스트 접근권한으로, enum으로 관리하기로 했다.
+
+```js title="Post.js"
+const mongoose = require('mongoose');
+
+const postSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    filePath: { type: String, required: true },
+    visibility: {
+        type: String,
+        enum: ['public', 'protected', 'private'],
+        default: 'public',
+        required: true
+    }
+}, {
+    timestamps: true, // automatically set createdAt and updatedAt
+});
+
+module.exports = mongoose.model('Post', postSchema);
+```
+
+<br />
+
+#### Post Document 저장
+
+JPA의 repository마냥 `require`로 Post 스키마를 불러와서 필요한 document를 저장하면 된다.
+
+절대경로인 `targetPath`는 프로젝트 경로까지 포함하기 때문에 프로젝트 파일이 이동되면 관리하기 힘들어진다.
+
+따라서 post 경로부터 시작하는 상대경로로 변환하여 저장했다.
+
+이러면 post 경로가 바뀌어도 document에는 영향이 없다.
+
+```js title="post.js"
+const Post = require('../models/Post');
+
+const projectRoot = process.cwd(); // project root path
+const relativePath = path.relative(projectRoot, targetPath);
+
+await Post.create({
+    title: jsonData.title,
+    category: jsonData.category,
+    filePath: relativePath,
+    visibility: jsonData.visibility
+});
+```
+
+```json title="저장된 document"
+{
+  "title": "uniQ 개발 노트",
+  "category": "dev-note",
+  "filePath": "post\\test.mdx",
+  "visibility": "protected",
+  "createdAt": {
+    "$date": "2025-05-28T14:13:13.519Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-28T14:13:13.519Z"
+  },
+  "__v": 0
+}
+```
 
 </details>
