@@ -1,0 +1,40 @@
+name: Netlify PR Preview
+
+on:
+  pull_request:
+    branches:
+      - "develop/**"
+      - "feature/**"
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  deploy-draft:
+    name: Deploy draft to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build page
+        run: yarn build
+
+      - name: Deploy draft to Netlify
+        uses: evnex/netlify-deploy@v1.0.4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          build-dir: "./build"
+          draft: true
+          comment-on-pull-request: true
