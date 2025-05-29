@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-05-28
+updated_date: 2025-05-29
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -680,5 +680,96 @@ await Post.create({
   "__v": 0
 }
 ```
+
+</details>
+
+### 📆 25-05-29
+
+MDX query API DB 연결, slug 필드 추가
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/3](https://github.com/Queue-ri/uniq-cms/issues/3)
+
+<br />
+
+#### 📌 query API 수정하기
+
+기존에 mock으로 하드코딩했던 부분을 MongoDB와 연결했다.
+
+[post.js diff](https://github.com/Queue-ri/uniq-cms/commit/14532ee43556e9c44cb0db5ac6f81a54d2011931)
+
+하지만 테스트해보니 요런 에러가 터졌다.
+
+```
+[Error] Failed to get post: CastError: Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Post"
+```
+
+이 말인 즉슨 MongoDB에 보낸 1이라는 쿼리 값이 ObjectId가 아니라는 뜻이다.
+
+mongoose의 `findById`는 내부적으로 _id가 MongoDB의 ObjectId 타입이라고 가정하는데 내가 무지성으로 MySQL 마냥 정수형 id 값을 날린게 원인이다.
+
+Auto increment처럼 id 필드를 따로 만들어주는 방법이 있긴 했는데, 찾아보니 ObjectId를 사용하는 것이 일반적이고 성능도 가장 최적화되어있다고 하여 해당 방식을 그대로 따르기로 했다.
+
+```
+http://localhost:6229/api/post/683860a3561f6209b13787fb
+```
+
+그리고 ObjectId로 다시 호출하니 잘 조회되었다.
+
+<br />
+
+#### 📌 하지만 주소창에 683860a3561f6209b13787fb 를 쓸 순 없자너
+
+그렇다. 그래서 UX와 SEO-friendly함을 고려하여 slug라는 것이 존재하는 것이었다.
+
+> **slug란?**
+>
+> slug는 웹 페이지를 쉽게 읽을 수 있는 형태로 식별하는 URL의 일부이다.<br />
+> 당연히 unique 해야 한다.
+
+```text title="FE route URL"
+http://localhost:3000/post/uniq-dev-note
+```
+
+그렇다면 FE에서 slug 기반 URL로 route 할 경우
+
+```text title="FE -> BE request endpoint"
+http://localhost:6229/api/post/683860a3561f6209b13787fb
+```
+
+FE가 BE에 ObjectId로 조회 요청을 날리는 flow가 되는데, 이는 아주 일반적인 방법이라고 한다.
+
+개인적으로 정수형 id를 더 선호해왔어서 slug 방식이 SEO 이득을 보는지 몰랐다 😂
+
+아무튼 스키마와 API 둘 다 slug 필드를 추가해주었고,
+
+[Commit e51a8a8](https://github.com/Queue-ri/uniq-cms/commit/e51a8a8c88ce8148142a1c10aab7c7f7f8c8e6f5)
+
+slugify라는 npm 패키지로 자동 생성도 가능하다는데 MVP 단계니까 있다는 것만 적어두고 패스한다.
+
+```js
+slug: { type: String, required: true, unique: true }
+```
+
+...그나저나 개발 일지 쓰면서 갑자기 보였는데 slug 필드에 unique 빼먹었다.
+
+내일 fix하자 ㅋㅋㅋㅋㅋㅋㅋㅋ
+
+<br />
+
+#### 😙 내일의 계획!
+
+내일은 리트코드 POTD 말고도 프로그래머스 문제 하나를 더 풀고 싶기 때문에 가능할지는 모르겠으나
+
+- slug field fix
+- MDX list query API impl
+- 무시무시한(?) CORS setting
+
+이 3가지가 일단 목표이고, 토요일이 5월의 마지막 날이니 이 날 뷰 작업이 얼추 되었으면 좋겠다고 생각한다.
+
+6월부터는 DOKI 양도 봐드려야 하고 정처기 실기도 준비해야 되기 때문에~
 
 </details>
