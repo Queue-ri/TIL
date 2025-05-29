@@ -188,6 +188,16 @@ article {
   font-family: "SUIT-Regular", "Sans-serif";
 }
 
+/* article anchor highlight */
+.highlight-active {
+  background-color: rgba(255, 255, 0, 0.5);
+  transition: background-color 0s;
+}
+.highlight-fade-out {
+  transition: background-color 0.5s ease;
+  background-color: transparent;
+}
+
 code {
   background-color: var(--ifm-code-background);
   border: 2px solid rgba(0, 0, 0, 0.05);
