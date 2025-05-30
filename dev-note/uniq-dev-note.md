@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-05-29
+updated_date: 2025-05-30
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -771,5 +771,26 @@ slug: { type: String, required: true, unique: true }
 이 3가지가 일단 목표이고, 토요일이 5월의 마지막 날이니 이 날 뷰 작업이 얼추 되었으면 좋겠다고 생각한다.
 
 6월부터는 DOKI 양도 봐드려야 하고 정처기 실기도 준비해야 되기 때문에~
+
+</details>
+
+### 📆 25-05-30
+
+slug 필드 패치, MDX list query API 구현
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/5](https://github.com/Queue-ri/uniq-cms/issues/5)
+
+<br />
+
+#### 📌 slug 필드의 누락된 제약 조건 패치
+
+<br />
+
+#### 📌 MDX list query API 구현
+
 
 </details>
