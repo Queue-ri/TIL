@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-05-30
+updated_date: 2025-06-07
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -788,9 +788,74 @@ slug 필드 패치, MDX list query API 구현
 
 #### 📌 slug 필드의 누락된 제약 조건 패치
 
+[Commit 4d2366a](https://github.com/Queue-ri/uniq-cms/commit/4d2366ad50275cc314537bf93c8d5eb992996149)
+
 <br />
 
 #### 📌 MDX list query API 구현
 
+```diff
+const postSchema = new mongoose.Schema({
+    title: { type: String, required: true },
++   description: { type: String, default: '' },
+    slug: { type: String, required: true, unique: true },
+    category: { type: String, required: true },
+    filePath: { type: String, required: true },
+    visibility: {
+        type: String,
+        enum: ['public', 'protected', 'private'],
+        default: 'public',
+        required: true
+    }
+}, {
+    timestamps: true, // automatically set createdAt and updatedAt
+});
+```
+
+slug fix에 이어 목록 조회시 필요할 description 필드도 Post.js에 추가했다.
+
+<br />
+
+#### Post list query API
+
+[Commit fdbd88c](https://github.com/Queue-ri/uniq-cms/commit/fdbd88c7f07efe287c65dab43a3e7a1735aa7465)
+
+<br />
+
+#### Timezone 지정하기
+
+timestamp가 UTC 기준으로 찍히길래 query에 대한 timezone 변환도 필요하더라.
+
+MongoDB config가 따로 없나 싶었는데 시간대 변환은 어플리케이션 레벨에서 처리하는 것이 일반적이라고 한다.
+
+```bash
+npm install dayjs
+```
+
+```js title="post.js"
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+```
+
+상단과 같이 dayjs 패키지를 이용하여 UTC -> GMT+9로 변환한다.
+
+```js title="post.js"
+createdAt: dayjs(post.createdAt).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
+```
+
+```json title="변환 전"
+{
+  "createdAt": "2025-05-29T13:26:59.764Z"
+}
+```
+```json title="GMT+9 변환 후"
+{
+  "createdAt": "2025-05-29 22:26:59"
+}
+```
 
 </details>
