@@ -1,10 +1,11 @@
 ---
-title: 'DOKI v1'
-eng_title: 'DOKI v1'
+title: 'DOKI v1 (0220 ~ 0228)'
+eng_title: 'DOKI v1 (0220 ~ 0228)'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
-sidebar_label: 'DOKI v1'
+sidebar_label: 'DOKI v1 (0220 ~ 0228)'
 created_date: 2025-05-20
+updated_date: 2025-06-08
 ---
 
 :::note 내용 못알아먹겠음 주의
