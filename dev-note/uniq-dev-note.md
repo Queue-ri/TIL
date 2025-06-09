@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-06-07
+updated_date: 2025-06-09
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -857,5 +857,125 @@ createdAt: dayjs(post.createdAt).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
   "createdAt": "2025-05-29 22:26:59"
 }
 ```
+
+</details>
+
+### 📆 25-06-09
+
+CORS 설정, 포스트 목록 UI 구현
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/5](https://github.com/Queue-ri/uniq-cms/issues/5)
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/7](https://github.com/Queue-ri/uniq-cms/issues/7)<br />
+> [https://github.com/Queue-ri/uniq/issues/4](https://github.com/Queue-ri/uniq/issues/4)<br />
+> [https://github.com/Queue-ri/uniq-cms/issues/9](https://github.com/Queue-ri/uniq-cms/issues/9)
+
+<br/>
+
+#### 📌 CORS FE origin 허용하기
+
+BE에 cors 패키지를 설치하고 허용할 origin을 명시해주면 된다.
+
+왜이렇게 쉽게 해결됐지? 이게 아닌데? 싶지만 생각해보니 웹 공부 3년째다. 아직도 이해 못했으면 심각한 것이다.
+
+CORS 설정 도중에 카카오 맵 API에서 허용 IP 주소를 설정했던 것이 떠올라서<br />
+CORS origin도 동적으로 관리할 수 있는지 알아보았는데, 된다고 한다.
+
+로그인 기능이 추가되면, 추후 관리자 페이지에서 설정 가능하면 좋을 것 같다.
+
+```bash
+npm install cors
+```
+
+```js title="index.js"
+// allowed CORS origins
+let allowedOrigins = [
+  'http://localhost:3000',
+];
+
+// CORS middleware setting
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    }
+    else {
+      callback(new Error('Not allowed by CORS: ' + origin));
+    }
+  }
+}));
+```
+
+<br />
+
+#### 📌 MainPage와 PostList 컴포넌트 구현
+
+MainPage에서 fetching 관련 useEffect를 두고 PostList는 컴포넌트로써 렌더링만 담당하도록 분리했다.
+
+data fetching은 페이지 단위에서 처리하는 게 일반적이라고 한다.
+
+1. 유지보수 측면에서 데이터와 UI를 분리하는 것이 좋고
+2. 다른 페이지와 데이터 공유가 용이해지며
+3. route 전환이나 refresh 될 때 한번씩만 실행되어야 하기 때문이다.
+
+<br />
+
+#### 📌 `formatDate` 유틸 함수 구현
+
+locale 기반 datetime 포맷팅이 자주 쓰일 것 같아 util로 모듈화하여 구현했다.
+
+```js title="formatDate.js"
+export function formatDate(dateString) {
+  const date = new Date(dateString);
+
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+}
+```
+
+<br />
+
+#### 💥 사실 slug로 조회 가능했어야 함 💥
+
+😠.................😡.....
+
+현재 MainPage에서 PostList를 통해 포스트 목록을 보여주고,
+
+여기서 item 하나를 클릭하면 PostDetail로 라우팅해서 넘어가려고 했는데
+
+이렇게 넘어가려면 `navigate`해야 하지만 URL 상에 id를 쿼리로 주지 않고는 컴포넌트에 넘기는게 안된다고 한다.
+
+하지만 URL에 ObjectId가 노출되면 안된다. slug를 내가 왜 추가했는데 ㅜㅜㅋㅋ
+
+`navigate`에 state를 줄 순 있지만 이는 새로고침시 bye 하는거라 refresh하면 포스트 내용이 증발하는 대참사가 일어나고
+
+사실 redux-persist같은 상태관리 패키지 쓰면 안될것이야 없긴 한데,, 뇌절이다.
+
+결국 미디엄, 노션 다 slug 기반 조회 API를 두길래, 보편성을 고려해서 BE에 API를 추가하기로 결정했다.
+
+<br />
+
+#### Origin 명시해줘요 ^ㅅ^
+
+```
+Error: Not allowed by CORS: undefined
+    at origin (C:\Users\Hexagoner\Desktop\uniq-cms\api\index.js:22:16)
+    at C:\Users\Hexagoner\Desktop\uniq-cms\node_modules\cors\lib\index.js:219:13
+```
+
+이젠 BE에 CORS 정책을 설정해놨기 때문에 포스트맨 헤더에 Origin을 명시해줘야 한다.
+
+[유익한 CORS 관련 레퍼런스](https://okky.kr/articles/1459836)
 
 </details>
