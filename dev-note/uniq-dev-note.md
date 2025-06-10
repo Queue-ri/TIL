@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-06-09
+updated_date: 2025-06-10
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -244,7 +244,7 @@ CRA Webpack의 기본 설정은 mdx를 알 수 없는 파일로 간주하여 정
 
 ### 📆 25-05-26
 
-frontmatter 파싱, `1.0.0-beta.1` 릴리즈
+frontmatter 파싱, FE `1.0.0-beta.1` 릴리즈
 
 <details>
 <summary>내용 보기</summary>
@@ -862,13 +862,14 @@ createdAt: dayjs(post.createdAt).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
 
 ### 📆 25-06-09
 
-CORS 설정, 포스트 목록 UI 구현
+CORS 설정, 포스트 목록 UI 구현, slug 기반 MDX query API 구현
 
 <details>
 <summary>내용 보기</summary>
 
 #### 📌 Closed Issues
-> [https://github.com/Queue-ri/uniq-cms/issues/5](https://github.com/Queue-ri/uniq-cms/issues/5)
+> [https://github.com/Queue-ri/uniq-cms/issues/5](https://github.com/Queue-ri/uniq-cms/issues/5)<br />
+> [https://github.com/Queue-ri/uniq-cms/issues/7](https://github.com/Queue-ri/uniq-cms/issues/7)
 
 #### 📌 Opened Issues
 > [https://github.com/Queue-ri/uniq-cms/issues/7](https://github.com/Queue-ri/uniq-cms/issues/7)<br />
@@ -977,5 +978,217 @@ Error: Not allowed by CORS: undefined
 이젠 BE에 CORS 정책을 설정해놨기 때문에 포스트맨 헤더에 Origin을 명시해줘야 한다.
 
 [유익한 CORS 관련 레퍼런스](https://okky.kr/articles/1459836)
+
+</details>
+
+### 📆 25-06-10
+
+라우팅, 포스트 상세 UI 구현, CSS Module, 포스트 접근제어, BE `1.0.0-beta.1` 릴리즈
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq-cms/issues/9](https://github.com/Queue-ri/uniq-cms/issues/9)<br />
+> [https://github.com/Queue-ri/uniq/issues/4](https://github.com/Queue-ri/uniq/issues/4)<br />
+> [https://github.com/Queue-ri/uniq-cms/issues/11](https://github.com/Queue-ri/uniq-cms/issues/11)
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq/issues/6](https://github.com/Queue-ri/uniq/issues/6)<br />
+> [https://github.com/Queue-ri/uniq-cms/issues/11](https://github.com/Queue-ri/uniq-cms/issues/11)
+
+<br/>
+
+#### 📌 라우터 설정 및 PostViewPage 연결
+
+```bash
+npm install react-router-dom
+```
+
+```js title="index.js"
+<Router>
+  <Routes>
+    <Route path="/" element={<MainPage />} />
+    <Route path="/post/:slug" element={<PostViewPage />} />
+  </Routes>
+</Router>
+```
+
+<br />
+
+#### 📌 응답으로 받은 MDX 렌더링하기
+
+이미 EditorPage에서 렌더링 로직을 구현했으나,<br />
+PostViewPage에서 PostDetail로 건네주는 것은 MDX 파일 자체가 아니라 내용이 적힌 문자열이다.
+
+따라서 MDX 문자열을 컴포넌트로 변환해주는 패키지와, frontmatter 파싱용 gray-matter가 필요.........
+
+```bash
+npm install @mdx-js/runtime
+npm install gray-matter
+```
+
+.....할 줄 알았으나?
+
+```text title="안되잖아"
+Compiled with problems:
+ERROR in ./src/component/post/PostDetail.js 7:0-45
+Module not found: Error: Can't resolve '@mdx-js/runtime' in 'C:\Users\Hexagoner\Desktop\uniq\src\component\post'
+```
+
+필요하지 않았음 ^^
+
+[패키지 사이트](https://www.npmjs.com/package/@mdx-js/runtime)에 가보니 @mdx-js/runtime은 deprecated 되었고
+
+거기 공지에 `@mdx-js/mdx`를 쓰라고 해서 하라는대로 했다.
+
+이렇게 되면 frontmatter는 기존에 쓰던 remark 플러그인을 사용하면 된다.
+
+```js title="PostDetail.js"
+useEffect(() => {
+  const compileMdx = async () => {
+    try {
+      const compiled = await evaluate(mdxData, {
+        ...runtime,
+        useDynamicImport: false,
+        format: 'mdx',
+        remarkPlugins: [
+          remarkFrontmatter,
+          [remarkMdxFrontmatter, { name: 'frontmatter' }],
+        ],
+      });
+
+      setContent(() => compiled.default);
+      if (compiled.frontmatter) {
+        setFrontmatter(compiled.frontmatter);
+      }
+    } catch (error) {
+      console.error('MDX compile error:', error);
+    }
+  };
+
+  compileMdx();
+}, [mdxData]);
+```
+
+<br />
+
+#### 📌 CSS 충돌과 모듈화를 통한 해결
+
+MainPage의 CSS와 PostViewPage의 CSS가 충돌나는듯 했다. 같은 wrapper 클래스를 가지고 있었는데
+
+자꾸 MainPage의 wrapper가 PostViewPage의 wrapper 사이즈로 지정되고, 타이틀 폰트도 꼬였다.
+
+알아보니 foo.css 이런식으로 import하면 해당 CSS는 **전역 스코프**라고 한다.
+
+이 경우 가장 마지막으로 로딩된 스타일을 적용한다고 했으니, MainPage에 PostViewPage 스타일이 적용되어버린 것이다.
+
+따라서 **로컬 스코프인 CSS Module** 방식으로 변경했는데...
+
+사실 이거 쓰면 해싱된 네이밍 때문에 가독성이 떨어져서 일부러 안하고 있었는데, 그냥 처음부터 쓸 걸 그랬나보다.
+
+---
+
+<center>⬇️ <b>하단부터는 포스트 접근제어 작업</b> ⬇️</center>
+
+---
+
+<br />
+
+#### 📌 기존의 query API 수정
+
+이제 protected와 private MDX는 direct access되면 안되기에
+
+1. ObjectId 기반 query API는 보안상 제거 (=주석처리)
+2. slug 기반 query API를 대표 query API로 지정 -> `/slug`를 삭제하여 endpoint 간소화
+3. query API에서 MDX visibility만 조회하는 metaOnly 옵션 추가
+4. query API에서 protected면 password verify하기
+5. query API에서 private면 403 FORBIDDEN 던지기
+6. list query API에서 private 포스트는 필터링하기
+
+요런 API상의 많은 수정들이 필요하다. 관련 이슈는 [11번](https://github.com/Queue-ri/uniq-cms/issues/11)이므로 참고.
+
+<br />
+
+#### 🤔 API를 분리하는 것이 좋을까?에 대한 고민과 그 결과
+
+최종적으로는 slug 기반 query API 하나로 통합하고 여기서 접근제어를 다 처리하기로 했다.
+
+왜냐하면 API를 여러 개 분리해서 구현할 경우,<br />
+*이럴땐 여기다 호출하고 저럴땐 저기다 호출하고...* 이렇게 되면
+
+- FE: 여기선 엔드포인트 뭐였더라 ㅇㅁㅇ? (이전 코드나 API 문서 찾아보는 비효율성)
+- BE: 헐 다른쪽 쿼리 API 유효성 검사 빼먹고 머지했다 (추가 이슈 처리하는 비효율성)
+- 눈: 살려...ㅈ... (반복되는 fetch 코드로 인한 쓸데없는 라인 수 증가 및 시력 저하)
+
+같은 상황이 발생하기 때문이다.
+
+<br />
+
+따라서 엔드포인트는 하나로 두고,
+
+1. 포스트의 visibility check 모드 여부를 확인하는 `metaOnly` query와
+2. private 접근 제한
+3. protected 비밀번호 유효성 검증
+
+이 모든걸 한 곳에서 처리하도록 설계했다.
+
+<br />
+
+#### 📌 패스워드에 bcrypt 적용하기
+
+평문으로 저장하는 것은 매우 안좋은 인상을 남기므로 11번 이슈와 함께 처리한다.
+
+- MDX publish API
+- MDX query API
+
+해싱은 두 가지 모두에 적용해야 한다.
+
+일단 https 통신이기만 하면 FE -> BE 평문 전송은 괜찮다고 한다.
+
+JWT같이 어디 저장할때가 문제인거고, 이건 그냥 타이핑해서 바로 보내는거니까.
+
+```bash title="설치해주세요"
+npm install bcrypt
+```
+
+[Commit ac395cd](https://github.com/Queue-ri/uniq-cms/commit/ac395cd792da1ba0d721a135afbfc87b69e7a454)
+
+여기까지 BE 작업을 마무리하고 `1.0.0-beta.1`을 릴리즈했다. ~~*잔디에 반영하고 싶어서*~~
+
+<br />
+
+#### 🛠️ 포스트 상세 조회에 대한 FE 플로우 수정
+
+기존에는 FE fetch 요청 -> BE 응답 -> FE 렌더링의 flow를 가지고 있었지만
+
+현 시점부턴 접근제어 기능이 추가되었으므로<br />
+FE meta 요청 -> BE 응답 -> FE fetch 요청 -> BE 응답 -> FE 렌더링의 방식으로 가야 한다.
+
+meta 요청은 마치 HTTP OPTIONS나 preflight처럼, fetch라는 실질적인 요청을 날리기 전에
+
+얘가 패스워드를 줘야 하는 포스트인가 아니면 그냥 요청해도 되는건가... 를 결정할 수 있도록 해준다.
+
+<br />
+
+#### 앞으로의 계획
+
+현재 둘러보았을 때
+
+- 페이지네이션 (API는 되어있는데 UI 상의 페이지네이션 없음)
+- 썸네일 이미지
+- 주인장 소개 영역
+- 작고 소중한 footer
+- TOC
+- 네비게이션 메뉴
+- 로그인
+
+정도의 기본적인 보완 요소들이 보이는데,
+
+여기서 페이지네이션과 주인장 소개 영역, footer만 추가하고 릴리즈해서 서버에 올릴 것이다.
+
+베어메탈 세팅 + 네트워크 세팅에서 시간이 걸릴 것 같아서 내일 릴리즈하고 싶다.
+
+publish API에 authentication이 필요하긴 한데... CORS로 막아보죠 뭐(?)
 
 </details>
