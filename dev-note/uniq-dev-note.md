@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-06-10
+updated_date: 2025-06-11
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -1190,5 +1190,148 @@ meta 요청은 마치 HTTP OPTIONS나 preflight처럼, fetch라는 실질적인 
 베어메탈 세팅 + 네트워크 세팅에서 시간이 걸릴 것 같아서 내일 릴리즈하고 싶다.
 
 publish API에 authentication이 필요하긴 한데... CORS로 막아보죠 뭐(?)
+
+</details>
+
+### 📆 25-06-11
+
+페이지네이션 UI, layout shift 문제, About, Footer
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq/issues/6](https://github.com/Queue-ri/uniq/issues/6)
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq/issues/8](https://github.com/Queue-ri/uniq/issues/8)<br />
+> [https://github.com/Queue-ri/uniq-cms/issues/14](https://github.com/Queue-ri/uniq-cms/issues/14)
+
+<br/>
+
+#### 📌 페이지네이션 추가
+
+우선 전체 페이지 수를 API 상으로 안 알려주고 있으므로, BE에서 `totalPages`를 추가로 반환해주어야 한다.
+
+```js {4} title="post.js"
+res.json({
+    page,
+    size: postMetadataList.length,
+    totalPages,
+    posts: postMetadataList
+});
+```
+
+그런 다음 FE에서 pagination 버튼과 그에 대한 handler를 만들어준다.
+
+pagination도 여러가지 형태의 UI가 존재하는데,
+
+나는 그 중 1 2 3 4 5 .. 형식의 多 버튼 UI는 피하기로 했다.
+
+가장 익숙한 형태이나, 만드는데 조금 더 시간이 걸리기 때문이다.
+
+...한편으론 저번에 본 닌텐도 홈페이지의 페이지네이션 UI가 인상깊어서이기도 하다.
+
+```js MainPage.js
+const handlePrev = () => {
+  if (page > 1) onPageChange(page - 1);
+};
+
+const handleNext = () => {
+  if (page < totalPages) onPageChange(page + 1);
+};
+
+const handleInputChange = (e) => {
+  setInputValue(e.target.value);
+};
+
+const handleKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    const parsed = parseInt(inputValue, 10);
+    if (!isNaN(parsed) && parsed >= 1 && parsed <= totalPages) {
+      onPageChange(parsed);
+    }
+  }
+};
+```
+
+<br />
+
+#### 뒤로가기시 페이지 초기화되는 문제
+
+react-router-dom의 useSearchParams를 이용해서 현재 페이지 번호를 쿼리로 관리하고
+
+뒤로가기해도 이전 페이지 상태가 유지되도록 했다.
+
+다만 URL이 `http://localhost:3000/?page=2` 처럼 되는데 100% 만족스럽진 않다.
+
+보통은 `http://localhost:3000/posts?page=2` 이런식으로 하니까...
+
+근데 그럼 블로그같이 메인에 리스트 냅다 올려진 곳들은 그럼 어떡하지?
+
+벨로그는 루트(각 사용자의 블로그 홈)를 `/posts`로 리디렉션하는 것 같다만.
+
+<br />
+
+#### 💥 Layout Shift
+
+> Cumulative Layout Shift (CLS)
+>
+> Google이 웹 품질 측정을 위해 정의한 Core Web Vitals 중 하나로,<br />
+> 사용자가 페이지를 보는 중에 얼마나 많은 레이아웃 변경이 누적되었는지를 수치로 평가한다.
+
+메인페이지에서 페이지를 변경할때마다 Loading과 list item이 번갈아 렌더링되면서
+
+우측의 스크롤바가 사라졌다가 생기고, viewport 사이즈 변화로 결국 컴포넌트들이 약간씩 이동하면서
+
+시각적 불편함을 주는 문제가 있었다.
+
+이걸 따로 부르는 용어가 있나 해서 찾아보니 진짜 있었다; 심지어 이걸로 품질 점수도 매김 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+
+마법의 1픽셀을 추가해서 해결했다. 후...
+
+```css {3}
+.wrapper {
+  display: flex;
+  min-height: calc(100vh - 69px + 1px); /* 1px: prevent annoying layout shift */
+  flex-direction: column;
+  padding-top: 32px;
+  padding-left: calc((100vw - 1200px) / 2);
+  padding-right: calc((100vw - 1200px) / 2);
+}
+```
+
+하지만 위에 About 컴포넌트가 추가되니 이는 무용지물이 되었다. ㅜㅜ
+
+보다 근본적인 해결책은 페이지 전환시 list 영역을 Loading 문구로 re-render 하지 않고
+
+overlay같은 것으로 띄우는 것이다.
+
+그럼 list는 이전 데이터였다가 최신 데이터로 갈아끼워지기만 할 것이다.
+
+추후의 베타버전에서 손보도록 하자...
+
+<br />
+
+#### 하드코딩 대신 config.js 사용하기
+
+WIP
+
+<br />
+
+#### ✨ 여태까지 완성된 UI
+
+하단은 오늘 분량 다 구현했다는 증거이다. 😎
+
+피그마 없이 어찌저찌 눈대중으로 잘... 빌드했네
+
+오늘 릴리즈하고 싶긴 했는데 생각해보니 EditorPage가 아직도 레거시 상태여서 그대로 올리기엔 무리인 것 같다.
+
+그리고 CORS로 막아보겠다는 그거는... 네 안돼요
+
+왜 안되느냐? CORS는 IP 차단책이 아니잖아..............
+
+![](https://velog.velcdn.com/images/qriosity/post/84c62a08-3df6-4277-a6f4-9f4c9dad5da5/image.png)
+![](https://velog.velcdn.com/images/qriosity/post/ba7618ad-3ae8-4646-968b-bd265300ad8a/image.png)
 
 </details>
