@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-06-11
+updated_date: 2025-06-12
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -1195,7 +1195,7 @@ publish API에 authentication이 필요하긴 한데... CORS로 막아보죠 뭐
 
 ### 📆 25-06-11
 
-페이지네이션 UI, layout shift 문제, About, Footer
+페이지네이션 UI, layout shift 문제, config.js, About, Footer
 
 <details>
 <summary>내용 보기</summary>
@@ -1229,6 +1229,8 @@ pagination도 여러가지 형태의 UI가 존재하는데,
 나는 그 중 1 2 3 4 5 .. 형식의 多 버튼 UI는 피하기로 했다.
 
 가장 익숙한 형태이나, 만드는데 조금 더 시간이 걸리기 때문이다.
+
+![](https://velog.velcdn.com/images/qriosity/post/c6ce4bed-7c91-4f1b-9ee9-26695b14e902/image.png)
 
 ...한편으론 저번에 본 닌텐도 홈페이지의 페이지네이션 UI가 인상깊어서이기도 하다.
 
@@ -1267,7 +1269,7 @@ react-router-dom의 useSearchParams를 이용해서 현재 페이지 번호를 �
 
 보통은 `http://localhost:3000/posts?page=2` 이런식으로 하니까...
 
-근데 그럼 블로그같이 메인에 리스트 냅다 올려진 곳들은 그럼 어떡하지?
+근데 그럼 블로그같이 메인에 리스트 냅다 올려진 곳들은 어떡하지?
 
 벨로그는 루트(각 사용자의 블로그 홈)를 `/posts`로 리디렉션하는 것 같다만.
 
@@ -1313,9 +1315,25 @@ overlay같은 것으로 띄우는 것이다.
 
 <br />
 
-#### 하드코딩 대신 config.js 사용하기
+#### 📌 하드코딩 대신 config.js 사용하기
 
-WIP
+docusaurus에서 config를 통해 블로그명이나 meta 정보를 관리했던 것이 생각나서 적용해보았다.
+
+컴포넌트에 하드코딩하는 것보단 유지보수 측면에서 편하기 때문에 해당 방식을 채택했다.
+
+```js title="uniq.config.js"
+export const UNIQ_CONFIG = {
+  blogName: 'qriosity.dev',
+  version: '1.0.0-beta.2',
+};
+```
+
+```js title="Navigation.js"
+<div className="Navigation">
+  <div className="navLogo">{UNIQ_CONFIG.blogName}</div>
+  <div className="version">{UNIQ_CONFIG.version}</div>
+</div>
+```
 
 <br />
 
@@ -1333,5 +1351,251 @@ WIP
 
 ![](https://velog.velcdn.com/images/qriosity/post/84c62a08-3df6-4277-a6f4-9f4c9dad5da5/image.png)
 ![](https://velog.velcdn.com/images/qriosity/post/ba7618ad-3ae8-4646-968b-bd265300ad8a/image.png)
+
+</details>
+
+### 📆 25-06-12
+
+EditorPage 보수, 뒤로가기 버튼, 썸네일 이미지
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq/issues/8](https://github.com/Queue-ri/uniq/issues/8)
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq/issues/10](https://github.com/Queue-ri/uniq/issues/10)
+
+<br/>
+
+#### 📌 User story였는데요, 아니였습니다.
+
+기존에 쓰던 user story가 agile 원칙에 안맞고 오히려 acceptance criteria에 맞다고 해서
+
+이슈 작성 형식을 다음처럼 수정하게 되었다.
+
+![](https://velog.velcdn.com/images/qriosity/post/516688a7-84bf-4d26-8cfd-07b076e8ee92/image.png)
+
+Agile에서 말하는 User Story의 핵심 구조는 이렇게 되어야 한다고 한다.
+
+> As a **[type of user]**, I want **[some goal]** so that **[some reason/benefit]**.
+
+반면에 Acceptance Criteria(수용 기준)는 user story가 '완료'되었는지 판단하는 구체적인 조건들을 뜻한다.
+
+사용자가 아닌 개발자, 디자이너, PM, QA를 위한 체크리스트이다.
+
+<br/>
+
+#### 📌 EditorPage 진입 방식에 대한 고민
+
+이제 루트 경로는 MainPage와 연결되어있기에 EditorPage는 다른 곳에 연결해야 한다.
+
+그럼 MainPage에서 어느 경로로 진입할 수 있어야 할까?
+
+일정 고민 하에 워드프레스를 떠올렸다. **WP는 UI상에 로그인 버튼을 노출시키지 않고 url로만 접근 가능**하다.
+
+그리고 로그인 이후 대시보드에서 글을 작성할 수 있다.
+
+현재 uniQ는 로그인 기능이 구현되어있지 않기에, UI상으로는 EditorPage를 노출시키지 않고 url로만 접근 가능하게끔 했다.
+
+외부인이 어찌저찌 url 찍어서 접근 후 publish 기능을 사용하는 Access Control Bypass의 위험이 있으나
+
+AWS 아니고 개인 서버라서 로그인 기능 추가되기 전까지 잠깐은 감수해도 될 것 같다.
+
+<br/>
+
+#### 📌 Conditional Rendering의 중요성
+
+라우터 연결 후 EditorPage에 들어갔더니 이런 에러가 떴다.
+
+```
+Cannot read properties of null (reading 'title')
+TypeError: Cannot read properties of null (reading 'title')
+```
+
+frontmatter가 파싱되지 않아 undefined 상태인 듯하다.
+
+원래는 에러 안떴는데 비동기라서 운좋게 그땐 안걸렸던듯 ㅋㅋ
+
+```js {1} title="EditorPage.js"
+{frontmatter && (
+  <div className="meta">
+    <h1>{frontmatter.title}</h1>
+  </div>
+)}
+```
+
+그래서 해당 코드를 찾아본 후 `frontmatter &&`를 추가해서 해결해줬다...만
+
+<p style={{fontSize: '32px'}}><b>아오 그놈의 할루시네이션</b></p>
+
+원래 상황이 뭐였냐면, 내가 *'경로에 mdx 파일 없을때 컴포넌트 렌더링하지 말고 안내 문구 나오게 코드 수정해줘'* 라고 했었는데
+
+GPT 얘가 아무말 없이 `frontmatter &&` 있는 버전으로 코드를 뽑아놓고, 내가 에러 뜬다고 말하니까 이상한걸 원인으로 짚기 시작했다.
+
+얘가 준 EditorPage 코드랑 내 코드 상태랑 동일하게 작성된게 맞는지부터 검토해야 하는데
+
+걍 자기꺼 버전 기준에서만 생각하니 애꿎은 craco config를 의심한다.
+
+그런데 이젠 gpt 할루시네이션 패턴에 익숙해져서 안속음. 🙃ㅋㅋ
+
+보통은 수정된 부분에 주석으로 표시해달라고 하는데 생략하니까 이 모양이다. 프롬프트는 템플릿 세팅같은거 없나?
+
+<br />
+
+#### null/undefined frontmatter 처리하기
+
+```markdown title="MDX"
+---
+---
+
+## 안녕하세요 전 제목이에용
+
+안녕히계세요
+```
+
+이건 null frontmatter 이고
+
+```markdown title="MDX"
+## 안녕하세요 전 제목이에용
+
+안녕히계세요
+```
+
+이건 undefined frontmatter이다.
+
+만약 frontmatter에 `title` 등의 필드가 있었다가, 사라지면 어떻게 될까?
+
+이상적인 UI 작동은, EditorSideBar에서 공문자열로 re-render 해주는 것이다.
+
+```js title="EditorSideBar.js"
+useEffect(() => {
+  // auto generate default slug based on title
+  // ...
+
+  // init with frontmatter values if exist else empty string
+  setTitle(frontmatter?.title ?? '');
+  setCreatedDate(frontmatter?.created_date ?? '');
+  setUpdatedDate(frontmatter?.updated_date ?? '');
+}, [frontmatter]);
+```
+
+`??` 연산자는 **null 병합 연산자(nullish coalescing operator)**로,
+
+왼쪽 피연산자가 null 또는 undefined일 때 오른쪽 피연산자를 반환한다.
+
+optional chaining은 아는데 얘는 처음 봐서 찾아봄!
+
+<br />
+
+#### 💥 자스로 로컬 파일 첨부 안됨
+
+```
+Not allowed to load local resource: file:///C:/Users/Hexagoner/Desktop/uniq/src/post/test.mdx
+```
+
+로컬 파일을 fetch해서 File 객체 생성하고 이걸 페이로드에 담으려 했는데,
+
+보안 정책 상 로컬 파일은 사용자가 input을 통해 직접 첨부해야 한다고 한다.
+
+...........................ok..... (보안은 ㅇㅈ)
+
+그렇다면 다른 방법을 떠올려보자.
+
+<br />
+
+#### ✅ Webpack의 raw-loader로 MDX 내용 퍼오기
+
+craco config에 raw-loader를 추가한 뒤 앱을 재시작해주고
+
+```js title="보안상 안되는 코드"
+// get file blob by fetching the fileUrl then create File object
+const response = await fetch(fileUrl);
+const blob = await response.blob();
+const fileName = filePath.replace('./', '');
+const file = new File([blob], fileName, { type: 'text/markdown' });
+```
+
+작동 불가한 이 코드를 하단처럼 수정해준다.
+
+```js title="로컬 MDX 첨부 우회 방법"
+const filePath = keys[0]; // ex. './sample.mdx'
+const fileName = filePath.replace('./', '');
+const publishFileName = `${slug}.mdx`;
+
+// dynamic import mdx file by raw-loader
+const rawModule = await import(
+  /* webpackChunkName: "raw-mdx" */
+  /* webpackMode: "lazy" */
+  `../post/${fileName}?raw`
+);
+
+// rawModule.default -> content of the file (as string)
+const content = rawModule.default;
+
+// create File object
+const file = new File([content], publishFileName, { type: 'text/markdown' });
+```
+
+raw-loader로 MDX 원본 내용을 가져와서 (즉, 파싱 안한 원본 내용을 문자열로 가져옴)
+
+File 객체로 생성한 뒤 formData에 첨부하는 방식이다.
+
+<br />
+
+#### multer는 별도의 UTF-8 설정이 필요
+
+FE에서 파일명을 `{slug}.mdx`로 바꾸고 request 날리는데
+
+slug에 한글이 있을 때 백엔드에서 인코딩이 깨지는 이슈가 있었다.
+
+```
+python-ë°±ì¤-nqueen-ë¬¸ì -íì´.mdx
+```
+
+FE는 문제 없었다. 브라우저는 내부적으로 multipart/form-data의 파일명을 UTF-8로 인코딩한다고 한다.
+
+원인은 BE의 multer 설정이었는데 
+
+```js
+const upload = multer({
+  dest: 'temp_uploads/',
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+});
+```
+
+이렇게 설정하면 기본적으로 파일명은 **Latin-1 (ISO-8859-1)** 인코딩으로 처리된다고 한다.
+
+따라서 하단과 같이 수정해주었다.
+
+```js
+const storage = multer.diskStorage({
+    destination: 'temp_uploads/',
+    filename: (req, file, cb) => {
+        // Change filename encoding from Latin-1 to UTF-8
+        try {
+            const rawName = file.originalname;
+            const utf8Name = Buffer.from(rawName, 'latin1').toString('utf8');
+
+            console.log('originalname (raw):', rawName);
+            console.log('originalname (utf8):', utf8Name);
+
+            cb(null, utf8Name);
+        } catch (err) {
+            console.error('Filename decode error:', err);
+            cb(err);
+        }
+    },
+});
+const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 },
+});
+```
+
+그런데 출력이........ raw만 출력되고 utf8이랑 console.error는 흔적도 없는데요??
+
+자정 내로 작업 끝내긴 글렀군 ㅜㅜ
 
 </details>
