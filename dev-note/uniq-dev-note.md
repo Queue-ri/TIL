@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-06-12
+updated_date: 2025-06-13
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -1356,7 +1356,7 @@ export const UNIQ_CONFIG = {
 
 ### 📆 25-06-12
 
-EditorPage 보수, 뒤로가기 버튼, 썸네일 이미지
+EditorPage 보수, Publish API 연결, raw-loader, multer 인코딩 문제
 
 <details>
 <summary>내용 보기</summary>
@@ -1444,7 +1444,7 @@ GPT 얘가 아무말 없이 `frontmatter &&` 있는 버전으로 코드를 뽑�
 
 <br />
 
-#### null/undefined frontmatter 처리하기
+#### 📌 null/undefined frontmatter 처리하기
 
 ```markdown title="MDX"
 ---
@@ -1455,7 +1455,7 @@ GPT 얘가 아무말 없이 `frontmatter &&` 있는 버전으로 코드를 뽑�
 안녕히계세요
 ```
 
-이건 null frontmatter 이고
+이건 **null** frontmatter 이고
 
 ```markdown title="MDX"
 ## 안녕하세요 전 제목이에용
@@ -1463,7 +1463,7 @@ GPT 얘가 아무말 없이 `frontmatter &&` 있는 버전으로 코드를 뽑�
 안녕히계세요
 ```
 
-이건 undefined frontmatter이다.
+이건 **undefined** frontmatter이다.
 
 만약 frontmatter에 `title` 등의 필드가 있었다가, 사라지면 어떻게 될까?
 
@@ -1544,7 +1544,7 @@ File 객체로 생성한 뒤 formData에 첨부하는 방식이다.
 
 <br />
 
-#### multer는 별도의 UTF-8 설정이 필요
+#### 💥 multer는 별도의 UTF-8 설정이 필요
 
 FE에서 파일명을 `{slug}.mdx`로 바꾸고 request 날리는데
 
@@ -1569,7 +1569,7 @@ const upload = multer({
 
 따라서 하단과 같이 수정해주었다.
 
-```js
+```js title="post.js"
 const storage = multer.diskStorage({
     destination: 'temp_uploads/',
     filename: (req, file, cb) => {
@@ -1597,5 +1597,54 @@ const upload = multer({
 그런데 출력이........ raw만 출력되고 utf8이랑 console.error는 흔적도 없는데요??
 
 자정 내로 작업 끝내긴 글렀군 ㅜㅜ
+
+---
+
+아 깨달았음
+
+raw 출력하면서 깨진 인코딩때문에 뒤에 이어지는 출력된 문자열을 먹어버린 것임
+
+이걸 따로 부르는 용어가 있나 싶어 찾아보니 딱히 대표적인 용어라기보단
+
+**Terminal Pollution 또는 Console Pollution** 정도로 부르면 될 것 같다.
+
+```js title="post.js"
+const storage = multer.diskStorage({
+    destination: 'temp_uploads/',
+    filename: (req, file, cb) => {
+        // Change filename encoding from Latin-1 to UTF-8
+        try {
+            const utf8Name = Buffer.from(file.originalname, 'latin1').toString('utf8');
+            console.log('latin1 decoded:', utf8Name);
+            cb(null, utf8Name);
+        } catch (err) {
+            console.error('Filename decode error:', err);
+            cb(err);
+        }
+    },
+});
+```
+
+```
+latin1 decoded: python-백준-nqueen-문제-풀이.mdx
+```
+
+이렇게 뽑아보니 잘 출력되긴 하는데, 문제는 저장된 파일명은 여전히 인코딩이 깨지는 이슈가 있었다.
+
+좀 더 살펴보니 API 내부에서 `file.originalname`으로 접근하고 있던게 원인이었다.
+
+`originalname`은 FE로부터 받은 원본 파일명이고, multer에서 cb(callback)로 지정한 값은 `filename`으로 들어간다고 한다.
+
+따라서 해당되는 모든 부분들을 `file.filename`으로 수정했고 인코딩 이슈는 종결되었다.
+
+![](https://velog.velcdn.com/images/qriosity/post/12758b0c-e3e4-4477-b5b0-a5f32fa7a8f8/image.png)
+
+![](https://velog.velcdn.com/images/qriosity/post/003bd5c3-5721-46c8-b895-f1a64234819f/image.png)
+
+<p style={{fontSize: '64px'}}><b>어휴.</b></p>
+
+오늘은 예상보다 오래 걸렸다.
+
+뒤로가기 버튼부터는 ~~*내일*~~ 오늘 오전에 하자. 밤낮 바뀌면 안됨.
 
 </details>
