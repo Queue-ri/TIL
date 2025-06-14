@@ -1896,13 +1896,13 @@ BE는 오늘 수정으로 production ready 수준이 된 것 같으니 버전 �
 
 ### 📆 25-06-14
 
-FE meta 변경, 모바일 레이아웃 막기
+FE meta 변경, 모바일 환경 임시 차단, 이스터에그, FE/BE `1.0.0-beta.2` 릴리즈
 
 <details>
 <summary>내용 보기</summary>
 
 #### 📌 Closed Issues
-
+> [https://github.com/Queue-ri/uniq/issues/14](https://github.com/Queue-ri/uniq/issues/14)
 
 #### 📌 Opened Issues
 > [https://github.com/Queue-ri/uniq/issues/14](https://github.com/Queue-ri/uniq/issues/14)
@@ -1911,6 +1911,171 @@ FE meta 변경, 모바일 레이아웃 막기
 
 #### 📌 FE metadata 변경
 
-WIP
+```js
+useEffect(() => {
+  // title
+  document.title = UNIQ_CONFIG.title;
+
+  // favicon
+  const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+  link.type = "image/x-icon";
+  link.rel = "shortcut icon";
+  link.href = UNIQ_CONFIG.favicon;
+  document.head.appendChild(link);
+
+  // description
+  let meta = document.querySelector("meta[name='description']");
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.name = "description";
+    document.head.appendChild(meta);
+  }
+  meta.content = UNIQ_CONFIG.description;
+}, []);
+```
+
+사이트 metadata를 변경해야 하는데 이는 상단처럼 동적으로 변경할 수 있다.
+
+이때 index.html의 내용은 그대로 두어도 되지만, 기본값이 보여지는 찰나가 있기 때문에
+
+index.html의 리터럴은 주석처리해두는 것이 더 깔끔하다.
+
+그러나 이건 UX적으로 적용되는 부분이고, SEO 측면에서는 부적절했다.
+
+<br />
+
+왜냐하면 `useEffect`는 CSR(Client-Side Rendering) 이후에 실행되므로, 검색 엔진이 보기엔 초기 HTML에 description이 없다고 판단할 수 있기 때문이다.
+
+검색 엔진(Google, Bing 등)은 주로 **초기 HTML 응답(SSR 또는 Static HTML)**을 읽고 메타 태그를 수집하는데
+
+react 앱은 초기에 public/index.html의 head를 반환한다고 한다.
+
+그래서 결국 하드코딩하는게 맞다는...
+
+<br />
+
+참고로 description은 SEO 최적화를 위해 150 ~ 160자 이내로 작성하는 것이 좋다.
+
+너무 길면 Google 검색 결과에 표시되는 snippet(미리보기)에서 ...으로 짤리기 때문이다.
+
+하지만 **너무 짧으면 검색 키워드와의 관련성이나 클릭 유도력(CTR)이 떨어질 수 있다!**
+
+<br />
+
+#### 📌 `manifest.json` 설정하기
+
+PWA 고려해서 icons에 알맞는 에셋을 준비해야 하는데... TIL 폴더 뜯어보니 161x161밖에 없다 ㅋ
+
+아니 192도 아니고 웬 161??? ~~*과거의 본인을 이해할 수 없는*~~
+
+첨에 그냥 161짜리를 4x upscale해서 192, 512로 리사이징해다 쓰려고 했는데
+
+어쩌다보니 로고 PSD 파일을 찾아서 정석대로 다시 만들어줬다. 다행히도 와중에 래스터화는 안해놨네;
+
+리사이징은 [Biteable](https://biteable.com/tools/image-resizer)을 사용했다. 짱편함.
+
+그리고 모바일 브라우저 환경에서 보여질 `theme_color` 설정해주는 것도 잊지 말자. (index.html에도 있음)
+
+<br />
+
+#### 🚫 모바일 환경 임시 차단
+
+반응형은 `1.0.0-beta.3`에서 지원될 예정이기 때문에,
+
+이번 릴리즈에선 모바일 접속시 뷰를 막아놔야 한다.
+
+따라서 전체화면을 채우는 `MobileOverlay`를 만들고, 모바일 환경을 감지하는 `useIsMobile` 커스텀 훅을 만든 후
+
+전역에 설정하여 뷰포트 리사이징시에도 유연하게 감지되도록 하는 것이 좋다.
+
+---
+
+#### 그런데 말입니다...
+
+**react hook은 반드시 함수형 컴포넌트 내에서 사용해야 한다**는 규칙 때문에, 현재의 index.js에서 호출할 수 없다.
+
+따라서 App.js를 생성해서 현재의 메인 엔트리포인트 작업들을 모듈화해주는 추가적인 리팩토링 작업이 필요했다.
+
+```js title="index.js에서 수정해야 하는 부분"
+root.render(
+  // <React.StrictMode>
+  <Router>
+    {isMobile && <MobileOverlay />}
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/post/:slug" element={<PostViewPage />} />
+      <Route path="/admin/editor" element={<EditorPage />} />
+    </Routes>
+  </Router>
+  // </React.StrictMode>
+);
+```
+
+```js title="수정 후 index.js"
+root.render(
+  // <React.StrictMode>
+  <App />
+  // </React.StrictMode>
+);
+```
+
+```js title="App.js"
+function App() {
+  const isMobile = useIsMobile();
+
+  return (
+    <Router>
+      {/* overlay for mobile environments */}
+      {isMobile && <MobileOverlay />}
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/post/:slug" element={<PostViewPage />} />
+        <Route path="/admin/editor" element={<EditorPage />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+적용하면 1200px 이하는 하단처럼 오버레이가 뜨게 된다.
+
+원래는 불투명 오버레이로 하려 했지만 막상 보니 괜찮아서 이대로 냅둠
+
+![](https://velog.velcdn.com/images/qriosity/post/fa442202-a747-462b-953d-ee4ada264148/image.png)
+
+<br />
+
+#### 🐾 귀여운 이스터에그 추가
+
+웬만하면 개발자만 당할 수 있도록 특정 조작에 대한 이스터에그를 넣어두었다.
+
+일반 사용자면 별로 당할 일 없을 것이고
+
+FE 개발자면 킹받을 것임 ㅇㅅㅇ
+
+![](https://velog.velcdn.com/images/qriosity/post/cf3277b5-fc22-45ec-9273-0eb45a158a9d/image.png)
+
+*I'm gonna go evil for this...* 😈🤭
+
+<br />
+
+#### 🚀 `1.0.0-beta.2` 릴리즈
+
+이렇게 FE BE 모두 마치고 둘 다 `1.0.0-beta.2`로 릴리즈했다.<br />
+(스크롤바 커스터마이징 등 잡다구리 CSS 조정도 했는데 생략함)
+
+내일은 그램 SSD 파티션 상태를 보고 메인 SSD에 윈도우 부트로더가 있는지 확인 후
+
+우분투가 깔려있던 보조 SSD를 포맷한 후 떼어내서 서버에 붙여줘야 한다. 내 KDE 잘가...ㅏ......
+
+![](https://velog.velcdn.com/images/qriosity/post/50c19128-07b4-4c41-b62e-b21d4b7d3cb7/image.png)
+
+눈물을 머금고 내 이쁜 우분투 날려야 됨 ㅜㅜ ~~근데 이쁜 쓰레기에 가까움 안정성이 뭔 탈옥한 iOS급이라서~~
+
+하이퍼바이저는 Proxmox를 알아봤지만 필자는 단일 OS를 사용할것이라서 사용하지 않기로 했다.
+
+그래서 낼 일어나면 우분투 부팅디스크부터 구우면 됨.
 
 </details>
