@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-06-13
+updated_date: 2025-06-14
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -1646,5 +1646,271 @@ latin1 decoded: python-백준-nqueen-문제-풀이.mdx
 오늘은 예상보다 오래 걸렸다.
 
 뒤로가기 버튼부터는 ~~*내일*~~ 오늘 오전에 하자. 밤낮 바뀌면 안됨.
+
+</details>
+
+### 📆 25-06-13
+
+포스트 썸네일 추가, transition 문제 해결, react hook 규칙, 최.신.C.S.S, GH push 로직 수정, 에러 핸들링 개선, CSS 조정
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+> [https://github.com/Queue-ri/uniq/issues/10](https://github.com/Queue-ri/uniq/issues/10)<br />
+> [https://github.com/Queue-ri/uniq/issues/12](https://github.com/Queue-ri/uniq/issues/12)<br />
+> [https://github.com/Queue-ri/uniq-cms/issues/14](https://github.com/Queue-ri/uniq-cms/issues/14)
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq/issues/12](https://github.com/Queue-ri/uniq/issues/12)
+
+<br/>
+
+#### 📌 frontmatter에 `image` 추가
+
+![](https://velog.velcdn.com/images/qriosity/post/1fc02bb5-ff2d-443d-abe7-02a34a36e17f/image.png)
+
+![](https://velog.velcdn.com/images/qriosity/post/b30ba6ab-77ee-4f8f-bde4-5b3d85085080/image.png)
+
+대표 썸네일용 `image` 필드를 추가하고 그에 맞추어 FE, BE를 업데이트했다.
+
+카카오톡이 2:1이고 벨로그, 유튜브 등은 16:9라서 썸네일 비율을 어떻게 할지 고민되었는데
+
+2:1 해보니까 너무 길쭉해서 ㅋㅋㅋ 16:9로 설정했다.
+
+관련 이슈는 [12번](https://github.com/Queue-ri/uniq/issues/12)이다.
+
+<br />
+
+#### 📌 Post item의 box-shadow 버그
+
+PostList의 각 item에 hover할 시 생기는 그림자가 버벅대는 현상이 있었는데<br />
+(transition은 되는데 transition 끝나기 전까진 하단에 있는 item에 가려져서 렌더링되는 느낌)
+
+뭐라 설명해야되는지 모르겠는데 직감적으로 z-index가 애매해서라는 생각이 들었다.
+
+item끼리 z-index가 동일해서 그런 것 같은데?
+
+그래서 `:hover`에 z-index를 지정해줬고 실제로 해결이 되었다.
+
+<br/>
+
+#### 📌 svg 에셋 추가 및 컬러 조정
+
+![](https://velog.velcdn.com/images/qriosity/post/750a9711-7106-4632-86df-a3230f0fcd05/image.png)
+
+뒤로가기 화살표... 피그마 열기 귀찮아서 DOKI에서 뜯어왔다 ㅋㅋ...
+
+public에 넣는거 아니고 **src 하위에 asset 폴더 새로 만들어서 넣어야 react 컴포넌트로 불러올 수 있다.**
+
+svg color를 CSS로 조정하는 방법은 우선 svg 코드를 까서 path 부분의 fill을 `currentColor`로 지정해주는 것이다.
+
+좀 유연하게 코드를 보고 수정해줘야 하는데, 대부분 path 수정해주면 다 된다.
+
+<br/>
+
+#### 💥 motion과의 transition 겹침 문제 해결
+
+motion으로 post 관련 컴포넌트에 transition을 넣었는데
+
+PostList의 각 item에 CSS로 설정된 hover transition과 motion의 transition이 겹치는 문제가 있었다.
+
+겹쳤다기보단 그냥 둘이 나란히 수행되는데, 서로 transform의 duration이 달라서 버벅이는 것처럼 보였다.
+
+따라서 motion은 그대로 두고 CSS에서
+
+```css
+.postItem:hover {
+  box-shadow: 0 6px 32px rgba(142, 82, 255, 0.15);
+  transform: translateY(-2px);
+  border-left: 6px solid #8e52ff;
+  z-index: 99;
+}
+```
+
+이거를 없애고
+
+```css
+/* post item hover-ready transition after motion triggered */
+.hoverReady {
+  transition: border 0.4s ease-out, box-shadow 0.5s ease, transform 0.5s ease;
+}
+
+.hoverReady:hover {
+  box-shadow: 0 6px 32px rgba(142, 82, 255, 0.15);
+  transform: translateY(-2px);
+  border-left: 6px solid #8e52ff;
+  z-index: 99;
+}
+```
+
+이렇게 `hoverReady`라는 별도의 클래스로 분리했다.
+
+motion transition 끝나기 전까진 hover transition이 필요 없기 때문에, 기본적으론 `hoverReady`를 붙이지 않고
+
+motion의 `onAnimationComplete` 콜백을 이용해서 motion transition 끝난 애들을 state로 관리하여
+
+걔네들만 `hoverReady` 클래스를 붙여주었다.
+
+또한 페이지 바뀔때마다 API로 응답 오면 useEffect로 hoverReady를 다시 떼어주었다.
+
+안그럼 페이지 넘기면서 transition이 또 겹치게 되기 때문이다.
+
+<br />
+
+#### 📌 React hook 사용 규칙을 따르자
+
+```
+React Hook "useEffect" is called conditionally.
+React Hooks must be called in the exact same order in every component render.
+Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+```
+
+`useEffect`는 react hook 사용 규칙에 따라 return문이 포함된 조건문 아래 놓이면 안된다.
+
+```js
+if (loading) return <p>Loading...</p>;
+if (error) return <p>Error!</p>;
+
+useEffect(() => {
+  // ...
+}, [posts]);
+```
+
+다시 말해 이런 코드 구조면 안된다는 것이다.
+
+이는 `useEffect`가 조건부로 호출되면 안되고 일관되게 호출되어야 하기 때문이다.
+
+웬만하면 최대한 상단에 놓아주자.
+
+<br />
+
+#### ✨ WA! 최신 CSS!
+
+```css
+html {
+  scrollbar-gutter: stable;
+}
+```
+
+- 스크롤바가 생겨도 레이아웃 너비는 고정됨
+- 모던 브라우저 지원 (Chrome, Edge, Firefox 등)
+- **Safari는 아직 지원하지 않는다.** (2025년 기준)
+
+`overflow-y: scroll` 보다 맛있어서 사파리 버리고 이거 씀 사파리가 알아서 나중에 지원하라 그래
+
+저 한 줄로 layout shift의 80퍼는 잡힌 것 같다. 후...^^
+
+---
+
+<center>⬇️ <b>하단부터는 백엔드 API 보수 작업</b> ⬇️</center>
+
+---
+
+#### ✨ pushToGithub 로직 수정
+
+원래 uniq-cms의 repo에 push하는 방식이었는데 계속 사용해보니 별로인 것 같다.
+
+- uniq-cms는 결국엔 npm package가 되어야하는 녀석임
+- 패키지에 docs가 들어가나요? 아니잖아;
+
+그래서 분리했다.
+
+사용자 입장에서는 npm으로 uniq-cms 버전 관리를 하고,
+
+사용자만의 uniq-posts repo를 따로 생성 후 거기에 포스트를 저장하는게 관리에 용이할 것이다.
+
+그리고 일단 분리를 해두어야 경로 변경이 생겨도 이전의 커밋 기록이 날라가지 않는다. (잔디 중요 ^ㅅ^)<br />
+repo 자체가 중간에 변경돼서 커밋 내역 다 날라간다고 상상해보자. 이 얼마나 슬픈지...
+
+따라서 `pushToGithub`에 인자로 넘기던 github username과 repo를 env로 분리하고 (username은 없앴다)
+
+필자는 qriosity-posts라고 repo를 생성해서 해당 repo에 연결했다.
+
+최종적으로, `/post` 경로를 git 저장소로 사용해서 category로 폴더링하고 동기화하는 방식으로 변경되었다.
+
+![](https://velog.velcdn.com/images/qriosity/post/82926b9a-b6a5-437c-8c57-2f0f788881db/image.png)
+
+그나저나 경로에 git 2개 있으면 vscode에서 둘 다 띄워주네 와우 ㄷ smart~
+
+<br />
+
+#### ✨ 에러 핸들링 개선
+
+FE에서 publish하다가 제일 많이 터지는 실패 원인이 slug 중복인데
+
+에러 핸들링이 부실해서 그냥 실패했다는 식으로만 alert 되었었다.
+
+이 점이 너무 불편해서 릴리즈 전에는 손봐야겠다는 생각이 들었다.
+
+MDX 첨부 실패(=multipart File 객체 첨부 실패)와<br />
+첨부 성공 후 BE에 요청했는데 BE에서 실패했을 시 MongoDB의 에러 메시지를 FE에서 확인할 수 있도록 BE의 에러 핸들링을 보완했다.
+
+<img src="https://velog.velcdn.com/images/qriosity/post/51a367be-cb9a-418c-bf11-8f6622f5f6e2/image.png" width="700px" height="auto" />
+
+<br /><br />
+
+그리고 참고로,
+
+```js
+try {
+  const res = await fetch('http://localhost:6229/api/post', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (res.ok) {
+    alert('Successfully published the post!');
+  }
+  else { // 4xx, 5xx
+    const errorText = await res.text();
+    throw new Error(`[${res.status}] ${errorText}`);
+  }
+} catch (err) { // network error: Server down, DNS, CORS
+  alert(`Failed to publish:\n ${err.message}`);
+}
+```
+
+4xx, 5xx 에러는 catch로 빠지지 않는다. catch는 네트워크 에러에 대한 블록이기 때문이다.
+
+그래서 else에서 throw해서 catch로 빠지도록 했다.
+
+<br />
+
+#### ✍ 차후를 위한 개선 가능 사항 기록
+
+publish 로딩 속도의 9할은 깃허브 푸시 작업인 것 같다.
+
+아무래도 동기식이라 그런듯한데 비동기로 빼서 개선해볼수 있을 듯하다.
+
+<br />
+
+---
+
+#### 내일(또 자정 넘어버려서 오늘)은....
+
+FE는 favicon이랑 title 변경하고, <br />
+BE는 오늘 수정으로 production ready 수준이 된 것 같으니 버전 올리고 그대로 main에 머지할 것이다.
+
+</details>
+
+### 📆 25-06-14
+
+FE meta 변경, 모바일 레이아웃 막기
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Closed Issues
+
+
+#### 📌 Opened Issues
+> [https://github.com/Queue-ri/uniq/issues/14](https://github.com/Queue-ri/uniq/issues/14)
+
+<br/>
+
+#### 📌 FE metadata 변경
+
+WIP
 
 </details>
