@@ -181,6 +181,7 @@ async function createConfig() {
             }, */
             {to: '/featured', label: 'Featured', position: 'left', items: docNavItems},
             {to: '/dev-note/algorio-dev-note', label: 'Dev Note', position: 'left'},
+            {to: '/enqrypt', label: 'EnQrypt', position: 'left'},
             {
               type: 'localeDropdown',
               position: 'right',
