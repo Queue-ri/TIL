@@ -1,8 +1,36 @@
 import React, { useState } from 'react';
+
+// for decryption
 import CryptoJS from 'crypto-js';
+
+// parser
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import CodeBlock from '@theme/CodeBlock'; // swizzled CodeBlock component
+
+// for admonitions
+import remarkDirective from 'remark-directive';
+import visit from 'unist-util-visit';
+
+// docusaurus theme components
+import CodeBlock from '@theme/CodeBlock';
+import Admonition from '@theme/Admonition';
+
+
+/* custom admonition parser */
+// ReactMarkdown 버전 이슈로 인해 remark-admonitions 대신 remark-directive로 직접 구현
+function remarkAdmonition() {
+  return (tree) => {
+    visit(tree, (node) => {
+      if (node.type === 'containerDirective' && ['info','tip','warning','caution','danger','note'].includes(node.name)) {
+        node.type = 'admonition';
+        node.data = node.data || {};
+        node.data.hName = 'admonition';
+        node.data.hProperties = { type: node.name };
+      }
+    });
+  };
+}
+
 
 export default function DeQrypter({ encrypted }) {
   const [decrypted, setDecrypted] = useState(null);
@@ -16,12 +44,6 @@ export default function DeQrypter({ encrypted }) {
       if (!originalText) throw new Error('복호화 실패');
 
       const sanitizedText = originalText
-        // Docusaurus admonition -> markdown blockquote로 변환
-        .replace(/:::(info|tip|warning|caution|danger|note)[^\n]*\n([\s\S]*?)\n:::/g, (match, type, content) => {
-          return `> 💡 **${type.toUpperCase()}**\n>\n` +
-            content.trim().split('\n').map(line => `> ${line}`).join('\n');
-        })
-
         // JSX style -> HTML style로 변환
         .replace(/<span\s+style=\{\s*\{([^}]+)\}\s*\}>/g, (_, styleContent) => {
           // styleContent: "fontSize:'32px', color:'red'" 등
@@ -49,6 +71,7 @@ export default function DeQrypter({ encrypted }) {
       <div style={{ marginTop: '1rem' }}>
         <ReactMarkdown
           children={decrypted}
+          remarkPlugins={[remarkDirective, remarkAdmonition]}
           rehypePlugins={[rehypeRaw]}
           components={{
             pre: ({node, ...props}) => <>{props.children}</>, // 중복 <pre> 제거
@@ -57,6 +80,10 @@ export default function DeQrypter({ encrypted }) {
                 return <code className={className} {...props}>{children}</code>;
               }
               return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
+            },
+            admonition({node, children, ...props}) {
+              const type = node.data?.hProperties?.type || 'info';
+              return <Admonition type={type} {...props}>{children}</Admonition>;
             },
           }}
         />
