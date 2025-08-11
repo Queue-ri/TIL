@@ -15,8 +15,13 @@ import visit from 'unist-util-visit';
 import CodeBlock from '@theme/CodeBlock';
 import Admonition from '@theme/Admonition';
 
+// custom components
+// details 컴포넌트는 Details - DetailsGeneric 구조로 되어있으나 swizzle 미지원이고 복잡해서 따로 컴팩트하게 구현함
+import CustomDetails from '../mdx-render/CustomDetails/CustomDetails';
+
 
 /* custom admonition parser */
+// :::info 등의 마크다운 구문을 html로 변환
 // ReactMarkdown 버전 이슈로 인해 remark-admonitions 대신 remark-directive로 직접 구현
 function remarkAdmonition() {
   return (tree) => {
@@ -85,6 +90,7 @@ export default function DeQrypter({ encrypted }) {
               const type = node.data?.hProperties?.type || 'info';
               return <Admonition type={type} {...props}>{children}</Admonition>;
             },
+            details: ({ node, ...props }) => <CustomDetails {...props} />,
           }}
         />
       </div>

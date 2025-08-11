@@ -1,0 +1,47 @@
+.details {
+  --docusaurus-details-decoration-color: var(--ifm-alert-border-color);
+  --docusaurus-details-summary-arrow-size: 0.38rem;
+  --docusaurus-details-transition: transform var(--ifm-transition-fast) ease;
+
+  border: 1px solid var(--ifm-alert-border-color);
+  margin: 0 0 var(--ifm-spacing-vertical);
+  border-radius: var(--ifm-global-radius);
+
+  summary {
+    cursor: pointer;
+    padding-left: 1rem;
+    position: relative;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::before {
+      border-color: transparent transparent transparent var(--docusaurus-details-decoration-color);
+        border-style: solid;
+        border-width: var(--docusaurus-details-summary-arrow-size);
+        content: '';
+        left: 0;
+        position: absolute;
+        top: .45rem;
+        transform: rotate(0);
+        transform-origin: calc(var(--docusaurus-details-summary-arrow-size) / 2) 50%;
+        transition: var(--docusaurus-details-transition);
+    }
+  }
+
+  &[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  &[data-collapsed='false'] summary::before {
+    transform: rotate(90deg);
+  }
+}
+
+.collapsibleContent {
+  border-top: 1px solid var(--docusaurus-details-decoration-color);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
