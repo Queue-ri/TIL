@@ -106,6 +106,12 @@ export default function DeQrypter({ encrypted }) {
           placeholder="비밀번호 입력"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault(); // 폼 전송 등 기본 동작 방지
+              handleDecrypt();
+            }
+          }}
           style={{ border: '1px solid #ccc', borderRadius: '.2rem', fontSize: '.8rem', padding: '0.4rem 2.5rem 0.4rem 0.5rem', outline: 'none'}}
         />
         <button style={{ fontSize: '.8rem', border: '1px solid #a0a6ff', borderRadius: '.2rem', backgroundColor: 'transparent', marginLeft: '.4rem', padding: '0.32rem 1rem 0.32rem .9rem', cursor: 'pointer', fontFamily: 'SUIT-Regular, sans-serif' }} onClick={handleDecrypt}>🔑 해제</button>
