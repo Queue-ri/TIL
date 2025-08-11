@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import CryptoJS from 'crypto-js';
 import ReactMarkdown from 'react-markdown';
-//import remarkGfm from 'remark-gfm';
-//import remarkPrism from 'remark-prism';
 import rehypeRaw from 'rehype-raw';
-import rehypeHighlight from 'rehype-highlight';
+import CodeBlock from '@theme/CodeBlock'; // swizzled CodeBlock component
 
 export default function DeQrypter({ encrypted }) {
   const [decrypted, setDecrypted] = useState(null);
@@ -15,22 +13,15 @@ export default function DeQrypter({ encrypted }) {
     try {
       const bytes = CryptoJS.AES.decrypt(encrypted, password);
       const originalText = bytes.toString(CryptoJS.enc.Utf8);
+      if (!originalText) throw new Error('복호화 실패');
 
-      if (!originalText || typeof originalText !== 'string') {
-        throw new Error('복호화 실패');
-      }
-
-      // 마크다운 문법을 HTML로 변환하기 전에 정제 작업 수행
       const sanitizedText = originalText
-        // :::info, :::tip 등 Docusaurus 마크다운을 안전한 인용문으로 대체
+        // Docusaurus admonition -> markdown blockquote로 변환
         .replace(/:::(info|tip|warning|caution|danger|note)[^\n]*\n([\s\S]*?)\n:::/g, (match, type, content) => {
-          return `> 💡 ${type.toUpperCase()}\n>\n` +
-            content
-              .trim()
-              .split('\n')
-              .map(line => `> ${line}`)
-              .join('\n');
+          return `> 💡 **${type.toUpperCase()}**\n>\n` +
+            content.trim().split('\n').map(line => `> ${line}`).join('\n');
         })
+
         // JSX style -> HTML style로 변환
         .replace(/<span\s+style=\{\s*\{([^}]+)\}\s*\}>/g, (_, styleContent) => {
           // styleContent: "fontSize:'32px', color:'red'" 등
@@ -54,15 +45,20 @@ export default function DeQrypter({ encrypted }) {
   };
 
   if (decrypted) {
-    console.log('[복호화된 내용 (sanitized)]');
-    console.log(decrypted);
-
     return (
       <div style={{ marginTop: '1rem' }}>
         <ReactMarkdown
           children={decrypted}
-          //remarkPlugins={[remarkGfm, remarkPrism]}
-          rehypePlugins={[rehypeRaw, rehypeHighlight]} // 반드시 rehypeRaw를 먼저 놓기 (순서 중요)
+          rehypePlugins={[rehypeRaw]}
+          components={{
+            pre: ({node, ...props}) => <>{props.children}</>, // 중복 <pre> 제거
+            code({node, inline, className, children, ...props}) {
+              if (inline) {
+                return <code className={className} {...props}>{children}</code>;
+              }
+              return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
+            },
+          }}
         />
       </div>
     );
