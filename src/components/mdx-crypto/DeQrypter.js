@@ -6,6 +6,8 @@ import CryptoJS from 'crypto-js';
 // parser
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 // for admonitions
 import remarkDirective from 'remark-directive';
@@ -75,9 +77,8 @@ export default function DeQrypter({ encrypted }) {
     return (
       <div style={{ marginTop: '1rem' }}>
         <ReactMarkdown
-          children={decrypted}
-          remarkPlugins={[remarkDirective, remarkAdmonition]}
-          rehypePlugins={[rehypeRaw]}
+          remarkPlugins={[remarkDirective, remarkAdmonition, remarkMath]}
+          rehypePlugins={[rehypeRaw, rehypeKatex]}
           components={{
             pre: ({node, ...props}) => <>{props.children}</>, // 중복 <pre> 제거
             code({node, inline, className, children, ...props}) {
@@ -92,7 +93,9 @@ export default function DeQrypter({ encrypted }) {
             },
             details: ({ node, ...props }) => <CustomDetails {...props} />,
           }}
-        />
+        >
+          {decrypted}
+        </ReactMarkdown>
       </div>
     );
   }
