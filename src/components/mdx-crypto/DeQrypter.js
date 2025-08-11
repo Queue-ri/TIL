@@ -67,7 +67,7 @@ export default function DeQrypter({ encrypted }) {
       setDecrypted(sanitizedText);
       setError(null);
     } catch (e) {
-      setError('❌ 복호화 실패: 비밀번호가 틀렸거나 잘못된 형식입니다.');
+      setError('복호화 실패: 비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -99,16 +99,18 @@ export default function DeQrypter({ encrypted }) {
 
   return (
     <div style={{ border: '1px solid #ccc', padding: '1rem', borderRadius: '8px' }}>
-      <p>🔐 이 콘텐츠는 암호화되어 있습니다.</p>
-      <input
-        type="password"
-        placeholder="비밀번호 입력"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ marginRight: '0.5rem' }}
-      />
-      <button onClick={handleDecrypt}>🔑 해제</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <p style={{ fontSize: '.9rem' }}>🔐 이 콘텐츠는 암호화되어 있습니다.</p>
+      <div class="wrapper" style={{ marginBottom: '.6rem' }}>
+        <input
+          type="password"
+          placeholder="비밀번호 입력"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{ border: '1px solid #ccc', borderRadius: '.2rem', fontSize: '.8rem', padding: '0.4rem 2.5rem 0.4rem 0.5rem', outline: 'none'}}
+        />
+        <button style={{ fontSize: '.8rem', border: '1px solid #a0a6ff', borderRadius: '.2rem', backgroundColor: 'transparent', marginLeft: '.4rem', padding: '0.32rem 1rem 0.32rem .9rem', cursor: 'pointer', fontFamily: 'SUIT-Regular, sans-serif' }} onClick={handleDecrypt}>🔑 해제</button>
+        {error && <div style={{ color: 'red', fontSize: '.9rem', marginTop: '.4rem'}}>{error}</div>}
+      </div>
     </div>
   );
 }

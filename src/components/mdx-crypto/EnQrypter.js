@@ -18,7 +18,7 @@ export default function EnQrypter() {
       setEncrypted(ciphertext);
       setCopied(false);
     } catch (e) {
-      setEncrypted('❌ 암호화 실패: 입력값 확인');
+      setEncrypted('암호화 실패: 입력값을 확인해주세요.');
     }
   };
 
@@ -30,7 +30,18 @@ export default function EnQrypter() {
   const inputStyle = {
     marginBottom: '0.5rem',
     width: '100%',
-    padding: '0.5rem 2.5rem 0.5rem 0.5rem'
+    padding: '0.5rem 2.5rem 0.5rem 0.5rem',
+    border: '1px solid #ccc',
+    borderRadius: '.2rem',
+    outline: 'none'
+  };
+
+  const textAreaStyle = {
+    width: '100%',
+    marginBottom: '1rem',
+    padding: '0.5rem 2.5rem 0.5rem 0.5rem',
+    border: '1px solid #ccc',
+    borderRadius: '.2rem',
   };
 
   const wrapperStyle = {
@@ -41,7 +52,7 @@ export default function EnQrypter() {
   const eyeButtonStyle = {
     position: 'absolute',
     right: '0.5rem',
-    transform: 'translateY(30%)',
+    transform: 'translateY(20%)',
     background: 'none',
     border: 'none',
     cursor: 'pointer',
@@ -57,7 +68,7 @@ export default function EnQrypter() {
         placeholder="여기에 마크다운 또는 평문을 입력하세요"
         value={plaintext}
         onChange={(e) => setPlaintext(e.target.value)}
-        style={{ width: '100%', marginBottom: '1rem' }}
+        style={textAreaStyle}
       />
 
       {/* 비밀번호 입력 */}
@@ -97,17 +108,17 @@ export default function EnQrypter() {
       </div>
 
       {confirmPassword && (
-        <p style={{ color: passwordsMatch ? 'green' : 'red', marginTop: 0 }}>
+        <p style={{ color: passwordsMatch ? 'green' : 'red', marginTop: 0, fontSize: '.9rem'}}>
           {passwordsMatch ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.'}
         </p>
       )}
 
       <div style={{ marginBottom: '1rem' }}>
-        <button onClick={handleEncrypt} disabled={!passwordsMatch}>
+        <button style={{ marginTop: '.4rem', padding: '0.32rem 1rem 0.32rem .9rem', fontSize: '.8rem', fontFamily: 'SUIT-Regular, sans-serif', border: `1px solid ${passwordsMatch ? '#a0a6ff' : '#ccc'}`, borderRadius: '.2rem', backgroundColor: 'transparent', cursor: passwordsMatch ? 'pointer' : 'default' }} onClick={handleEncrypt} disabled={!passwordsMatch}>
           🔒 암호화
         </button>
         {encrypted && (
-          <button onClick={handleCopy} style={{ marginLeft: '1rem' }}>
+          <button style={{ margin: '.4rem 0 0 .5rem', padding: '0.32rem 1rem 0.32rem .9rem', fontSize: '.8rem', fontFamily: 'SUIT-Regular, sans-serif', border: '1px solid #a0a6ff', borderRadius: '.2rem', backgroundColor: 'transparent', cursor: 'pointer' }} onClick={handleCopy}>
             {copied ? '✅ 복사됨' : '📋 복사'}
           </button>
         )}
@@ -115,12 +126,12 @@ export default function EnQrypter() {
 
       {encrypted && (
         <div>
-          <p>🔑 암호화된 문자열:</p>
+          <div style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>🔑 암호화된 문자열:</div>
           <textarea
             rows={5}
             readOnly
             value={encrypted}
-            style={{ width: '100%', fontFamily: 'monospace' }}
+            style={textAreaStyle}
           />
         </div>
       )}
