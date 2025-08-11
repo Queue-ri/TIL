@@ -97,10 +97,38 @@ export default function DeQrypter({ encrypted }) {
     );
   }
 
+  const wrapperStyle = {
+    display: 'flex',
+    gap: '.4rem',
+    marginBottom: '.6rem',
+  };
+
+  const inputStyle = {
+    flex: '1 1 auto',
+    minWidth: '130px',
+    maxWidth: '280px',
+    border: '1px solid #ccc',
+    borderRadius: '.2rem',
+    fontSize: '.8rem',
+    padding: '0.4rem 2.5rem 0.4rem 0.5rem',
+    outline: 'none',
+  };
+
+  const buttonStyle = {
+    flexShrink: 0,
+    fontSize: '.8rem',
+    border: '1px solid #a0a6ff',
+    borderRadius: '.2rem',
+    backgroundColor: 'transparent',
+    padding: '0.32rem 1rem 0.32rem .9rem',
+    cursor: 'pointer',
+    fontFamily: 'SUIT-Regular, sans-serif',
+  };
+
   return (
     <div style={{ border: '1px solid #ccc', padding: '1rem', borderRadius: '8px' }}>
       <p style={{ fontSize: '.9rem' }}>🔐 이 콘텐츠는 암호화되어 있습니다.</p>
-      <div class="wrapper" style={{ marginBottom: '.6rem' }}>
+      <div class="wrapper" style={wrapperStyle}>
         <input
           type="password"
           placeholder="비밀번호 입력"
@@ -112,11 +140,11 @@ export default function DeQrypter({ encrypted }) {
               handleDecrypt();
             }
           }}
-          style={{ border: '1px solid #ccc', borderRadius: '.2rem', fontSize: '.8rem', padding: '0.4rem 2.5rem 0.4rem 0.5rem', outline: 'none'}}
+          style={inputStyle}
         />
-        <button style={{ fontSize: '.8rem', border: '1px solid #a0a6ff', borderRadius: '.2rem', backgroundColor: 'transparent', marginLeft: '.4rem', padding: '0.32rem 1rem 0.32rem .9rem', cursor: 'pointer', fontFamily: 'SUIT-Regular, sans-serif' }} onClick={handleDecrypt}>🔑 해제</button>
-        {error && <div style={{ color: 'red', fontSize: '.9rem', marginTop: '.4rem'}}>{error}</div>}
+        <button style={buttonStyle} onClick={handleDecrypt}>🔑 해제</button>
       </div>
+      {error && <div style={{ color: 'red', fontSize: '.9rem', marginTop: '.4rem'}}>{error}</div>}
     </div>
   );
 }
