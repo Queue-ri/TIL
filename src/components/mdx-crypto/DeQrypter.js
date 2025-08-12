@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 // for decryption
 import CryptoJS from 'crypto-js';
@@ -20,6 +20,7 @@ import Admonition from '@theme/Admonition';
 // custom components
 // details 컴포넌트는 Details - DetailsGeneric 구조로 되어있으나 swizzle 미지원이고 복잡해서 따로 컴팩트하게 구현함
 import CustomDetails from '../mdx-render/CustomDetails/CustomDetails';
+import DeQrypterContext from './DeQrypterContext'; // TOC context for DocItem
 
 
 /* custom admonition parser */
@@ -38,11 +39,53 @@ function remarkAdmonition() {
   };
 }
 
+/* custom heading parser for TOC */
+// remark plugin으로 만들어서 넣는 방식은 무한 호출되는 이슈로 인해 불가
+function extractHeadingsFromMarkdown(mdText) {
+  const lines = mdText.split('\n');
+  const headings = [];
+  let firstLevel1Found = false;
+
+  for (const line of lines) {
+    const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
+    if (headingMatch) {
+      const level = headingMatch[1].length;
+      const text = headingMatch[2].trim();
+
+      if (level === 1 && !firstLevel1Found) {
+        firstLevel1Found = true;
+        continue; // 첫번째 h1 무시
+      }
+
+      // id 생성: 영소문자, 공백 -> 하이픈 변환, 한/영/숫자/하이픈 허용
+      const id = text
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^가-힣a-z0-9\-]/g, '');
+
+      headings.push({ value: text, id, level });
+    }
+  }
+
+  return headings;
+}
+
 
 export default function DeQrypter({ encrypted }) {
+  // DeQrypter 사용 여부
+  const { setIsDeQrypterUsed, setDecryptedToc } = useContext(DeQrypterContext);
+
   const [decrypted, setDecrypted] = useState(null);
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setIsDeQrypterUsed(true); // DeQrypter 사용함
+    return () => {
+      setIsDeQrypterUsed(false);
+      setDecryptedToc([]); // 언마운트시 TOC 초기화
+    };
+  }, []);
 
   const handleDecrypt = () => {
     try {
@@ -66,6 +109,11 @@ export default function DeQrypter({ encrypted }) {
           return `<span style="${htmlStyle}">`;
         });
 
+      // TOC 생성
+      const toc = extractHeadingsFromMarkdown(sanitizedText);
+      console.log('Decrypted TOC:', toc);
+      setDecryptedToc(toc);
+      
       setDecrypted(sanitizedText);
       setError(null);
     } catch (e) {
@@ -131,7 +179,7 @@ export default function DeQrypter({ encrypted }) {
   return (
     <div style={{ border: '1px solid #ccc', padding: '1rem', borderRadius: '8px' }}>
       <p style={{ fontSize: '.9rem' }}>🔐 이 콘텐츠는 암호화되어 있습니다.</p>
-      <div class="wrapper" style={wrapperStyle}>
+      <div className="wrapper" style={wrapperStyle}>
         <input
           type="password"
           placeholder="비밀번호 입력"

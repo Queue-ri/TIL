@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import DocPaginator from '@theme/DocPaginator';
 import DocVersionBanner from '@theme/DocVersionBanner';
@@ -23,6 +23,9 @@ import {
 } from '@docusaurus/theme-common';
 import DocBreadcrumbs from '@theme/DocBreadcrumbs';
 import MDXContent from '@theme/MDXContent';
+
+/* [DeQrypter] custom implementation */
+import DeQrypterContext from '@site/src/components/mdx-crypto/DeQrypterContext';
 
 function DocItemMetadata(props) {
   const {content: DocContent} = props;
@@ -55,69 +58,84 @@ function DocItemContent(props) {
   // - user asks to hide it with front matter
   // - the markdown content does not already contain a top-level h1 heading
 
+  /* [DeQrypter] custom implementation */
+  const [isDeQrypterUsed, setIsDeQrypterUsed] = useState(false);
+  const [decryptedToc, setDecryptedToc] = useState([]);
+
   const shouldAddTitle =
     !hideTitle && typeof DocContent.contentTitle === 'undefined';
   const windowSize = useWindowSize();
   const canRenderTOC =
-    !hideTableOfContents && DocContent.toc && DocContent.toc.length > 0;
+    !hideTableOfContents &&
+    (
+      (isDeQrypterUsed && decryptedToc.length > 0) || 
+      (!isDeQrypterUsed && DocContent.toc && DocContent.toc.length > 0)
+    );
   const renderTocDesktop =
     canRenderTOC && (windowSize === 'desktop' || windowSize === 'ssr');
+
+  console.log(isDeQrypterUsed);
+
   return (
-    <div className="row">
-      <div className={clsx('col', !hideTableOfContents && styles.docItemCol)}>
-        <DocVersionBanner />
-        <div className={styles.docItemContainer}>
-          <article>
-            <DocBreadcrumbs />
-            <DocVersionBadge />
+    <DeQrypterContext.Provider
+      value={{ isDeQrypterUsed, setIsDeQrypterUsed, decryptedToc, setDecryptedToc }}
+    >
+      <div className="row">
+        <div className={clsx('col', !hideTableOfContents && styles.docItemCol)}>
+          <DocVersionBanner />
+          <div className={styles.docItemContainer}>
+            <article>
+              <DocBreadcrumbs />
+              <DocVersionBadge />
 
-            {canRenderTOC && (
-              <TOCCollapsible
-                toc={DocContent.toc}
-                minHeadingLevel={tocMinHeadingLevel}
-                maxHeadingLevel={tocMaxHeadingLevel}
-                className={clsx(
-                  ThemeClassNames.docs.docTocMobile,
-                  styles.tocMobile,
-                )}
-              />
-            )}
-
-            <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
-              {/*
-               Title can be declared inside md content or declared through
-               front matter and added manually. To make both cases consistent,
-               the added title is added under the same div.markdown block
-               See https://github.com/facebook/docusaurus/pull/4882#issuecomment-853021120
-               */}
-              {shouldAddTitle && (
-                <header>
-                  <Heading as="h1">{title}</Heading>
-                </header>
+              {canRenderTOC && (
+                <TOCCollapsible
+                  toc={isDeQrypterUsed ? decryptedToc : DocContent.toc}
+                  minHeadingLevel={tocMinHeadingLevel}
+                  maxHeadingLevel={tocMaxHeadingLevel}
+                  className={clsx(
+                    ThemeClassNames.docs.docTocMobile,
+                    styles.tocMobile,
+                  )}
+                />
               )}
-              <MDXContent>
-                <DocContent />
-              </MDXContent>
-            </div>
 
-            <DocItemFooter {...props} />
-          </article>
+              <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
+                {/*
+                Title can be declared inside md content or declared through
+                front matter and added manually. To make both cases consistent,
+                the added title is added under the same div.markdown block
+                See https://github.com/facebook/docusaurus/pull/4882#issuecomment-853021120
+                */}
+                {shouldAddTitle && (
+                  <header>
+                    <Heading as="h1">{title}</Heading>
+                  </header>
+                )}
+                <MDXContent>
+                  <DocContent />
+                </MDXContent>
+              </div>
 
-          <DocPaginator previous={metadata.previous} next={metadata.next} />
-          <Comment />
+              <DocItemFooter {...props} />
+            </article>
+
+            <DocPaginator previous={metadata.previous} next={metadata.next} />
+            <Comment />
+          </div>
         </div>
+        {renderTocDesktop && (
+          <div className="col col--3">
+            <TOC
+              toc={isDeQrypterUsed ? decryptedToc : DocContent.toc}
+              minHeadingLevel={tocMinHeadingLevel}
+              maxHeadingLevel={tocMaxHeadingLevel}
+              className={ThemeClassNames.docs.docTocDesktop}
+            />
+          </div>
+        )}
       </div>
-      {renderTocDesktop && (
-        <div className="col col--3">
-          <TOC
-            toc={DocContent.toc}
-            minHeadingLevel={tocMinHeadingLevel}
-            maxHeadingLevel={tocMaxHeadingLevel}
-            className={ThemeClassNames.docs.docTocDesktop}
-          />
-        </div>
-      )}
-    </div>
+    </DeQrypterContext.Provider>
   );
 }
 
