@@ -16,6 +16,7 @@ import visit from 'unist-util-visit';
 // docusaurus theme components
 import CodeBlock from '@theme/CodeBlock';
 import Admonition from '@theme/Admonition';
+import Heading from '@theme/Heading';
 
 // custom components
 // details 컴포넌트는 Details - DetailsGeneric 구조로 되어있으나 swizzle 미지원이고 복잡해서 따로 컴팩트하게 구현함
@@ -44,7 +45,7 @@ function remarkAdmonition() {
 function extractHeadingsFromMarkdown(mdText) {
   const lines = mdText.split('\n');
   const headings = [];
-  let firstLevel1Found = false;
+  let isFirstLevel1 = true;
 
   for (const line of lines) {
     const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
@@ -52,10 +53,11 @@ function extractHeadingsFromMarkdown(mdText) {
       const level = headingMatch[1].length;
       const text = headingMatch[2].trim();
 
-      if (level === 1 && !firstLevel1Found) {
-        firstLevel1Found = true;
+      if (level === 1 && isFirstLevel1) {
+        isFirstLevel1 = false;
         continue; // 첫번째 h1 무시
       }
+      isFirstLevel1 = false;
 
       // id 생성: 영소문자, 공백 -> 하이픈 변환, 한/영/숫자/하이픈 허용
       const id = text
@@ -77,7 +79,13 @@ export default function DeQrypter({ encrypted }) {
 
   const [decrypted, setDecrypted] = useState(null);
   const [password, setPassword] = useState('');
+  const [toc, setToc] = useState([]);
   const [error, setError] = useState(null);
+
+  // TOC 데이터 인덱스용 ref
+  const headingIndexRef = React.useRef(0);
+  // 첫번째 h1 여부 체크용 ref
+  const firstH1Ref = React.useRef(true);
 
   useEffect(() => {
     setIsDeQrypterUsed(true); // DeQrypter 사용함
@@ -87,6 +95,8 @@ export default function DeQrypter({ encrypted }) {
     };
   }, []);
 
+
+  /* 복호화 함수 */
   const handleDecrypt = () => {
     try {
       const bytes = CryptoJS.AES.decrypt(encrypted, password);
@@ -112,6 +122,7 @@ export default function DeQrypter({ encrypted }) {
       // TOC 생성
       const toc = extractHeadingsFromMarkdown(sanitizedText);
       console.log('Decrypted TOC:', toc);
+      setToc(toc);
       setDecryptedToc(toc);
       
       setDecrypted(sanitizedText);
@@ -121,13 +132,57 @@ export default function DeQrypter({ encrypted }) {
     }
   };
 
+
+  /* 복호화 후 렌더링 */
   if (decrypted) {
+    // TOC 데이터에서 첫번째 h1은 일부러 제거되고 나머지부터 있음
+    // 따라서 첫번째 h1은 id 없이 렌더링하고, 이후부터는 TOC 데이터 기반으로 id 설정
+
+    /*
+      ex1)
+        h1 <- id 없음
+        h2
+        h2
+
+      ex2)
+        h2
+        h1 <- id 있음
+        h2
+    */
+
+    // init refs: useRef hook은 최상위 레벨에 있어야 함
+    headingIndexRef.current = 0;
+    firstH1Ref.current = true;
+
+    // docusaurus Heading 컴포넌트로 변환
+    function createHeading(level) {
+      return ({ node, ...props }) => {
+        if (level === 1 && firstH1Ref.current) { // 첫번째 h1: id 없이 렌더링
+          firstH1Ref.current = false;
+          return <Heading as="h1" {...props} />;
+        }
+        else { // h2~h6 or 첫번째가 아닌 h1: id 설정
+          firstH1Ref.current = false;
+          const index = headingIndexRef.current;
+          const headingId = toc[index]?.id || '';
+          headingIndexRef.current += 1;
+          return <Heading as={`h${level}`} id={headingId} {...props} />;
+        }
+      };
+    }
+
     return (
       <div style={{ marginTop: '1rem' }}>
         <ReactMarkdown
           remarkPlugins={[remarkDirective, remarkAdmonition, remarkMath]}
           rehypePlugins={[rehypeRaw, rehypeKatex]}
           components={{
+            h1: createHeading(1),
+            h2: createHeading(2),
+            h3: createHeading(3),
+            h4: createHeading(4),
+            h5: createHeading(5),
+            h6: createHeading(6),
             pre: ({node, ...props}) => <>{props.children}</>, // 중복 <pre> 제거
             code({node, inline, className, children, ...props}) {
               if (inline) {
@@ -148,6 +203,8 @@ export default function DeQrypter({ encrypted }) {
     );
   }
 
+
+  /* 복호화 이전 패스워드 입력창 렌더링 */
   const wrapperStyle = {
     display: 'flex',
     gap: '.4rem',
