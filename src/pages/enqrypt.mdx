@@ -4,9 +4,9 @@ title: EnQrypt
 
 # 🧪 Public TIL을 위한 문서 암호화 (experimental)
 
-:::caution
+:::danger 🐞자나깨나 버그 조심
 
-실험적인 기능입니다. 사용에 주의해주세요.
+실험적인 기능입니다. 버그가 존재할 수 있습니다.
 
 :::
 
@@ -23,7 +23,45 @@ Public repository에 커밋되는 TIL 문서 내용을 외부로부터 안전하
 <br />
 
 import EnQrypter from '@site/src/components/mdx-crypto/EnQrypter.js';
+import DeQrypter from '@site/src/components/mdx-crypto/DeQrypter.js';
 
 <EnQrypter />
 
 <br />
+
+:::info 렌더링 지원 목록
+- [x] Docusaurus Code Blocks
+- [x] Docusaurus Details
+- [x] Docusaurus Admonitions
+- [x] Inline JSX
+- [x] KaTeX
+- [x] Docusaurus Headings
+- [x] Docusaurus TOC (swizzle 필수)
+:::
+
+<br /><br />
+
+## 🚀 How to use?
+
+1. **원문 암호화**  
+   [EnQrypter](https://github.com/Queue-ri/TIL/blob/main/src/components/mdx-crypto/EnQrypter.js)를 사용하여 원문을 암호화합니다.
+2. **MDX 작성**  
+   MDX를 생성하여 [DeQrypter](https://github.com/Queue-ri/TIL/blob/main/src/components/mdx-crypto/DeQrypter.js)를 import하고 암호화된 내용을 붙여넣습니다.
+
+```jsx title="example.mdx"
+import DeQrypter from '@site/src/components/mdx-crypto/DeQrypter.js';
+
+<DeQrypter encrypted="암호화된 내용" />
+```
+
+<br />
+
+## ⚡️ Live Demo
+
+패스워드를 입력하고 내용을 확인해보세요!
+
+패스워드는 `qriosity` 입니다.
+
+<DeQrypter encrypted="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" />
+
+<br /><br />
