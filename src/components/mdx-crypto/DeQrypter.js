@@ -11,7 +11,7 @@ import rehypeKatex from 'rehype-katex';
 
 // for admonitions
 import remarkDirective from 'remark-directive';
-import visit from 'unist-util-visit';
+import { visit } from 'unist-util-visit';
 
 // docusaurus theme components
 import CodeBlock from '@theme/CodeBlock';
@@ -102,6 +102,8 @@ export default function DeQrypter({ encrypted }) {
       const bytes = CryptoJS.AES.decrypt(encrypted, password);
       const originalText = bytes.toString(CryptoJS.enc.Utf8);
       if (!originalText) throw new Error('복호화 실패');
+      console.log('[Decrypted text]');
+      console.log(originalText);
 
       const sanitizedText = originalText
         // JSX style -> HTML style로 변환
