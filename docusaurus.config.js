@@ -162,7 +162,8 @@ async function createConfig() {
       ({
         announcementBar: {
           id: 'announcement',
-          content: `🚧 Some pages are still under construction! 🚧`
+          content: `🚧 Some pages are still under construction! 🚧`,
+          isCloseable: true,
         },
         navbar: {
           title: 'Queue-ri\'s TIL',
@@ -203,7 +204,11 @@ async function createConfig() {
           ],
           hideOnScroll: true
         },
-        hideableSidebar: true,
+        docs: {
+          sidebar: {
+            hideable: true,
+          },
+        },
         footer: {
           style: 'dark',
           links: [
