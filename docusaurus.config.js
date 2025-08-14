@@ -188,11 +188,11 @@ async function createConfig() {
               position: 'right',
             },
             {
-              href: 'http://qriositylog.com',
+              href: 'https://qriosity.dev',
               position: 'right',
               className: 'blog-link',
-              label: 'Blog',
-              'aria-label': 'Go to qriositylog.com',
+              label: 'qriosity.dev',
+              'aria-label': 'Go to qriosity.dev',
             },
             {
               href: 'https://github.com/Queue-ri',
@@ -243,7 +243,7 @@ async function createConfig() {
               items: [
                 {
                   label: 'Blog',
-                  href: 'http://qriositylog.com',
+                  href: 'https://qriosity.dev',
                 },
                 {
                   label: 'GitHub',
