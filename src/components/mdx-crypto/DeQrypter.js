@@ -4,8 +4,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 
 // parser
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
+import { MDXProvider } from '@mdx-js/react';
+import { evaluate } from '@mdx-js/mdx';
+import * as runtime from 'react/jsx-runtime';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
@@ -19,6 +20,13 @@ import Admonition from '@theme/Admonition';
 import Heading from '@theme/Heading';
 import Details from '@theme/Details';
 
+// custom TIL components
+import * as TILComponentsRaw from '@site/src/components';
+// 모든 default export를 풀어서 단일 객체로 변환
+const TILComponents = Object.fromEntries(
+  Object.entries(TILComponentsRaw).map(([key, mod]) => [key, mod.default || mod])
+);
+
 // TOC context for DocItem
 import DeQrypterContext from './DeQrypterContext';
 
@@ -30,7 +38,6 @@ function remarkAdmonition() {
   return (tree) => {
     visit(tree, (node) => {
       if (node.type === 'containerDirective' && ['info','tip','warning','caution','danger','note'].includes(node.name)) {
-        node.type = 'admonition';
         node.data = node.data || {};
         node.data.hName = 'admonition';
         node.data.hProperties = { type: node.name };
@@ -38,6 +45,24 @@ function remarkAdmonition() {
     });
   };
 }
+
+/* custom details parser */
+// 그냥 details: ... 로 컴포넌트 매핑 시도하면 매핑이 안됨
+// remark plugin은 :::details 같은 구문을 인식하기에 <details> 용으로는 부적합
+// MDX AST에서 mdxJsxFlowElement 타입으로 변환된 뒤 rehype 단계에서 name을 바꾸고 MDXProvider에 매핑해야 함
+function rehypeDetailsToComponent() {
+  return (tree) => {
+    visit(tree, (node) => {
+      // mdxJsxFlowElement 타입에서 name이 'details'인 경우
+      if (node.type === 'mdxJsxFlowElement' && node.name === 'details') {
+        console.log('[MDX JSX Before]', node);
+        node.name = 'Details';
+        console.log('[MDX JSX After]', node);
+      }
+    });
+  };
+}
+
 
 /* custom heading parser for TOC */
 // remark plugin으로 만들어서 넣는 방식은 무한 호출되는 이슈로 인해 불가
@@ -77,6 +102,7 @@ export default function DeQrypter({ encrypted }) {
   const { setIsDeQrypterUsed, setDecryptedToc } = useContext(DeQrypterContext);
 
   const [decrypted, setDecrypted] = useState(null);
+  const [MDXComponent, setMDXComponent] = useState(null);
   const [password, setPassword] = useState('');
   const [toc, setToc] = useState([]);
   const [error, setError] = useState(null);
@@ -86,6 +112,7 @@ export default function DeQrypter({ encrypted }) {
   // 첫번째 h1 여부 체크용 ref
   const firstH1Ref = React.useRef(true);
 
+  /* TOC context hook */
   useEffect(() => {
     setIsDeQrypterUsed(true); // DeQrypter 사용함
     return () => {
@@ -93,6 +120,100 @@ export default function DeQrypter({ encrypted }) {
       setDecryptedToc([]); // 언마운트시 TOC 초기화
     };
   }, []);
+
+  /* MDX compilation hook */
+  useEffect(() => {
+    if (!decrypted) return;
+
+    const compileMdx = async () => {
+      try {
+        const compiled = await evaluate(decrypted, {
+          ...runtime,
+          useDynamicImport: false,
+          format: 'mdx',
+          remarkPlugins: [remarkDirective, remarkAdmonition, remarkMath],
+          rehypePlugins: [rehypeDetailsToComponent, rehypeKatex],
+          useMDXComponents: () => ({
+            h1: createHeading(1),
+            h2: createHeading(2),
+            h3: createHeading(3),
+            h4: createHeading(4),
+            h5: createHeading(5),
+            h6: createHeading(6),
+            Details: ({ node, ...props }) => {
+              console.log('Details component rendered', props);
+              let summaryText = 'Details';
+              const childrenArray = Array.isArray(props.children) ? props.children : [props.children];
+              const filteredChildren = childrenArray.filter((child) => {
+                if (React.isValidElement(child) && child.type === 'summary') {
+                  summaryText = child.props.children;
+                  return false;
+                }
+                return true;
+              });
+              return <Details summary={summaryText} {...props} children={filteredChildren} />;
+            },
+            pre: ({node, ...props}) => {
+              const child = props.children; // 중복 <pre> 제거
+
+              // React element면 isCodeBlock 주입
+              if (React.isValidElement(child)) {
+                return React.cloneElement(child, { isCodeBlock: true });
+              }
+
+              return child; // 문자열이나 다른 타입이면 그대로 반환
+            },
+            code: ({ isCodeBlock, className, children, ...props }) => {
+              if (isCodeBlock === true) return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
+              return <code className={className} {...props}>{children}</code>;
+            },
+            admonition: ({ node, children, ...props }) => {
+              const type = node?.data?.hProperties?.type || 'info';
+              return <Admonition type={type} {...props}>{children}</Admonition>;
+            },
+            ...TILComponents, // 커스텀 컴포넌트: MDXProvider에는 넣으면 안됨
+          }),
+        });
+
+        setMDXComponent(() => compiled.default);
+      } catch (error) {
+        console.error('MDX compile error:', error);
+        setError('MDX 컴파일 중 문제가 발생했습니다.');
+      }
+    };
+
+    compileMdx();
+  }, [decrypted]);
+
+  /* docusaurus Heading 컴포넌트로 변환하는 함수 */
+  // TOC 데이터에서 첫번째 h1은 일부러 제거되고 나머지부터 있음
+  // 따라서 첫번째 h1은 id 없이 렌더링하고, 이후부터는 TOC 데이터 기반으로 id 설정
+  /*
+    ex1)
+      h1 <- id 없음
+      h2
+      h2
+
+    ex2)
+      h2
+      h1 <- id 있음
+      h2
+  */
+  function createHeading(level) {
+    return ({ node, ...props }) => {
+      if (level === 1 && firstH1Ref.current) { // 첫번째 h1: id 없이 렌더링
+        firstH1Ref.current = false;
+        return <Heading as="h1" {...props} />;
+      }
+      else { // h2~h6 or 첫번째가 아닌 h1: id 설정
+        firstH1Ref.current = false;
+        const index = headingIndexRef.current;
+        const headingId = toc[index]?.id || '';
+        headingIndexRef.current += 1;
+        return <Heading as={`h${level}`} id={headingId} {...props} />;
+      }
+    };
+  }
 
 
   /* 복호화 함수 */
@@ -104,29 +225,13 @@ export default function DeQrypter({ encrypted }) {
       console.log('[Decrypted text]');
       console.log(originalText);
 
-      const sanitizedText = originalText
-        // JSX style -> HTML style로 변환
-        .replace(/<span\s+style=\{\s*\{([^}]+)\}\s*\}>/g, (_, styleContent) => {
-          // styleContent: "fontSize:'32px', color:'red'" 등
-          const htmlStyle = styleContent
-            .split(',')
-            .map(pair => {
-              const [key, value] = pair.split(':').map(s => s.trim().replace(/^'|'$/g, ''));
-              // camelCase -> kebab-case
-              const kebabKey = key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-              return `${kebabKey}:${value}`;
-            })
-            .join('; ');
-          return `<span style="${htmlStyle}">`;
-        });
-
       // TOC 생성
-      const toc = extractHeadingsFromMarkdown(sanitizedText);
+      const toc = extractHeadingsFromMarkdown(originalText);
       console.log('Decrypted TOC:', toc);
       setToc(toc);
       setDecryptedToc(toc);
       
-      setDecrypted(sanitizedText);
+      setDecrypted(originalText);
       setError(null);
     } catch (e) {
       setError('복호화 실패: 비밀번호가 일치하지 않습니다.');
@@ -135,93 +240,45 @@ export default function DeQrypter({ encrypted }) {
 
 
   /* 복호화 후 렌더링 */
-  if (decrypted) {
-    // TOC 데이터에서 첫번째 h1은 일부러 제거되고 나머지부터 있음
-    // 따라서 첫번째 h1은 id 없이 렌더링하고, 이후부터는 TOC 데이터 기반으로 id 설정
-
-    /*
-      ex1)
-        h1 <- id 없음
-        h2
-        h2
-
-      ex2)
-        h2
-        h1 <- id 있음
-        h2
-    */
-
-    // init refs: useRef hook은 최상위 레벨에 있어야 함
-    headingIndexRef.current = 0;
-    firstH1Ref.current = true;
-
-    // docusaurus Heading 컴포넌트로 변환
-    function createHeading(level) {
-      return ({ node, ...props }) => {
-        if (level === 1 && firstH1Ref.current) { // 첫번째 h1: id 없이 렌더링
-          firstH1Ref.current = false;
-          return <Heading as="h1" {...props} />;
+  if (MDXComponent) {
+    const components = {
+      h1: createHeading(1),
+      h2: createHeading(2),
+      h3: createHeading(3),
+      h4: createHeading(4),
+      h5: createHeading(5),
+      h6: createHeading(6),
+      Details: ({ node, ...props }) => {
+        console.log('Details component rendered', props);
+        let summaryText = 'Details';
+        const childrenArray = Array.isArray(props.children) ? props.children : [props.children];
+        const filteredChildren = childrenArray.filter((child) => {
+          if (React.isValidElement(child) && child.type === 'summary') {
+            summaryText = child.props.children;
+            return false;
+          }
+          return true;
+        });
+        return <Details summary={summaryText} {...props} children={filteredChildren} />;
+      },
+      pre: ({node, ...props}) => <>{props.children}</>, // 중복 <pre> 제거
+      code({node, inline, className, children, ...props}) {
+        if (inline) {
+          return <code className={className} {...props}>{children}</code>;
         }
-        else { // h2~h6 or 첫번째가 아닌 h1: id 설정
-          firstH1Ref.current = false;
-          const index = headingIndexRef.current;
-          const headingId = toc[index]?.id || '';
-          headingIndexRef.current += 1;
-          return <Heading as={`h${level}`} id={headingId} {...props} />;
-        }
-      };
-    }
+        return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
+      },
+      admonition({node, children, ...props}) {
+        const type = node?.data?.hProperties?.type || 'info';
+        return <Admonition type={type} {...props}>{children}</Admonition>;
+      },
+    };
 
     return (
       <div style={{ marginTop: '1rem' }}>
-        <ReactMarkdown
-          remarkPlugins={[remarkDirective, remarkAdmonition, remarkMath]}
-          rehypePlugins={[rehypeRaw, rehypeKatex]}
-          components={{
-            h1: createHeading(1),
-            h2: createHeading(2),
-            h3: createHeading(3),
-            h4: createHeading(4),
-            h5: createHeading(5),
-            h6: createHeading(6),
-            pre: ({node, ...props}) => <>{props.children}</>, // 중복 <pre> 제거
-            code({node, inline, className, children, ...props}) {
-              if (inline) {
-                return <code className={className} {...props}>{children}</code>;
-              }
-              return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
-            },
-            admonition({node, children, ...props}) {
-              const type = node.data?.hProperties?.type || 'info';
-              return <Admonition type={type} {...props}>{children}</Admonition>;
-            },
-            details: ({ node, ...props }) => {
-              let summaryText = 'Details';
-
-              // children이 배열인지 확인
-              const childrenArray = Array.isArray(props.children) ? props.children : [props.children];
-              
-              // children에서 summary 제거
-              const filteredChildren = childrenArray
-                .filter((child) => {
-                  if (React.isValidElement(child) && child.type === 'summary') {
-                    summaryText = child.props.children;
-                    return false;
-                  }
-                  return true;
-                });
-
-              // props를 Object로 유지하고 children만 업데이트
-              const filteredProps = { ...props, children: filteredChildren };
-
-              return (
-                <Details summary={summaryText} {...filteredProps} />
-              );
-            },
-          }}
-        >
-          {decrypted}
-        </ReactMarkdown>
+        <MDXProvider components={components}>
+          <MDXComponent />
+        </MDXProvider>
       </div>
     );
   }
