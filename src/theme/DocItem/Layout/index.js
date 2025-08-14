@@ -12,6 +12,7 @@ import DocItemContent from '@theme/DocItem/Content';
 import DocBreadcrumbs from '@theme/DocBreadcrumbs';
 import ContentVisibility from '@theme/ContentVisibility';
 import styles from './styles.module.css';
+import Comment from '../utterances';
 /**
  * Decide if the toc should be rendered, on mobile or desktop viewports
  */
@@ -48,6 +49,7 @@ export default function DocItemLayout({children}) {
             <DocItemFooter />
           </article>
           <DocItemPaginator />
+          <Comment />
         </div>
       </div>
       {docTOC.desktop && <div className="col col--3">{docTOC.desktop}</div>}
