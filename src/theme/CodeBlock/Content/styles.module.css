@@ -6,6 +6,7 @@
 
 .codeBlockStandalone {
   padding: 0;
+  border-radius: var(--ifm-global-radius);
 }
 
 .codeBlockLines {
