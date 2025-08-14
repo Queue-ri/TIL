@@ -17,11 +17,10 @@ import { visit } from 'unist-util-visit';
 import CodeBlock from '@theme/CodeBlock';
 import Admonition from '@theme/Admonition';
 import Heading from '@theme/Heading';
+import Details from '@theme/Details';
 
-// custom components
-// details 컴포넌트는 Details - DetailsGeneric 구조로 되어있으나 swizzle 미지원이고 복잡해서 따로 컴팩트하게 구현함
-import CustomDetails from '../mdx-render/CustomDetails/CustomDetails';
-import DeQrypterContext from './DeQrypterContext'; // TOC context for DocItem
+// TOC context for DocItem
+import DeQrypterContext from './DeQrypterContext';
 
 
 /* custom admonition parser */
@@ -196,7 +195,29 @@ export default function DeQrypter({ encrypted }) {
               const type = node.data?.hProperties?.type || 'info';
               return <Admonition type={type} {...props}>{children}</Admonition>;
             },
-            details: ({ node, ...props }) => <CustomDetails {...props} />,
+            details: ({ node, ...props }) => {
+              let summaryText = 'Details';
+
+              // children이 배열인지 확인
+              const childrenArray = Array.isArray(props.children) ? props.children : [props.children];
+              
+              // children에서 summary 제거
+              const filteredChildren = childrenArray
+                .filter((child) => {
+                  if (React.isValidElement(child) && child.type === 'summary') {
+                    summaryText = child.props.children;
+                    return false;
+                  }
+                  return true;
+                });
+
+              // props를 Object로 유지하고 children만 업데이트
+              const filteredProps = { ...props, children: filteredChildren };
+
+              return (
+                <Details summary={summaryText} {...filteredProps} />
+              );
+            },
           }}
         >
           {decrypted}
