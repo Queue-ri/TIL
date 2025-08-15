@@ -5,4 +5,7 @@
 <p align="center">모든 문서들은 CI/CD 파이프라인을 통해 관리됩니다.</p>
 <br />
 <p align="center"><a href="https://til.qriosity.dev">Come hang out! :3</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://til.qriosity.dev/about">About TIL</a></p>
-
+<br />
+<p align="center">
+  <img src="https://em-content.zobj.net/source/telegram/386/red-heart_2764-fe0f.webp" width=35 height="auto"></div>
+</p>
