@@ -7,12 +7,11 @@ import CryptoJS from 'crypto-js';
 import { MDXProvider } from '@mdx-js/react';
 import { evaluate } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-
-// for admonitions
-import remarkDirective from 'remark-directive';
 import { visit } from 'unist-util-visit';
+import remarkDirective from 'remark-directive';
+import remarkMath from 'remark-math';
+
+import rehypeKatex from 'rehype-katex';
 
 // docusaurus theme components
 import CodeBlock from '@theme/CodeBlock';
@@ -32,15 +31,88 @@ import DeQrypterContext from './DeQrypterContext';
 
 
 /* custom admonition parser */
-// :::info 등의 마크다운 구문을 html로 변환
-// ReactMarkdown 버전 이슈로 인해 remark-admonitions 대신 remark-directive로 직접 구현
+// ':::info 제목' 형식을 파싱해서 전처리
+// 전처리 안하면 remark-directive에서 인식 못해서 paragraph로 파싱됨
+// title 없는 ':::info' 형식은 remark-directive에서 인식함
+export function remarkAdmonitionPreprocess() {
+  function processNodes(nodes) {
+    if (!nodes) return;
+
+    for (let i = 0; i < nodes.length; ++i) {
+      const node = nodes[i];
+
+      // mdxJsxFlowElement 안의 children도 재귀로 처리
+      // ex. <details> 내부의 admonition
+      if (node.type === 'mdxJsxFlowElement' && node.children) {
+        processNodes(node.children);
+      }
+
+      if (node.type !== 'paragraph') continue;
+      const firstText = node.children?.[0];
+      if (!firstText || firstText.type !== 'text') continue;
+
+      // 시작 마커 체크
+      const startMatch = firstText.value.match(
+        /^:::(info|tip|warning|caution|danger|note|important|success|secondary)\s*(.*)$/
+      );
+      if (!startMatch) continue;
+
+      const [, type, title] = startMatch;
+
+      // 종료 마커 찾기
+      let endIndex = i + 1;
+      while (endIndex < nodes.length) {
+        const endNode = nodes[endIndex];
+        const endText = endNode.children?.[0];
+        if (
+          endNode.type === 'paragraph' &&
+          endText?.type === 'text' &&
+          endText.value.trim() === ':::'
+        ) {
+          break;
+        }
+        endIndex++;
+      }
+
+      // contentNodes: 시작 paragraph 다음부터 종료 전 paragraph까지
+      const contentNodes = nodes.slice(i + 1, endIndex);
+
+      // containerDirective로 교체
+      nodes.splice(i, endIndex - i + 1, {
+        type: 'containerDirective',
+        name: type,
+        children: contentNodes,
+        data: {
+          hName: 'admonition',
+          hProperties: { type, title: title || undefined },
+        },
+      });
+    }
+  }
+
+  return (tree) => {
+    processNodes(tree.children);
+  };
+}
+// remark-admonitions는 MDX 2 부터 호환 안되므로 remark-directive로 직접 구현
+// remarkAdmonition은 반드시 remarkAdmonitionPreprocess를 거친 녀석들을 처리해야 함
+// ':::info' 형식의 containerDirective 노드를 admonition으로 인식하도록 처리 
 function remarkAdmonition() {
   return (tree) => {
     visit(tree, (node) => {
-      if (node.type === 'containerDirective' && ['info','tip','warning','caution','danger','note'].includes(node.name)) {
+      if (
+        node.type === 'containerDirective' &&
+        ['info','tip','warning','caution','danger','note','important','success','secondary'].includes(node.name)
+      ) {
+        node.children = node.children;
         node.data = node.data || {};
         node.data.hName = 'admonition';
-        node.data.hProperties = { type: node.name };
+        // 기존 hProperties에 title을 유지하고 type만 덮어쓰기
+        node.data.hProperties = {
+          ...(node.data.hProperties || {}),
+          type: node.name,
+        };
+        // children은 이미 preprocess에서 넣었기 때문에 따로 건드릴 필요 없음
       }
     });
   };
@@ -131,7 +203,7 @@ export default function DeQrypter({ encrypted }) {
           ...runtime,
           useDynamicImport: false,
           format: 'mdx',
-          remarkPlugins: [remarkDirective, remarkAdmonition, remarkMath],
+          remarkPlugins: [remarkDirective, remarkAdmonitionPreprocess, remarkAdmonition, remarkMath],
           rehypePlugins: [rehypeDetailsToComponent, rehypeKatex],
           useMDXComponents: () => ({
             h1: createHeading(1),
