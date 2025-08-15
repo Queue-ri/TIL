@@ -191,7 +191,7 @@ async function createConfig() {
               href: 'https://qriosity.dev',
               position: 'right',
               className: 'blog-link',
-              label: 'qriosity.dev',
+              label: '🌠 qriosity.dev',
               'aria-label': 'Go to qriosity.dev',
             },
             {
