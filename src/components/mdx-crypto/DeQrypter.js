@@ -118,6 +118,24 @@ function remarkAdmonition() {
   };
 }
 
+/* custom code block meta parser */
+// 전처리 안하면 title 등 node.meta 내의 정보가 날라감
+// TODO: 여기서 정규식 파싱하기
+function remarkCodeBlockMeta() {
+  return (tree) => {
+    visit(tree, 'code', (node) => {
+      if (node.meta) {
+        node.data = node.data || {};
+        node.data.hProperties = {
+          ...(node.data.hProperties || {}),
+          meta: node.meta
+        };
+      }
+    });
+  };
+}
+
+
 /* custom details parser */
 // 그냥 details: ... 로 컴포넌트 매핑 시도하면 매핑이 안됨
 // remark plugin은 :::details 같은 구문을 인식하기에 <details> 용으로는 부적합
@@ -203,7 +221,7 @@ export default function DeQrypter({ encrypted }) {
           ...runtime,
           useDynamicImport: false,
           format: 'mdx',
-          remarkPlugins: [remarkDirective, remarkAdmonitionPreprocess, remarkAdmonition, remarkMath],
+          remarkPlugins: [remarkDirective, remarkAdmonitionPreprocess, remarkAdmonition, remarkCodeBlockMeta, remarkMath],
           rehypePlugins: [rehypeDetailsToComponent, rehypeKatex],
           useMDXComponents: () => ({
             h1: createHeading(1),
@@ -235,8 +253,12 @@ export default function DeQrypter({ encrypted }) {
 
               return child; // 문자열이나 다른 타입이면 그대로 반환
             },
-            code: ({ isCodeBlock, className, children, ...props }) => {
-              if (isCodeBlock === true) return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
+            code: ({ isCodeBlock, meta, className, children, ...props }) => {
+              if (isCodeBlock === true) {
+                // code block이어도 title이나 option이 없으면 meta는 undefined
+                const title = meta?.match(/title="([^"]+)"/)[1];
+                return <CodeBlock className={className} title={title} {...props}>{children}</CodeBlock>;
+              }
               return <code className={className} {...props}>{children}</code>;
             },
             admonition: ({ node, children, ...props }) => {
@@ -333,12 +355,23 @@ export default function DeQrypter({ encrypted }) {
         });
         return <Details summary={summaryText} {...props} children={filteredChildren} />;
       },
-      pre: ({node, ...props}) => <>{props.children}</>, // 중복 <pre> 제거
-      code({node, inline, className, children, ...props}) {
-        if (inline) {
-          return <code className={className} {...props}>{children}</code>;
+      pre: ({ node, ...props }) => {
+        const child = props.children; // 중복 <pre> 제거
+
+        // React element면 isCodeBlock 주입
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, { isCodeBlock: true });
         }
-        return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
+
+        return child; // 문자열이나 다른 타입이면 그대로 반환
+      },
+      code: ({ isCodeBlock, meta, className, children, ...props }) => {
+        if (isCodeBlock === true) {
+          // code block이어도 title이나 option이 없으면 meta는 undefined
+          const title = meta?.match(/title="([^"]+)"/)[1];
+          return <CodeBlock className={className} title={title} {...props}>{children}</CodeBlock>;
+        }
+        return <code className={className} {...props}>{children}</code>;
       },
       admonition({node, children, ...props}) {
         const type = node?.data?.hProperties?.type || 'info';
