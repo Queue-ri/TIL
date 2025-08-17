@@ -256,8 +256,13 @@ export default function DeQrypter({ encrypted }) {
             code: ({ isCodeBlock, meta, className, children, ...props }) => {
               if (isCodeBlock === true) {
                 // code block이어도 title이나 option이 없으면 meta는 undefined
-                const title = meta?.match(/title="([^"]+)"/)[1];
-                return <CodeBlock className={className} title={title} {...props}>{children}</CodeBlock>;
+                const titleMatch = meta?.match(/title="([^"]+)"/);
+                const title = titleMatch ? titleMatch[1] : undefined;
+
+                // showLineNumbers 같은 boolean 옵션은 문자열에 키가 있으면 true
+                const showLineNumbers = meta?.includes('showLineNumbers') || false;
+
+                return <CodeBlock className={className} title={title} showLineNumbers={showLineNumbers} {...props}>{children}</CodeBlock>;
               }
               return <code className={className} {...props}>{children}</code>;
             },
@@ -368,8 +373,13 @@ export default function DeQrypter({ encrypted }) {
       code: ({ isCodeBlock, meta, className, children, ...props }) => {
         if (isCodeBlock === true) {
           // code block이어도 title이나 option이 없으면 meta는 undefined
-          const title = meta?.match(/title="([^"]+)"/)[1];
-          return <CodeBlock className={className} title={title} {...props}>{children}</CodeBlock>;
+          const titleMatch = meta?.match(/title="([^"]+)"/);
+          const title = titleMatch ? titleMatch[1] : undefined;
+
+          // showLineNumbers 같은 boolean 옵션은 문자열에 키가 있으면 true
+          const showLineNumbers = meta?.includes('showLineNumbers') || false;
+
+          return <CodeBlock className={className} title={title} showLineNumbers={showLineNumbers} {...props}>{children}</CodeBlock>;
         }
         return <code className={className} {...props}>{children}</code>;
       },
