@@ -156,34 +156,39 @@ function rehypeDetailsToComponent() {
 
 /* custom heading parser for TOC */
 // remark plugin으로 만들어서 넣는 방식은 무한 호출되는 이슈로 인해 불가
-function extractHeadingsFromMarkdown(mdText) {
-  const lines = mdText.split('\n');
-  const headings = [];
-  let isFirstLevel1 = true;
+// rehype 단에서 처리 안하면 TOC와의 id 동기화 깨져서 anchor 먹통됨
+// MDX AST에서 생성한 id를 연결하지 않으면 Heading 컴포넌트가 anchor를 만들 수 없음
+function rehypeExtractHeadings(setToc) {
+  return (tree) => {
+    const headings = [];
+    visit(tree, 'element', (node) => {
+      if (/^h[1-6]$/.test(node.tagName)) {
+        const text = node.children
+          .filter((c) => c.type === 'text')
+          .map((c) => c.value)
+          .join(' ')
+          .trim();
 
-  for (const line of lines) {
-    const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
-    if (headingMatch) {
-      const level = headingMatch[1].length;
-      const text = headingMatch[2].trim();
+        if (!text) return;
 
-      if (level === 1 && isFirstLevel1) {
-        isFirstLevel1 = false;
-        continue; // 첫번째 h1 무시
+        // id 생성: 영소문자, 공백 -> 하이픈 변환, 한/영/숫자/하이픈 허용
+        const id = text
+          .toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^가-힣a-z0-9\-]/g, '');
+
+        node.properties = node.properties || {};
+        node.properties.id = id; // [!IMPORTANT] AST 노드에 id 부여
+
+        headings.push({
+          value: text,
+          id,
+          level: Number(node.tagName[1]),
+        });
       }
-      isFirstLevel1 = false;
-
-      // id 생성: 영소문자, 공백 -> 하이픈 변환, 한/영/숫자/하이픈 허용
-      const id = text
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^가-힣a-z0-9\-]/g, '');
-
-      headings.push({ value: text, id, level });
-    }
-  }
-
-  return headings;
+    });
+    setToc(headings);
+  };
 }
 
 
@@ -196,11 +201,6 @@ export default function DeQrypter({ encrypted }) {
   const [password, setPassword] = useState('');
   const [toc, setToc] = useState([]);
   const [error, setError] = useState(null);
-
-  // TOC 데이터 인덱스용 ref
-  const headingIndexRef = React.useRef(0);
-  // 첫번째 h1 여부 체크용 ref
-  const firstH1Ref = React.useRef(true);
 
   /* TOC context hook */
   useEffect(() => {
@@ -222,14 +222,21 @@ export default function DeQrypter({ encrypted }) {
           useDynamicImport: false,
           format: 'mdx',
           remarkPlugins: [remarkDirective, remarkAdmonitionPreprocess, remarkAdmonition, remarkCodeBlockMeta, remarkMath],
-          rehypePlugins: [rehypeDetailsToComponent, rehypeKatex],
+          rehypePlugins: [
+            rehypeDetailsToComponent,
+            [rehypeExtractHeadings, (headings) => {
+              setToc(headings);
+              setDecryptedToc(headings);
+            }],
+            rehypeKatex,
+          ],
           useMDXComponents: () => ({
-            h1: createHeading(1),
-            h2: createHeading(2),
-            h3: createHeading(3),
-            h4: createHeading(4),
-            h5: createHeading(5),
-            h6: createHeading(6),
+            h1: (props) => <Heading as="h1" {...props} />,
+            h2: ({id, ...props}) => <Heading as="h2" id={id} {...props} />,
+            h3: ({id, ...props}) => <Heading as="h3" id={id} {...props} />,
+            h4: ({id, ...props}) => <Heading as="h4" id={id} {...props} />,
+            h5: ({id, ...props}) => <Heading as="h5" id={id} {...props} />,
+            h6: ({id, ...props}) => <Heading as="h6" id={id} {...props} />,
             Details: ({ node, ...props }) => {
               console.log('Details component rendered', props);
               let summaryText = 'Details';
@@ -284,36 +291,6 @@ export default function DeQrypter({ encrypted }) {
     compileMdx();
   }, [decrypted]);
 
-  /* docusaurus Heading 컴포넌트로 변환하는 함수 */
-  // TOC 데이터에서 첫번째 h1은 일부러 제거되고 나머지부터 있음
-  // 따라서 첫번째 h1은 id 없이 렌더링하고, 이후부터는 TOC 데이터 기반으로 id 설정
-  /*
-    ex1)
-      h1 <- id 없음
-      h2
-      h2
-
-    ex2)
-      h2
-      h1 <- id 있음
-      h2
-  */
-  function createHeading(level) {
-    return ({ node, ...props }) => {
-      if (level === 1 && firstH1Ref.current) { // 첫번째 h1: id 없이 렌더링
-        firstH1Ref.current = false;
-        return <Heading as="h1" {...props} />;
-      }
-      else { // h2~h6 or 첫번째가 아닌 h1: id 설정
-        firstH1Ref.current = false;
-        const index = headingIndexRef.current;
-        const headingId = toc[index]?.id || '';
-        headingIndexRef.current += 1;
-        return <Heading as={`h${level}`} id={headingId} {...props} />;
-      }
-    };
-  }
-
 
   /* 복호화 함수 */
   const handleDecrypt = () => {
@@ -325,7 +302,6 @@ export default function DeQrypter({ encrypted }) {
       console.log(originalText);
 
       // TOC 생성
-      const toc = extractHeadingsFromMarkdown(originalText);
       console.log('Decrypted TOC:', toc);
       setToc(toc);
       setDecryptedToc(toc);
@@ -341,12 +317,12 @@ export default function DeQrypter({ encrypted }) {
   /* 복호화 후 렌더링 */
   if (MDXComponent) {
     const components = {
-      h1: createHeading(1),
-      h2: createHeading(2),
-      h3: createHeading(3),
-      h4: createHeading(4),
-      h5: createHeading(5),
-      h6: createHeading(6),
+      h1: (props) => <Heading as="h1" {...props} />,
+      h2: ({id, ...props}) => <Heading as="h2" id={id} {...props} />,
+      h3: ({id, ...props}) => <Heading as="h3" id={id} {...props} />,
+      h4: ({id, ...props}) => <Heading as="h4" id={id} {...props} />,
+      h5: ({id, ...props}) => <Heading as="h5" id={id} {...props} />,
+      h6: ({id, ...props}) => <Heading as="h6" id={id} {...props} />,
       Details: ({ node, ...props }) => {
         console.log('Details component rendered', props);
         let summaryText = 'Details';
