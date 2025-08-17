@@ -24,6 +24,10 @@
     max-height: var(--ifm-navbar-height);
     color: inherit !important;
     text-decoration: none !important;
+    
+    /* Fix logo css of sidebarWithHideableNavbar */
+    font-family: 'Yoonwoo', 'Varela Round', sans-serif;
+    font-size: 25px;
   }
 
   .sidebarLogo img {
