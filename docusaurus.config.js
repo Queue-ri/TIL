@@ -12,7 +12,7 @@ const docNavItems = [
     label: 'PL',
   },
   {
-    to: 'featured/ps/boj/11660',
+    to: 'featured/ps/java-snippets-for-ps',
     label: 'PS',
   },
   {
