@@ -12,7 +12,11 @@ TIL 문서들을 특정 주제로 분류하여 정리한 페이지입니다.
 
 ⭐바로가기: 
 [`PL`](https://til.qriosity.dev/featured/pl/java/java-introduction)
+[`PS`](http://localhost:3002/featured/ps/java-snippets-for-ps)
 [`Backend`](https://til.qriosity.dev/featured/backend/spring/spring_main)
+[`DevOps`](http://localhost:3002/featured/devops/jenkins/setting-jenkins-server-with-oracle-cloud)
+[`Infra`](http://localhost:3002/featured/infra/setting-redirection-in-apache-server-with-oracle-cloud)
+[`Git/GitHub`](http://localhost:3002/featured/git-github/github-action/aoji-for-integration-dev-note)
 [`English`](https://til.qriosity.dev/featured/english/dev-vocab/a)
 <br />
 
@@ -60,12 +64,9 @@ TIL인 만큼 엄밀하게 작성하기보다는 편하게 기억을 돕기 위�
 
 Git 또는 GitHub 관련 내용이 기록되어 있습니다.
 
-:::note
+:::note 왜 GitHub를 DevOps로 분류하지 않나요?
 
-***왜 GitHub를 DevOps로 분류하지 않나요?***
-
-GitHub 토픽은 많은 경우 Git 내용을 포함하고 있습니다.
-
+GitHub 토픽은 많은 경우 Git 내용을 포함하고 있습니다.<br />
 따라서 DevOps로 분류할 경우 카테고리 구분이 모호해지기에 예외적으로 Git과 같이 분류합니다.
 
 :::
