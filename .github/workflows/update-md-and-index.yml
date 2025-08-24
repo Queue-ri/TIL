@@ -27,7 +27,7 @@ jobs:
             run: ./.github/rmdupdater.sh
             
           - name: Push txt file to repository
-            run: ./.github/commit_push.sh
+            run: ./.github/commit_push.sh recent
 
     gen-ps-badge:
         needs: update-recent-md
