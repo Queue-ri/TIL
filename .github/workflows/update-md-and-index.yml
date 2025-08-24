@@ -17,8 +17,20 @@ jobs:
           - name: Push markdown file to repository
             run: ./.github/commit_push.sh
 
-    gen-ps-badge:
+    update-recent-md:
         needs: update-md
+        name: Write Recent List
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+          - name: Run rmdupdater
+            run: ./.github/rmdupdater.sh
+            
+          - name: Push txt file to repository
+            run: ./.github/commit_push.sh
+
+    gen-ps-badge:
+        needs: update-recent-md
         name: Generate PS Badge
         runs-on: ubuntu-latest
         steps:
