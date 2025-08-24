@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 let template = fs.readFileSync('badge/template.svg', 'utf-8');
-const listFile = path.resolve(__dirname, '../recent-ps-list.txt');
+const listFile = 'recent-ps-list.txt';
 
 /* 교체할 내용 */
 // 줄 단위로 1차 파싱
