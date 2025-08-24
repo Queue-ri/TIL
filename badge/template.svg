@@ -1,0 +1,139 @@
+<svg width="460" height="230" viewBox="0 0 460 230" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Outer border gradient -->
+    <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8088FF"/>
+      <stop offset="100%" stop-color="#FF6EC7"/>
+    </linearGradient>
+    
+    <!-- Title text gradient -->
+    <linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8088FF"/>
+      <stop offset="100%" stop-color="#FF6EC7"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&amp;display=swap');
+
+    .container {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 20px;
+      fill: url(#titleGradient);
+
+      /* for animation */
+      opacity: 0;
+      animation: fadeInUp .6s forwards;
+      animation-delay: 0s;
+    }
+    .list-item {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      fill: #FFFFFF;
+
+      /* for animation */
+      opacity: 0;
+      animation: fadeInUp .6s forwards;
+    }
+    .credit {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      fill: url(#titleGradient);
+
+      /* for animation */
+      opacity: 0;
+      animation: fadeIn 1.5s forwards;
+      animation-delay: 0s;
+    }
+    .legend {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      fill: #FFFFFF;
+
+      /* for animation */
+      opacity: 0;
+      animation: fadeIn 1.5s forwards;
+      animation-delay: 0s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
+  <!-- Outer border -->
+  <rect x="0" y="0" width="460" height="230" rx="12" ry="12" fill="url(#borderGradient)"/>
+
+  <!-- Inner background (border 두께 2px 만큼 여백) -->
+  <rect x="2" y="2" width="456" height="226" rx="10" ry="10" fill="#292D3E"/>
+
+  <!-- Logo -->
+  <clipPath id="logoClip">
+    <rect x="0" y="0" width="392" height="190"/>
+  </clipPath>
+
+  <image 
+    x="-14"
+    y="-43" 
+    width="131" 
+    height="131" 
+    href="https://velog.velcdn.com/images/qriosity/post/37e49aa3-5e51-479c-8fab-31ccf255d8a0/image.svg" 
+    opacity="0.1" 
+    clip-path="url(#logoClip)"
+  />
+
+  <!-- Padding 적용 그룹 (좌우 34px, 상 22px) -->
+  <g class="container" transform="translate(34,22)">
+    
+    <!-- Title -->
+    <text x="0" y="20" class="title">
+      <tspan font-weight="500">Recent Updates in </tspan>
+      <tspan font-weight="700">TIL/PS</tspan>
+    </text>
+
+    <!-- 리스트 영역 -->
+    <text x="8" y="55" class="list-item" xml:space="preserve" style="animation-delay:0.15s">
+      <tspan x="8" y="55" class="bullet">•</tspan>
+      <tspan x="22" y="55" class="content">Placeholder for line 1</tspan>
+    </text>
+
+    <text x="8" y="81" class="list-item" xml:space="preserve" style="animation-delay:0.3s">
+      <tspan x="8" y="81" class="bullet">•</tspan>
+      <tspan x="22" y="81" class="content">Placeholder for line 2</tspan>
+    </text>
+
+    <text x="8" y="107" class="list-item" xml:space="preserve" style="animation-delay:0.45s">
+      <tspan x="8" y="107" class="bullet">•</tspan>
+      <tspan x="22" y="107" class="content">Placeholder for line 3</tspan>
+    </text>
+
+    <text x="8" y="133" class="list-item" xml:space="preserve" style="animation-delay:0.6s">
+      <tspan x="8" y="133" class="bullet">•</tspan>
+      <tspan x="22" y="133" class="content">Placeholder for line 4</tspan>
+    </text>
+
+    <text x="8" y="159" class="list-item" xml:space="preserve" style="animation-delay:0.75s">
+      <tspan x="8" y="159" class="bullet">•</tspan>
+      <tspan x="22" y="159" class="content">Placeholder for line 5</tspan>
+    </text>
+
+
+    <!-- Created By -->
+    <text x="0" y="188" class="credit">
+      <tspan font-weight="500">Created By </tspan>
+      <tspan font-weight="700">Queue-ri</tspan>
+    </text>
+
+    <!-- legend -->
+    <text x="264" y="188" class="legend">📗 new</text>
+    <text x="325" y="188" class="legend">📙 update</text>
+  </g>
+</svg>
