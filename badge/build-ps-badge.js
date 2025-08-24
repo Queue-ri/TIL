@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-let template = fs.readFileSync('template.svg', 'utf-8');
+let template = fs.readFileSync('badge/template.svg', 'utf-8');
 const listFile = path.resolve(__dirname, '../recent-ps-list.txt');
 
 /* 교체할 내용 */
@@ -30,4 +30,4 @@ const data = lines.map(line => {
 let i = 0;
 svg = template.replace(/Placeholder for line \d+/g, () => data[i++]);
 
-fs.writeFileSync('ps-badge.svg', svg, 'utf-8');
+fs.writeFileSync('badge/ps-badge.svg', svg, 'utf-8');
