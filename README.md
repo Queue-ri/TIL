@@ -7,5 +7,9 @@
 <p align="center"><a href="https://til.qriosity.dev">Come hang out! :3</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://til.qriosity.dev/about">About TIL</a></p>
 <br />
 <p align="center">
+  <img src="https://github.com/Queue-ri/TIL/blob/main/badge/ps-badge.svg" width=460 height="auto">
+</p>
+<br />
+<p align="center">
   <img src="https://em-content.zobj.net/source/telegram/386/red-heart_2764-fe0f.webp" width=35 height="auto"></div>
 </p>
