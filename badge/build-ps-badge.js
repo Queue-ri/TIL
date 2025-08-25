@@ -13,7 +13,9 @@ const statusToEmoji = {
 };
 
 // 2차 파싱
-const data = lines.map(line => {
+const MAX_LINE = 5;
+
+const data = lines.slice(0, MAX_LINE).map(line => {
   const [status, ...rest] = line.split(','); // 첫 쉼표만 기준으로 자르기
   const title = rest.join(',').trim(); // 이후는 쉼표로 자르면 안됨
   const emoji = statusToEmoji[status.trim()] || '📘';
