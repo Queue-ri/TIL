@@ -10,7 +10,7 @@ jobs:
         name: Write Markdown
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@v5
           - name: Run mdupdater
             run: ./.github/mdupdater.sh
             
@@ -22,7 +22,7 @@ jobs:
         name: Write Recent List
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@v5
           - run: git pull origin main # guarantee a latest commit from 'update-md'
 
           - name: Run rmdupdater
@@ -36,7 +36,7 @@ jobs:
         name: Generate PS Badge
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@v5
           - run: git pull origin main # guarantee a latest commit from 'update-recent-md'
           
           - name: Use Node.js
@@ -88,7 +88,7 @@ jobs:
         name: Docsearch Auto Scraper
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v5
 
             - name: Run docsearch scraper
               uses: darrenjennings/algolia-docsearch-action@master
