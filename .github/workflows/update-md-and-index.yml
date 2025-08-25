@@ -60,7 +60,7 @@ jobs:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     deploy:
-        needs: update-md
+        needs: gen-ps-badge
         name: Trigger Deployment
         runs-on: ubuntu-latest
         environment: cloudflare-pages
