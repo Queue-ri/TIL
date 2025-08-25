@@ -1,3 +1,4 @@
+new, 498 - Diagonal Traverse
 update, Java Tips for PS
 new, Advanced Java Optimization for PS
 new, Java Tips for PS
