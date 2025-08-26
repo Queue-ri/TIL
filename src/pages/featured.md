@@ -12,11 +12,11 @@ TIL 문서들을 특정 주제로 분류하여 정리한 페이지입니다.
 
 ⭐바로가기: 
 [`PL`](https://til.qriosity.dev/featured/pl/java/java-introduction)
-[`PS`](http://localhost:3002/featured/ps/java-snippets-for-ps)
+[`PS`](https://til.qriosity.dev/featured/ps/java-snippets-for-ps)
 [`Backend`](https://til.qriosity.dev/featured/backend/spring/spring_main)
-[`DevOps`](http://localhost:3002/featured/devops/jenkins/setting-jenkins-server-with-oracle-cloud)
-[`Infra`](http://localhost:3002/featured/infra/setting-redirection-in-apache-server-with-oracle-cloud)
-[`Git/GitHub`](http://localhost:3002/featured/git-github/github-action/aoji-for-integration-dev-note)
+[`DevOps`](https://til.qriosity.dev/featured/devops/jenkins/setting-jenkins-server-with-oracle-cloud)
+[`Infra`](https://til.qriosity.dev/featured/infra/setting-redirection-in-apache-server-with-oracle-cloud)
+[`Git/GitHub`](https://til.qriosity.dev/featured/git-github/github-action/aoji-for-integration-dev-note)
 [`English`](https://til.qriosity.dev/featured/english/dev-vocab/a)
 <br />
 
