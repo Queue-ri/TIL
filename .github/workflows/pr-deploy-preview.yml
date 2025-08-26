@@ -30,7 +30,7 @@ jobs:
         run: yarn build
 
       - name: Deploy draft to Netlify
-        uses: evnex/netlify-deploy@v1.0.4
+        uses: evnex/netlify-deploy@1.0.5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
