@@ -3,10 +3,17 @@ title: 'Cloudflare Workers로 커스텀 오프라인 페이지 만들기'
 eng_title: 'Create Custom Offline Page with Cloudflare Workers'
 image: https://til.qriositylog.com/img/m_banner_background.jpg
 created_date: 2025-08-11
-updated_date: 2025-08-20
+updated_date: 2025-08-26
 ---
 
 # Cloudflare Workers로 커스텀 오프라인 페이지 만들기
+
+:::info 초안 발행됨
+
+이 TIL 문서는 [[Cloudflare Workers로 커스텀 서버 다운 페이지 만들기](https://www.qriosity.dev/post/cloudflare-workers%EB%A1%9C-%EC%BB%A4%EC%8A%A4%ED%85%80-%EC%84%9C%EB%B2%84-%EB%8B%A4%EC%9A%B4-%ED%8E%98%EC%9D%B4%EC%A7%80-%EB%A7%8C%EB%93%A4%EA%B8%B0)] 포스트로 발행되었습니다.<br />
+블로그에서 최신 내용을 확인해주세요!
+
+:::
 
 import DeQrypter from '@site/src/components/mdx-crypto/DeQrypter';
 
