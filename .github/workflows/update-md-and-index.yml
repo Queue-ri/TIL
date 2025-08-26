@@ -68,7 +68,7 @@ jobs:
         environment: cloudflare-pages
         steps:
           - name: Trigger Cloudflare Pages
-            uses: Cyb3r-Jak3/actions-cloudflare-pages@v1.0.1
+            uses: Cyb3r-Jak3/actions-cloudflare-pages@v2.0.0
             with:
                 account: ${{ secrets.CLOUDFLARE_ID }}
                 project: ${{ secrets.CLOUDFLARE_PROJECT }}
