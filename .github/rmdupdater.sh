@@ -40,8 +40,9 @@ for file in $all_files; do
 
         # 대괄호 안 전체 라벨 추출
         label=$(echo "$line" | grep -oP '\[\K[^\]]+(?=\])')
-        # 소괄호 안 eng_title 추출
-        english_title=$(echo "$label" | grep -oP '\([A-Za-z0-9 ,\-!?.]+\)' | tr -d '()')
+        # 소괄호 안 eng_title 추출 (한글이 포함될 수도 있음)
+        english_title=$(echo "$label" | grep -oP '\([^\)]+\)' | tr -d '()')
+
 
         if [ -n "$english_title" ]; then
             echo "${status}, ${english_title}" >> "$output_file"
