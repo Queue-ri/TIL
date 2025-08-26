@@ -13,15 +13,22 @@ echo -e "\n${MAGENTA}** RMDUPDATER by Queue-ri${NOCOLOR}"
 date -u -d "+9 hours"
 echo -e "${GREEN}** generating ${output_file}...${NOCOLOR}"
 
-# 모든 /md/date 파일 내림차순 정렬 (최신순 5개)
-recent_files=$(find ./md/date -type f -name "*.md" | sort -r | head -n 5)
+# 모든 /md/date 파일 내림차순 정렬
+all_files=$(find ./md/date -type f -name "*.md" | sort -r)
 
 # output 파일 초기화
 > "$output_file"
 
+# 추출 카운터
+count=0
+max_count=5
+
 # /featured/ps 에 한하여 영문 제목 추출
-for file in $recent_files; do
-    grep 'https://til.qriosity.dev/featured/ps/' "$file" | while read -r line; do
+for file in $all_files; do
+    while read -r line; do
+        # PS 문서 없으면 skip
+        echo "$line" | grep -q 'https://til.qriosity.dev/featured/ps/' || continue
+
         # new / update 상태 추출
         if echo "$line" | grep -q '\[New!\]'; then
             status="new"
@@ -38,8 +45,14 @@ for file in $recent_files; do
 
         if [ -n "$english_title" ]; then
             echo "${status}, ${english_title}" >> "$output_file"
+            count=$((count + 1)) # 추출 시 카운터 증가
         fi
-    done
+
+        # 5개 추출 끝
+        if [ "$count" -ge "$max_count" ]; then
+            break 2 # while & for 모두 종료
+        fi
+    done < "$file"
 done
 
 echo -e "${GREEN}** Successfully generated ${output_file}\n${NOCOLOR}"
