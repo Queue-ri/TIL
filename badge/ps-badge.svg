@@ -119,27 +119,27 @@
     <!-- 리스트 영역 -->
     <text x="8" y="55" class="list-item" xml:space="preserve" style="animation-delay:0.15s">
       <tspan x="8" y="55" class="bullet">•</tspan>
-      <tspan x="22" y="55" class="content">📗 3446 - Sort Matrix by Diagonals</tspan>
+      <tspan x="22" y="55" class="content">📗 3021 - Alice and Bob Playing Flower Gam...</tspan>
     </text>
 
     <text x="8" y="81" class="list-item" xml:space="preserve" style="animation-delay:0.3s">
       <tspan x="8" y="81" class="bullet">•</tspan>
-      <tspan x="22" y="81" class="content">📗 3459 - Length of Longest V-Shaped Diago...</tspan>
+      <tspan x="22" y="81" class="content">📗 3446 - Sort Matrix by Diagonals</tspan>
     </text>
 
     <text x="8" y="107" class="list-item" xml:space="preserve" style="animation-delay:0.45s">
       <tspan x="8" y="107" class="bullet">•</tspan>
-      <tspan x="22" y="107" class="content">📗 131130 - 혼자 놀기의 달인</tspan>
+      <tspan x="22" y="107" class="content">📗 3459 - Length of Longest V-Shaped Diago...</tspan>
     </text>
 
     <text x="8" y="133" class="list-item" xml:space="preserve" style="animation-delay:0.6s">
       <tspan x="8" y="133" class="bullet">•</tspan>
-      <tspan x="22" y="133" class="content">📗 498 - Diagonal Traverse</tspan>
+      <tspan x="22" y="133" class="content">📗 131130 - 혼자 놀기의 달인</tspan>
     </text>
 
     <text x="8" y="159" class="list-item" xml:space="preserve" style="animation-delay:0.75s">
       <tspan x="8" y="159" class="bullet">•</tspan>
-      <tspan x="22" y="159" class="content">📙 Java Tips for PS</tspan>
+      <tspan x="22" y="159" class="content">📗 498 - Diagonal Traverse</tspan>
     </text>
 
 
