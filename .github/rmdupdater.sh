@@ -38,10 +38,12 @@ for file in $all_files; do
             continue
         fi
 
-        # 대괄호 안 전체 라벨 추출
-        label=$(echo "$line" | grep -oP '\[\K[^\]]+(?=\])')
-        # 소괄호 안 eng_title 추출 (한글이 포함될 수도 있음)
-        english_title=$(echo "$label" | grep -oP '\([^\)]+\)' | tr -d '()')
+        # 소괄호 안 eng_title 추출 (한글, 특문 포함될 수도 있음)
+        ## \[.*\( : 대괄호 안의 ( 까지 스킵
+        ## ([^)]*) : ) 나오기 전까지 전부 캡처 -> eng_title
+        ## \)\].* : 닫는 괄호와 ] 이후는 무시
+        ## \1 : 캡처된 부분만 출력
+        english_title=$(echo "$line" | sed -nE 's/.*\[.*\(([^)]*)\)\].*/\1/p')
 
 
         if [ -n "$english_title" ]; then
