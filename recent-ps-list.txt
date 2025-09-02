@@ -1,5 +1,5 @@
+new, 3025 - Find the Number of Ways to Place People I
 new, 37 - Sudoku Solver
 new, 276035 - FrontEnd 개발자 찾기
 new, 133027 - 주문량이 많은 아이스크림들 조회하기
 new, 36 - Valid Sudoku
-new, 3021 - Alice and Bob Playing Flower Game
