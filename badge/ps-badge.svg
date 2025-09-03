@@ -119,27 +119,27 @@
     <!-- 리스트 영역 -->
     <text x="8" y="55" class="list-item" xml:space="preserve" style="animation-delay:0.15s">
       <tspan x="8" y="55" class="bullet">•</tspan>
-      <tspan x="22" y="55" class="content">📗 1792 - Maximum Average Pass Ratio</tspan>
+      <tspan x="22" y="55" class="content">📗 144854 - 조건에 맞는 도서와 저자 리스트 출력하기</tspan>
     </text>
 
     <text x="8" y="81" class="list-item" xml:space="preserve" style="animation-delay:0.3s">
       <tspan x="8" y="81" class="bullet">•</tspan>
-      <tspan x="22" y="81" class="content">📗 3025 - Find the Number of Ways to Place...</tspan>
+      <tspan x="22" y="81" class="content">📗 1792 - Maximum Average Pass Ratio</tspan>
     </text>
 
     <text x="8" y="107" class="list-item" xml:space="preserve" style="animation-delay:0.45s">
       <tspan x="8" y="107" class="bullet">•</tspan>
-      <tspan x="22" y="107" class="content">📗 37 - Sudoku Solver</tspan>
+      <tspan x="22" y="107" class="content">📗 3025 - Find the Number of Ways to Place...</tspan>
     </text>
 
     <text x="8" y="133" class="list-item" xml:space="preserve" style="animation-delay:0.6s">
       <tspan x="8" y="133" class="bullet">•</tspan>
-      <tspan x="22" y="133" class="content">📗 276035 - FrontEnd 개발자 찾기</tspan>
+      <tspan x="22" y="133" class="content">📗 37 - Sudoku Solver</tspan>
     </text>
 
     <text x="8" y="159" class="list-item" xml:space="preserve" style="animation-delay:0.75s">
       <tspan x="8" y="159" class="bullet">•</tspan>
-      <tspan x="22" y="159" class="content">📗 133027 - 주문량이 많은 아이스크림들 조회하기</tspan>
+      <tspan x="22" y="159" class="content">📗 276035 - FrontEnd 개발자 찾기</tspan>
     </text>
 
 
