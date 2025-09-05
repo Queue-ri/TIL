@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 1
 sidebar_label: 'uniQ 개발 노트'
 created_date: 2025-05-20
-updated_date: 2025-06-14
+updated_date: 2025-09-05
 ---
 
 :::note 내용 못알아먹겠음 주의
@@ -2077,5 +2077,29 @@ FE 개발자면 킹받을 것임 ㅇㅅㅇ
 하이퍼바이저는 Proxmox를 알아봤지만 필자는 단일 OS를 사용할것이라서 사용하지 않기로 했다.
 
 그래서 낼 일어나면 우분투 부팅디스크부터 구우면 됨.
+
+</details>
+
+### 📆 25-09-05
+
+`1.0.0-dev.20250905`까지의 중간 일지
+
+<details>
+<summary>내용 보기</summary>
+
+#### 📌 Opened Issues
+> 없음. 아직 `1.0.0-beta.3` 마일스톤 시작 안함.
+
+<br/>
+
+#### 📌 전반적인 스타일 수정
+
+![](https://velog.velcdn.com/images/qriosity/post/b4a87506-8e4f-4c3e-a54f-2e93031ee965/image.gif)
+
+1. Code Block 폰트 빼먹어서 추가함: 우분투 기본 폰트가 이뻐서 적용 안된지 몰랐음
+2. MDX 스타일 수정 (a 태그 스타일, details 간격, heading 내 code 스타일 등)
+3. About 버튼 스타일 수정: 이전처럼 떠오르는 방식은 카드에 어울리지만 버튼에는 안어울림
+4. PostList hover 스타일 수정: 기존의 border 방식은 content flexbox가 줄어들어서 text wrap shifting이 일어남.
+5. PostList에서 타이틀은 1줄, Desc는 2줄로 제한
 
 </details>
