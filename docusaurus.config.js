@@ -8,7 +8,7 @@ const lightCodeTheme = require('./prism-custom/one-light/oneLight.js');
 const darkCodeTheme = require('./prism-custom/one-dark-pro-flat/oneDarkProFlat.js');
 const docNavItems = [
   {
-    to: 'featured/pl/java/java-introduction',
+    to: 'featured/pl/java/advanced/limitations-and-potential-improvements-in-java',
     label: 'PL',
   },
   {
@@ -16,7 +16,7 @@ const docNavItems = [
     label: 'PS',
   },
   {
-    to: 'featured/backend/spring/spring_main',
+    to: 'featured/backend/spring/backend_main',
     label: 'Backend',
   },
   {
@@ -24,11 +24,11 @@ const docNavItems = [
     label: 'DevOps',
   },
   {
-    to: 'featured/infra/setting-redirection-in-apache-server-with-oracle-cloud',
+    to: 'featured/infra/nginx/nginx-msa-digital-training/chapter-02-reverse-proxy',
     label: 'Infra',
   },
   {
-    to: 'featured/git-github/github-action/aoji-for-integration-dev-note',
+    to: 'featured/git-github/git-tips/why-git-shows-modified-with-no-changes',
     label: 'Git/GitHub',
   },
   {
@@ -181,7 +181,7 @@ async function createConfig() {
               position: 'left'
             }, */
             {to: '/featured', label: 'Featured', position: 'left', items: docNavItems},
-            {to: '/dev-note/algorio-dev-note', label: 'Dev Note', position: 'left'},
+            {to: '/dev-note/uniq-dev-note', label: 'Dev Note', position: 'left'},
             {to: '/enqrypt', label: 'EnQrypt', position: 'left'},
             {
               type: 'localeDropdown',
