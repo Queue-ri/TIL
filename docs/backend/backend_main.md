@@ -2,8 +2,8 @@
 title: 'Backend'
 eng_title: 'Backend'
 image: https://til.qriosity.dev/img/m_banner_background.jpg
-sidebar_position: 2
-sidebar_label: 'Backend'
+sidebar_position: 1
+sidebar_label: '📚️ Backend'
 created_date: 2025-09-09
 ---
 
