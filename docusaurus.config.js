@@ -16,7 +16,7 @@ const docNavItems = [
     label: 'PS',
   },
   {
-    to: 'featured/backend/spring/backend_main',
+    to: 'featured/backend/backend_main',
     label: 'Backend',
   },
   {
