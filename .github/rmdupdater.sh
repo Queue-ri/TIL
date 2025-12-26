@@ -38,13 +38,49 @@ for file in $all_files; do
             continue
         fi
 
-        # 소괄호 안 eng_title 추출 (한글, 특문 포함될 수도 있음)
-        ## \[.*\( : 대괄호 안의 ( 까지 스킵
-        ## ([^)]*) : ) 나오기 전까지 전부 캡처 -> eng_title
-        ## \)\].* : 닫는 괄호와 ] 이후는 무시
-        ## \1 : 캡처된 부분만 출력
-        english_title=$(echo "$line" | sed -nE 's/.*\[.*\(([^)]*)\)\].*/\1/p')
+        # [!LEGACY] old parser: 정규식 한계로 소괄호 처리 어려움
+        ## 소괄호 안 eng_title 추출 (한글, 특문 포함될 수도 있음)
+        ### \[.*\( : 대괄호 안의 ( 까지 스킵
+        ### ([^)]*) : ) 나오기 전까지 전부 캡처 -> eng_title
+        ### \)\].* : 닫는 괄호와 ] 이후는 무시
+        ### \1 : 캡처된 부분만 출력
+        # english_title=$(echo "$line" | sed -nE 's/.*\[.*\(([^)]*)\)\].*/\1/p')
 
+        # new parser:
+        english_title=$(
+            echo "$line" |
+            awk '
+                # []() 포맷이 매칭되는 줄만 실행
+                match($0, /\[[^]]+\]\(https?:\/\//) {
+                    s = substr($0, RSTART+1, RLENGTH-2)
+                    sub(/\]\(.*/, "", s)
+
+                    depth = 0
+                    end = 0
+                    start = 0
+
+                    # 뒤에서부터 depth 스캔
+                    for (i = length(s); i >= 1; --i) {
+                        c = substr(s, i, 1)
+
+                        if (c == ")") {
+                            if (depth == 0) end = i
+                            ++depth
+                        }
+                        else if (c == "(") {
+                            --depth
+                            if (depth == 0) {
+                                start = i
+                                break
+                            }
+                        }
+                    }
+
+                    if (start && end)
+                        print substr(s, start+1, end-start-1)
+                }
+            '
+        )
 
         if [ -n "$english_title" ]; then
             echo "${status}, ${english_title}" >> "$output_file"
