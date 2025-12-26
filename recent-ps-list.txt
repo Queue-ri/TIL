@@ -1,5 +1,5 @@
+new, Coding Test Legworks README
 new, 12981 - 영어 끝말잇기
 update, 12980 - 점프와 순간 이동
 new, 21557 - 불꽃놀이
 new, 144854 - 조건에 맞는 도서와 저자 리스트 출력하기
-new, 1792 - Maximum Average Pass Ratio
