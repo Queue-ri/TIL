@@ -1,5 +1,5 @@
+update, Java Snippets for PS
 new, 3454 - Separate Squares II
 new, 2025 SSAFY 15th Cohort (Phase 1)
 new, Coding Test Legworks README
 new, 12981 - 영어 끝말잇기
-update, 12980 - 점프와 순간 이동
