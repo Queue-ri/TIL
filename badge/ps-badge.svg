@@ -119,27 +119,27 @@
     <!-- 리스트 영역 -->
     <text x="8" y="55" class="list-item" xml:space="preserve" style="animation-delay:0.15s">
       <tspan x="8" y="55" class="bullet">•</tspan>
-      <tspan x="22" y="55" class="content">📙 Java Snippets for PS</tspan>
+      <tspan x="22" y="55" class="content">📗 2750 - 수 정렬하기</tspan>
     </text>
 
     <text x="8" y="81" class="list-item" xml:space="preserve" style="animation-delay:0.3s">
       <tspan x="8" y="81" class="bullet">•</tspan>
-      <tspan x="22" y="81" class="content">📗 3454 - Separate Squares II</tspan>
+      <tspan x="22" y="81" class="content">📙 Java Snippets for PS</tspan>
     </text>
 
     <text x="8" y="107" class="list-item" xml:space="preserve" style="animation-delay:0.45s">
       <tspan x="8" y="107" class="bullet">•</tspan>
-      <tspan x="22" y="107" class="content">📗 2025 SSAFY 15th Cohort (Phase 1)</tspan>
+      <tspan x="22" y="107" class="content">📗 3454 - Separate Squares II</tspan>
     </text>
 
     <text x="8" y="133" class="list-item" xml:space="preserve" style="animation-delay:0.6s">
       <tspan x="8" y="133" class="bullet">•</tspan>
-      <tspan x="22" y="133" class="content">📗 Coding Test Legworks README</tspan>
+      <tspan x="22" y="133" class="content">📗 2025 SSAFY 15th Cohort (Phase 1)</tspan>
     </text>
 
     <text x="8" y="159" class="list-item" xml:space="preserve" style="animation-delay:0.75s">
       <tspan x="8" y="159" class="bullet">•</tspan>
-      <tspan x="22" y="159" class="content">📗 12981 - 영어 끝말잇기</tspan>
+      <tspan x="22" y="159" class="content">📗 Coding Test Legworks README</tspan>
     </text>
 
 
