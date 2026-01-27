@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 
 // for decryption
 import CryptoJS from 'crypto-js';
@@ -201,6 +201,10 @@ export default function DeQrypter({ encrypted }) {
   const [password, setPassword] = useState('');
   const [toc, setToc] = useState([]);
   const [error, setError] = useState(null);
+  const [showToast, setShowToast] = useState(false); // for copy button
+
+  // 타이머 참조를 위한 useRef
+  const toastTimer = useRef(null);
 
   /* TOC context hook */
   useEffect(() => {
@@ -291,6 +295,13 @@ export default function DeQrypter({ encrypted }) {
     compileMdx();
   }, [decrypted]);
 
+  /* Toast UI timer cleanup hook (to prevent memory leak) */
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) clearTimeout(toastTimer.current);
+    };
+  }, []);
+
 
   /* 복호화 함수 */
   const handleDecrypt = () => {
@@ -365,11 +376,23 @@ export default function DeQrypter({ encrypted }) {
       },
     }; // end of components
 
-    // 복호화 내용 복사 버튼
+    // 원문 복사 버튼 핸들러
     const handleCopy = async () => {
       try {
         await navigator.clipboard.writeText(decrypted);
-        alert("원문을 클립보드에 복사했습니다."); // TODO: alert보단 toast 방식이 나을듯
+
+        // 이미 실행 중인 타이머가 있다면 취소 (연타 대응)
+        if (toastTimer.current) {
+          clearTimeout(toastTimer.current);
+        }
+        
+        setShowToast(true);
+        toastTimer.current = setTimeout(() => {
+          setShowToast(false);
+          toastTimer.current = null;
+        }, 2000); // 2초 후 토스트 사라짐
+        //alert("원문을 클립보드에 복사했습니다.");
+      
       } catch (err) {
         alert("원문을 복사하는 데 실패했습니다.");
       }
@@ -410,6 +433,30 @@ export default function DeQrypter({ encrypted }) {
           >
             📋 원문 복사
           </button>
+        </div>
+
+        {/* Toast UI */}
+        <div style={{
+          position: 'fixed',
+          bottom: showToast ? '20px' : '-50px', // 아래에서 위로 등장
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          color: '#fff',
+          padding: '0.6rem 1.6rem',
+          borderRadius: '100px',
+          fontFamily: 'SUIT-Regular, sans-serif',
+          fontSize: '1rem',
+          fontWeight: 'bold',
+          zIndex: 9999,
+          transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          opacity: showToast ? 1 : 0,
+          pointerEvents: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <span>✅ 원문 복사 완료! ^ㅅ^</span>
         </div>
       </div>
     );
