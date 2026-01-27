@@ -363,13 +363,54 @@ export default function DeQrypter({ encrypted }) {
         const type = node?.data?.hProperties?.type || 'info';
         return <Admonition type={type} {...props}>{children}</Admonition>;
       },
-    };
+    }; // end of components
+
+    // 복호화 내용 복사 버튼
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(decrypted);
+        alert("원문을 클립보드에 복사했습니다."); // TODO: alert보단 toast 방식이 나을듯
+      } catch (err) {
+        alert("원문을 복사하는 데 실패했습니다.");
+      }
+    }
 
     return (
-      <div style={{ marginTop: '1rem' }}>
-        <MDXProvider components={components}>
-          <MDXComponent />
-        </MDXProvider>
+      <div>
+        {/* MDX post area */}
+        <div style={{ marginTop: '1rem' }}>
+          <MDXProvider components={components}>
+            <MDXComponent />
+          </MDXProvider>
+        </div>
+
+        {/* DeQrypter copy button area*/}
+        <div style={{
+          display: 'flex',
+          marginTop: '32px',
+          justifyContent: 'flex-end'
+        }}
+        >
+          <button
+            onClick={handleCopy}
+            style={{
+              padding: '6px 16px',
+              fontFamily: 'SUIT-Regular, sans-serif',
+              fontSize: '0.75rem',
+              backgroundColor: 'var(--ifm-color-primary)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              transition: 'opacity 0.2s',
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.opacity = '0.8')}
+            onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+          >
+            📋 원문 복사
+          </button>
+        </div>
       </div>
     );
   }
