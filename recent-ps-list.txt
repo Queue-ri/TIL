@@ -1,5 +1,5 @@
+new, 42842 - 카펫
 new, 3314 - Construct the Minimum Bitwise Array I
 new, 2750 - 수 정렬하기
 update, Java Snippets for PS
 new, 3454 - Separate Squares II
-new, 2025 SSAFY 15th Cohort (Phase 1)
