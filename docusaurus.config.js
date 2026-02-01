@@ -12,6 +12,10 @@ const docNavItems = [
     label: 'PL',
   },
   {
+    to: 'featured/cs/ssafy-cs-study/ssafy-cs-study-chapter-2-1',
+    label: 'CS',
+  },
+  {
     to: 'featured/ps/java-snippets-for-ps',
     label: 'PS',
   },
