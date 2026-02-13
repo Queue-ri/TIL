@@ -12,6 +12,7 @@ TIL 문서들을 특정 주제로 분류하여 정리한 페이지입니다.
 
 ⭐바로가기: 
 [`PL`](https://til.qriosity.dev/featured/pl/java/java-introduction)
+[`CS`](https://til.qriosity.dev/featured/cs/ssafy-cs-study/ssafy-cs-study-chapter-2-1)
 [`PS`](https://til.qriosity.dev/featured/ps/java-snippets-for-ps)
 [`Backend`](https://til.qriosity.dev/featured/backend/spring/spring_main)
 [`DevOps`](https://til.qriosity.dev/featured/devops/jenkins/setting-jenkins-server-with-oracle-cloud)
@@ -29,14 +30,21 @@ TIL인 만큼 엄밀하게 작성하기보다는 편하게 기억을 돕기 위�
 이곳의 글이 좀 더 검증과 가공을 거치면 블로그 포스트로 발행됩니다.
 <br />
 
-### 📙 PS (Problem Solving)
+### 📙 CS (Computer Science)
+
+기술면접 관련 지식을 비롯한 전반적인 컴퓨터 이론에 관하여 기록되어 있습니다.
+
+
+<br />
+
+### 📒 PS (Problem Solving)
 
 백준, 프로그래머스, LeetCode 등 PS 풀이가 기록되어 있습니다.
 
 대놓고 코테 난이도를 벗어난 문제는 대참사를 방지하기 위해 별도로 표시됩니다.
 <br />
 
-### 📒 Backend
+### 📗 Backend
 
 백엔드 프레임워크에 관하여 기록되어 있습니다.
 
@@ -44,7 +52,7 @@ TIL인 만큼 엄밀하게 작성하기보다는 편하게 기억을 돕기 위�
 
 <br />
 
-### 📗 DevOps
+### 📘 DevOps
 
 자동화, CI/CD에 관하여 기록되어 있습니다.
 
@@ -52,7 +60,7 @@ TIL인 만큼 엄밀하게 작성하기보다는 편하게 기억을 돕기 위�
 
 <br />
 
-### 📘 Infra
+### 📓 Infra
 
 기타 서버 관련 내용이 기록되어 있습니다.
 
@@ -60,7 +68,7 @@ TIL인 만큼 엄밀하게 작성하기보다는 편하게 기억을 돕기 위�
 
 <br />
 
-### 📓 Git/GitHub
+### 📔 Git/GitHub
 
 Git 또는 GitHub 관련 내용이 기록되어 있습니다.
 
@@ -73,7 +81,7 @@ GitHub 토픽은 많은 경우 Git 내용을 포함하고 있습니다.<br />
 
 <br />
 
-### 📔 English
+### 🌐 English
 
 영어에 관하여 기록되어 있습니다. 신성한 프밍 얘기 중에 웬 갑자기 영어냐구요?
 
