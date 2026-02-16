@@ -52,7 +52,7 @@ jobs:
             run: echo "date=$(TZ=Asia/Seoul date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
           - name: Commit new PS badge
-            uses: EndBug/add-and-commit@v4
+            uses: EndBug/add-and-commit@v9
             with:
               author_name: Queue-ri
               author_email: qriosity.dev@gmail.com
