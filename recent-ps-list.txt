@@ -1,5 +1,5 @@
+new, SSAFY 15th Cohort Test A (1st)
 new, 1765 - 닭싸움 팀 정하기
 new, 22251 - 빌런 호석
 new, 18511 - 큰 수 구성하기
 new, 42842 - 카펫
-new, 3314 - Construct the Minimum Bitwise Array I
