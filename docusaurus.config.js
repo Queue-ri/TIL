@@ -20,6 +20,10 @@ const docNavItems = [
     label: 'PS',
   },
   {
+    to: 'featured/frontend/frontend_main',
+    label: 'Frontend',
+  },
+  {
     to: 'featured/backend/backend_main',
     label: 'Backend',
   },
