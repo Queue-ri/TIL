@@ -1,5 +1,5 @@
+new, 14613 - 리스트 복사
 new, 13072 - 병사관리
 new, 1708 - 볼록 껍질
 new, 761 - Special Binary String
 new, SSAFY 15th Cohort Test A (1st)
-new, 1765 - 닭싸움 팀 정하기
