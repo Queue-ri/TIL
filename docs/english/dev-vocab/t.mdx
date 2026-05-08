@@ -5,7 +5,7 @@ image: https://til.qriositylog.com/img/m_banner_background.jpg
 sidebar_position: 20
 sidebar_label: 'T'
 created_date: 2021-11-21
-updated_date: 2025-05-07
+updated_date: 2026-05-08
 ---
 
 :::note
@@ -54,3 +54,17 @@ today I learned
 
 재귀 함수를 반복문으로 치환하여 연쇄 호출을 처리하는 최적화 기법<br />
 재귀 호출로 인한 스택 오버플로우 위험이 있는 경우에 유용하다.
+
+<br />
+
+## Type Punning
+
+데이터의 실제 비트 패턴은 유지하면서, 이를 다른 타입으로 해석하여 사용하는 기법<br />
+C++20의 `std::bit_cast`나 C 스타일의 포인터 캐스팅 등을 통해 수행되며, 주로 메모리 효율성이나 하드웨어 레벨의 데이터 조작을 위해 사용된다.
+
+:::warning
+
+`std::bit_cast`로 `const` 포인터 -> 일반 포인터로 주소값을 복사하는 경우, **컴파일러는 경고를 띄우지 않는다.**<br />
+하지만 이를 통해 실제 상수 메모리 영역을 수정하려 하면 SegFault RTE가 발생하며, 엄연히 UB이므로 개발자가 알아서 주의해야 한다.
+
+:::
