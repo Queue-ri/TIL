@@ -284,7 +284,7 @@ async function createConfig() {
         prism: {
           theme: lightCodeTheme,
           darkTheme: darkCodeTheme,
-          additionalLanguages: ['bash','java','apacheconf','kotlin','nasm','latex'],
+          additionalLanguages: ['bash','java','apacheconf','kotlin','nasm','latex','properties'],
         },
         algolia: {
           apiKey: '1e840cb68e840b79c0dbad8b4b02b783',
