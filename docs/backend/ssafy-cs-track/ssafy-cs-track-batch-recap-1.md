@@ -1,0 +1,21 @@
+---
+title: 'SSAFY 전공자 자바반 Batch 개념 정리 - 1'
+eng_title: 'SSAFY CS Track Batch Recap - 1'
+image: https://til.qriosity.dev/img/m_banner_background.jpg
+sidebar_position: 16
+created_date: 2026-05-28
+---
+
+# SSAFY 전공자 자바반 Batch 개념 정리 - 1
+
+:::note 별 내용은 아닌데
+
+<img src="https://velog.velcdn.com/images/qriosity/post/b8c1d75a-81b8-4ed0-b52b-fba26996a6c5/image.jpg" width="720px" height="auto" />
+
+킹외비때문에 공개하지 않습니다.
+
+:::
+
+import DeQrypter from '@site/src/components/mdx-crypto/DeQrypter';
+
+<DeQrypter encrypted="U2FsdGVkX19Ib6LeQAi9Bk05+Y0a+Exyr/OqysY9oOkNLXiWCZR0ovK/5JWZXt4m6QNHhzA/az4WlzPr6ZZz4ctC1RTB/P8VKrv6C66zhljNgu7pSH7jL0LiTvq/5D5WpyMjiR2E1MB9LYEIyZcvpDhUnYeZEazEFJnQvdUExR52uxjIxmSUAKW9bWpQ+U3Ge8L5gwBE3Z5NyU9i3lDmX//aBRQLXwihHAMnWTr+CcVdtoSPqQcfiHQFcnsFDoGKFz6N1WOwMYnzoCGIqCX4P1ExQPcyQA2YKtKufKmYyIR3Vv0NtbhjMihW4gof+3DJLTbBi5pM+Plbj+7ughIHELznvfaLtKq23wtr4t9dGZOkXmQLE4kOeGYvpdTO9spnrSejM60wm9jHa5zc8OFq3KupV6lrC69nm+8du3qXK2kTef4nk4keRg3i1vgtITfIB+wF4fKoHOuaDx4bgFQNV7iclhKwRxJdYvZLc5VivEuXYCbFiE9HGMHWcBmynxjG3QoxQ/OeTs0YddfgpEAQ/S0wjoJHTB9wCl/Nfp3BEahgNVdmvfRmYLlpua5cBz4KDJbL6mpXRJSVCaehSfItQLKKzWuoypNLqWg/w5J+oRx0l/MXlcFAKQlD3ZL+Warhu8m7cxZuxepJpjuTbSaA+0Q7JR0c0uq3DIg6i6UqzSvJPxZO2IGc8qFdla2VuyfiOKzXNFRvQbdfhBZshuDmso1zsVbOEezz8kjHVFnzq24oFIrSHXQ7frJ560ju3DXsSEc0x7Gya/ozI+kgtoRZe39wg8pjZinBpjB/RXYWu2NQQ+osso+O7b0XNGB/HsNqQV/qCIDsAnw9Ucc1MTjtKMWole+GCul72cDmMuqa3a8eT1zrQNpWad6d1fiFNJaDm0m6wcH9gDafJy+0r/yR9jWEC0Vpc/9lZKpUTKr7jC43lgkyTz5qWkZ3+PEBDaa/9lyL1CdsNgAuH9FIu7l+tsDodL0VoCGw8lWDUhnqehYmBRtUSB7qcksmzkmpPWsz0p7qKoJ2beyG6J8HGxcrnvJaTp/m9Ni1gDIYZ3cuKDr4I8VNdwi1uNkodG2LdbKDtSJwQDAvL+tYtGRO1EfXlyAwGnMeCZ89OamPWW2nOdQBNkF4p/i4LXrggORGx6Wn5yksrhJnjbCVwAHMhAYbp7uzXWENLkJHmpq/Kf9nRpZ/Rzrqlw/zYsbDtRF8xiF3ZIpoVQvFr5jr6UA9KL8t4QaYfkr9tIR3nqAgU+44e9FjvLkup2JVy8Gg7E13U+S1A/6d/rFx9rgKTwRgft+Xz6WzXFEbecVySCLwj0e9y8Dxk0ZTOS0TaJAzWq1bQadqwq/3hWteflKDimdQXlhc+IENfXV1MbgPktmG8oWRVEGU5BVjG40VS64U+GudIfJQhUnEQLiEI6lrq60hqnFYY0v85wURUdzAy7fUDbr8q8EHlKEJtXrj1cn3QBPcHeLHM011uD4UY6OOtBSM/Hr8KUZGB8QrktGEC0sC3mMgmaBP3tFmMdZKbOUWy87MpckeKNtUEft90+uPXAGsP2jmQ0rHpsODuzFyCuCX8Xn1QD+K5C23EY2nPetjplXbif8Gec1VU5gbwsrRGB9heGYjZFHvSgcetEtEfhKv6nkX1C4=" />
