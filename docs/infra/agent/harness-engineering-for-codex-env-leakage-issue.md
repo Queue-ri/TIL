@@ -2,7 +2,9 @@
 title: '하네스 엔지니어링으로 Codex env 유출 막기'
 eng_title: 'Harness Engineering for Codex Env Leakage Issue'
 image: https://til.qriosity.dev/img/m_banner_background.jpg
+sidebar_position: 1
 created_date: 2026-06-11
+updated_date: 2026-06-18
 ---
 
 # 하네스 엔지니어링으로 Codex env 유출 막기
